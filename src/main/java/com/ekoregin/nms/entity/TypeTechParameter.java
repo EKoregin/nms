@@ -1,5 +1,6 @@
 package com.ekoregin.nms.entity;
 
+import com.ekoregin.nms.dto.TypeTechParamDto;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -11,7 +12,7 @@ import lombok.*;
 @NoArgsConstructor
 @ToString
 @AllArgsConstructor
-@Entity
+@Entity(name = "type_tech_parameter")
 public class TypeTechParameter {
 
     @Id
@@ -19,4 +20,10 @@ public class TypeTechParameter {
     private Long id;
     private String name;
     private String description;
+
+    public TypeTechParameter(TypeTechParamDto typeTechParamDto) {
+        id = typeTechParamDto.getId();
+        name = typeTechParamDto.getName();
+        description = typeTechParamDto.getDescription();
+    }
 }
