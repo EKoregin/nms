@@ -27,4 +27,9 @@ public class TypeTechParameterController {
       model.addAttribute("typeTechParams", typeTechParamDtoList);
       return "typeTechParams";
    }
+
+   @GetMapping("/addForm")
+   public String formCreateTypeTechParam() {
+      return "addTypeTechParam";
+   }
 }
