@@ -13,13 +13,13 @@ import lombok.NoArgsConstructor;
 public class TypeTechParamDto {
     private Long id;
 
-    private String name;
+    private String typeTechParamName;
 
-    private String description;
+    private String typeTechParamDescription;
 
     public TypeTechParamDto(TypeTechParameter typeTechParameter) {
         id = typeTechParameter.getId();
-        name = typeTechParameter.getName();
-        description = typeTechParameter.getDescription();
+        typeTechParamName = typeTechParameter.getName();
+        typeTechParamDescription = typeTechParameter.getDescription();
     }
 }

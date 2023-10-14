@@ -23,7 +23,7 @@ public class TypeTechParameter {
 
     public TypeTechParameter(TypeTechParamDto typeTechParamDto) {
         id = typeTechParamDto.getId();
-        name = typeTechParamDto.getName();
-        description = typeTechParamDto.getDescription();
+        name = typeTechParamDto.getTypeTechParamName();
+        description = typeTechParamDto.getTypeTechParamDescription();
     }
 }
