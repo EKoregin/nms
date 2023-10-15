@@ -17,7 +17,7 @@ public class TechParameter {
     private Long id;
 
     @OneToOne
-    @PrimaryKeyJoinColumn
+    @JoinColumn(name = "type_tech_parameter_id")
     private TypeTechParameter type;
 
     @Column(name = "value")
