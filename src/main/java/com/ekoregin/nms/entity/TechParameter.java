@@ -24,5 +24,9 @@ public class TechParameter {
 
     @Column(name = "value")
     private String value;
+
+    @ManyToOne
+    @JoinColumn(name = "customer_id")
+    private Customer customer;
 }
 
