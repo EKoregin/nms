@@ -25,7 +25,7 @@ public class TechParameter {
 
     public TechParameter(TechParamDto techParamDto) {
         id = techParamDto.getId();
-        type = techParamDto.getTypeTechParameter();
+        type = new TypeTechParameter(techParamDto.getTypeTechParamDto());
         value = techParamDto.getTechParamValue();
     }
 }

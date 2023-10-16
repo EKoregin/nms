@@ -36,7 +36,7 @@
             <tbody>
             <tr th:each="parameter : ${techParams}">
                 <span>
-                    <td th:text="${parameter.typeTechParameter}"></td>
+                    <td th:text="${parameter.typeTechParamDto.typeTechParamName}"></td>
                     <td th:text="${parameter.techParamValue}"></td>
                     <td>
                         <div class="container">

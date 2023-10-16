@@ -10,15 +10,17 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TechParamDto {
+    private static final long serialVersionUID = 1L;
+
     private Long id;
 
     private String techParamValue;
 
-    private TypeTechParameter typeTechParameter;
+    private TypeTechParamDto typeTechParamDto;
 
     public TechParamDto(TechParameter techParameter) {
         id = techParameter.getId();
         techParamValue = techParameter.getValue();
-        typeTechParameter = techParameter.getType();
+        typeTechParamDto = new TypeTechParamDto(techParameter.getType());
     }
 }

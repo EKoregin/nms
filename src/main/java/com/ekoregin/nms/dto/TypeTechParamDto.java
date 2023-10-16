@@ -11,6 +11,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class TypeTechParamDto {
+    private static final long serialVersionUID = 1L;
+
     private Long id;
 
     private String typeTechParamName;
