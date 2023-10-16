@@ -1,5 +1,6 @@
 package com.ekoregin.nms.entity;
 
+import com.ekoregin.nms.dto.CustomerDto;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -8,7 +9,6 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
-@ToString
 @AllArgsConstructor
 @Entity(name = "customer")
 public class Customer {
@@ -27,4 +27,10 @@ public class Customer {
 
     @Transient
     private List<Check> checks;
+
+    public Customer(CustomerDto customerDto) {
+        id = customerDto.getId();
+        name = customerDto.getName();
+        address = customerDto.getAddress();
+    }
 }

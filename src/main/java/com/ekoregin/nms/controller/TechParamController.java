@@ -23,11 +23,6 @@ public class TechParamController {
     private final TechParamService techParamService;
     private final TypeTechParameterService typeTechParamService;
 
-//    @ModelAttribute(name = "techParameterDto")
-//    public TechParameterDto techParameterDto() {
-//        return new TechParameterDto();
-//    }
-
     @ModelAttribute(name = "typeTechParams")
     public List<TypeTechParameter> typeTechParameterList() {
         return typeTechParamService.findAll();
