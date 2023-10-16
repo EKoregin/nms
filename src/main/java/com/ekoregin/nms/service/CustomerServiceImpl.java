@@ -31,18 +31,27 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public void update(Customer customer) {
-
+    public void update(CustomerDto customerDto) {
+        Customer customer = findById(customerDto.getId());
+        customer.setName(customerDto.getName());
+        customer.setAddress(customerDto.getAddress());
+        customerRepo.save(customer);
     }
 
     @Override
     public void delete(long id) {
-
+        customerRepo.deleteById(id);
+        log.info("Customer with ID: {} was deleted", id);
     }
 
     @Override
     public Customer findById(long id) {
-        return null;
+        Customer customer = customerRepo.findById(id).orElse(null);
+        if (customer == null) {
+            log.info("Customer with ID: {} not found!", id);
+            throw new NoSuchElementException("Customer with ID: " + id + " not found!");
+        }
+        return customer;
     }
 
     @Override

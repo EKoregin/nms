@@ -9,7 +9,7 @@ public interface CustomerService {
 
     Customer create(CustomerDto customerDto);
 
-    void update(Customer customer);
+    void update(CustomerDto customerDto);
 
     void delete(long id);
 
