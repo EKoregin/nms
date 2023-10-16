@@ -1,7 +1,8 @@
 package com.ekoregin.nms.service;
 
-import com.ekoregin.nms.dto.TechParamDto;
+import com.ekoregin.nms.dto.TechParameterDto;
 import com.ekoregin.nms.entity.TechParameter;
+import com.ekoregin.nms.entity.TypeTechParameter;
 import com.ekoregin.nms.repository.TechParameterRepo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,22 +17,32 @@ import java.util.NoSuchElementException;
 public class TechParamServiceImpl implements TechParamService {
 
     private final TechParameterRepo repo;
+    private final TypeTechParameterService typeTechParameterService;
 
     @Override
-    public TechParameter create(TechParamDto techParamDto) {
-        TechParameter techParameter = new TechParameter(techParamDto);
+    public TechParameter create(TechParameterDto techParameterDto) {
+        long typeId = techParameterDto.getTypeId();
+        TypeTechParameter typeTechParameter = typeTechParameterService.findById(typeId);
+        if (typeTechParameter == null) {
+            log.error("TypeTechParam with ID: {} was not found", typeId);
+            throw new NoSuchElementException("TypeTechParam with ID: " + typeId + " was not found");
+        }
+        TechParameter techParameter = TechParameter.builder()
+                .value(techParameterDto.getValue())
+                .type(typeTechParameter)
+                .build();
         repo.save(techParameter);
         log.info("TechParameter with ID: {} was created", techParameter.getId());
         return techParameter;
     }
 
     @Override
-    public void update(TechParamDto techParamDto) {
-        long paramId = techParamDto != null ? techParamDto.getId() : 0;
-        TechParameter techParameter = repo.findById(paramId).orElse(null);
-        if (techParameter != null && techParamDto != null) {
-            repo.save(new TechParameter(techParamDto));
-            log.info("TechParam was updated: {}", techParamDto);
+    public void update(TechParameter techParameter) {
+        long paramId = techParameter != null ? techParameter.getId() : 0;
+        TechParameter techParameterFound = repo.findById(paramId).orElse(null);
+        if (techParameterFound != null && techParameter != null) {
+            repo.save(techParameter);
+            log.info("TechParam was updated: {}", techParameter);
         } else {
             log.error("TechParam with ID: {} was not found", paramId);
             throw new NoSuchElementException("TechParam with ID: " + paramId + " was not found");

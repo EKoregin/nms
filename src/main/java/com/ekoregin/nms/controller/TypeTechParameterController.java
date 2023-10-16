@@ -1,6 +1,6 @@
 package com.ekoregin.nms.controller;
 
-import com.ekoregin.nms.dto.TypeTechParamDto;
+import com.ekoregin.nms.entity.TypeTechParameter;
 import com.ekoregin.nms.service.TypeTechParameterService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,10 +23,8 @@ public class TypeTechParameterController {
 
    @GetMapping
    public String allTypeTechParams(Model model) {
-      List<TypeTechParamDto> typeTechParamDtoList = service.findAll().stream()
-              .map(TypeTechParamDto::new)
-              .toList();
-      model.addAttribute("typeTechParams", typeTechParamDtoList);
+      List<TypeTechParameter> typeTechParameterList = service.findAll();
+      model.addAttribute("typeTechParams", typeTechParameterList);
       return "typeTechParams";
    }
 
@@ -36,8 +34,8 @@ public class TypeTechParameterController {
    }
 
    @PostMapping("/create")
-   public String create(@ModelAttribute TypeTechParamDto typeTechParamDto) {
-      service.create(typeTechParamDto);
+   public String create(@ModelAttribute TypeTechParameter typeTechParam) {
+      service.create(typeTechParam);
       return "redirect:/typeTechParams";
    }
 }

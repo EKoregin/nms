@@ -1,6 +1,5 @@
 package com.ekoregin.nms.service;
 
-import com.ekoregin.nms.dto.TypeTechParamDto;
 import com.ekoregin.nms.entity.TypeTechParameter;
 import com.ekoregin.nms.repository.TypeTechParameterRepo;
 import lombok.RequiredArgsConstructor;
@@ -20,21 +19,20 @@ public class TypeTechParamServiceImpl implements TypeTechParameterService{
 
     @Transactional
     @Override
-    public TypeTechParameter create(TypeTechParamDto typeTechParamDto) {
-        TypeTechParameter typeTechParameter = new TypeTechParameter(typeTechParamDto);
-        repo.save(typeTechParameter);
-        log.info("TypeTechParameter with ID: {} was created", typeTechParameter.getId());
-        return typeTechParameter;
+    public TypeTechParameter create(TypeTechParameter typeTechParam) {
+        repo.save(typeTechParam);
+        log.info("TypeTechParameter with ID: {} was created", typeTechParam.getId());
+        return typeTechParam;
     }
 
     @Transactional
     @Override
-    public void update(TypeTechParamDto typeTechParamDto) {
-            long paramId = typeTechParamDto != null ? typeTechParamDto.getId() : 0;
+    public void update(TypeTechParameter typeTechParam) {
+            long paramId = typeTechParam != null ? typeTechParam.getId() : 0;
             TypeTechParameter typeTechParameter = repo.findById(paramId).orElse(null);
-            if (typeTechParameter != null && typeTechParamDto != null) {
-                repo.save(new TypeTechParameter(typeTechParamDto));
-                log.info("TypeTechParam was updated: {}", typeTechParamDto);
+            if (typeTechParameter != null && typeTechParam != null) {
+                repo.save(typeTechParam);
+                log.info("TypeTechParam was updated: {}", typeTechParam);
             } else {
                 log.error("TypeTechParam with ID: {} was not found", paramId);
                 throw new NoSuchElementException("TypeTechParam with ID: " + paramId + " was not found");

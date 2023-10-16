@@ -1,6 +1,5 @@
 package com.ekoregin.nms.entity;
 
-import com.ekoregin.nms.dto.TechParamDto;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -9,8 +8,11 @@ import lombok.*;
 @NoArgsConstructor
 @ToString
 @AllArgsConstructor
+@Builder
 @Entity(name = "tech_parameter")
 public class TechParameter {
+
+    private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,11 +24,5 @@ public class TechParameter {
 
     @Column(name = "value")
     private String value;
-
-    public TechParameter(TechParamDto techParamDto) {
-        id = techParamDto.getId();
-        type = new TypeTechParameter(techParamDto.getTypeTechParamDto());
-        value = techParamDto.getTechParamValue();
-    }
 }
 

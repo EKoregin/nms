@@ -1,15 +1,14 @@
 package com.ekoregin.nms.service;
 
-import com.ekoregin.nms.dto.TypeTechParamDto;
 import com.ekoregin.nms.entity.TypeTechParameter;
 
 import java.util.List;
 
 public interface TypeTechParameterService {
 
-    TypeTechParameter create(TypeTechParamDto typeTechParamDto);
+    TypeTechParameter create(TypeTechParameter typeTechParam);
 
-    void update(TypeTechParamDto typeTechParamDto);
+    void update(TypeTechParameter typeTechParam);
 
     void delete(long id);
 
