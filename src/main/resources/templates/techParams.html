@@ -40,17 +40,17 @@
                     <td th:text="${parameter.value}"></td>
                     <td>
                         <div class="container">
-<!--                        <div class="row">-->
-<!--                            <div class="col-2 col-md-5">-->
-<!--                                <a th:href="@{'/items/editForm/{itemId}'(itemId=${item.id})}"  class="btn btn-info" role="button">Редактировать</a>-->
-<!--                            </div>-->
-<!--                            <div class="col-2 col-md-5">-->
-<!--                                <form th:action="@{'/items/{id}'(id=${item.id})}" th:method="delete">-->
-<!--                                    <button type="submit" class="btn btn-danger">Delete</button>-->
-<!--                                </form>-->
-<!--                            </div>-->
-<!--                        </div>-->
-<!--                        </div>-->
+                        <div class="row">
+                            <div class="col-2 col-md-5">
+                                <a th:href="@{'/techParams/editForm/{techParamId}'(techParamId=${parameter.id})}"  class="btn btn-info" role="button">Редактировать</a>
+                            </div>
+                            <div class="col-2 col-md-5">
+                                <form th:action="@{'/techParams/{techParamId}'(techParamId=${parameter.id})}" th:method="delete">
+                                    <button type="submit" class="btn btn-danger">Delete</button>
+                                </form>
+                            </div>
+                        </div>
+                        </div>
                     </td>
                 </span>
             </tr>

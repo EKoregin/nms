@@ -10,10 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -26,10 +23,10 @@ public class TechParamController {
     private final TechParamService techParamService;
     private final TypeTechParameterService typeTechParamService;
 
-    @ModelAttribute(name = "techParameterDto")
-    public TechParameterDto techParameterDto() {
-        return new TechParameterDto();
-    }
+//    @ModelAttribute(name = "techParameterDto")
+//    public TechParameterDto techParameterDto() {
+//        return new TechParameterDto();
+//    }
 
     @ModelAttribute(name = "typeTechParams")
     public List<TypeTechParameter> typeTechParameterList() {
@@ -45,13 +42,40 @@ public class TechParamController {
 
     @GetMapping("/addForm")
     public String formCreateTechParam(Model model) {
+        model.addAttribute("techParameterDto", new TechParameterDto());
         return "addTechParam";
+    }
+
+    @GetMapping("/editForm/{techParamId}")
+    public String formEditTechParam(@PathVariable long techParamId, Model model) {
+        TechParameter techParameter = techParamService.findById(techParamId);
+        TechParameterDto techParameterDto = new TechParameterDto(techParameter);
+        model.addAttribute("techParameterDto", techParameterDto);
+        return "editTechParam";
     }
 
     @PostMapping("/create")
     public String create(@ModelAttribute TechParameterDto techParameterDto) {
         log.info("TechParamDto for save: {}", techParameterDto);
         techParamService.create(techParameterDto);
+        return "redirect:/techParams";
+    }
+
+    @PutMapping("/update")
+    public String update(@ModelAttribute TechParameterDto techParameterDto) {
+        log.info("TechParamDto for update: {}", techParameterDto);
+        long techParamId = techParameterDto.getId();
+        TypeTechParameter typeTechParameter = typeTechParamService.findById(techParameterDto.getTypeId());
+        TechParameter techParameter = techParamService.findById(techParamId);
+        techParameter.setValue(techParameterDto.getValue());
+        techParameter.setType(typeTechParameter);
+        techParamService.update(techParameter);
+        return "redirect:/techParams";
+    }
+
+    @DeleteMapping("/{techParamId}")
+    public String delete(@PathVariable("techParamId") long techParamId) {
+        techParamService.delete(techParamId);
         return "redirect:/techParams";
     }
 }
