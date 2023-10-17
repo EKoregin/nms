@@ -35,9 +35,12 @@ public class TechParamController {
         return "techParams";
     }
 
-    @GetMapping("/addForm")
-    public String formCreateTechParam(Model model) {
-        model.addAttribute("techParameterDto", new TechParameterDto());
+    @GetMapping("/addForm/{customerId}")
+    public String formCreateTechParam(@PathVariable long customerId, Model model) {
+        model.addAttribute("customerId");
+        TechParameterDto techParameterDto = new TechParameterDto();
+        techParameterDto.setCustomerId(customerId);
+        model.addAttribute("techParameterDto", techParameterDto);
         return "addTechParam";
     }
 
@@ -52,25 +55,28 @@ public class TechParamController {
     @PostMapping("/create")
     public String create(@ModelAttribute TechParameterDto techParameterDto) {
         log.info("TechParamDto for save: {}", techParameterDto);
+        long customerId = techParameterDto.getCustomerId();
         techParamService.create(techParameterDto);
-        return "redirect:/techParams";
+        return "redirect:/customers/editForm/" + customerId;
     }
 
     @PutMapping("/update")
     public String update(@ModelAttribute TechParameterDto techParameterDto) {
         log.info("TechParamDto for update: {}", techParameterDto);
         long techParamId = techParameterDto.getId();
+        long customerId = techParameterDto.getCustomerId();
         TypeTechParameter typeTechParameter = typeTechParamService.findById(techParameterDto.getTypeId());
         TechParameter techParameter = techParamService.findById(techParamId);
         techParameter.setValue(techParameterDto.getValue());
         techParameter.setType(typeTechParameter);
         techParamService.update(techParameter);
-        return "redirect:/techParams";
+        return "redirect:/customers/editForm/" + customerId;
     }
 
-    @DeleteMapping("/{techParamId}")
-    public String delete(@PathVariable("techParamId") long techParamId) {
+    @DeleteMapping("/{techParamId}/customer/{customerId}")
+    public String delete(@PathVariable long techParamId,
+                         @PathVariable long customerId) {
         techParamService.delete(techParamId);
-        return "redirect:/techParams";
+        return "redirect:/customers/editForm/" + customerId;
     }
 }

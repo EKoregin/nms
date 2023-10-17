@@ -15,10 +15,10 @@
 <div class="container">
     <div class="row pt3">
         <div class="card" style="width: 80%">
+            <div class="card-header">Изменение технического параметра</div>
             <div class="card-body">
                 <form th:action="@{/techParams/update}" th:method="PUT" th:object="${techParameterDto}">
                     <input type="hidden" th:field="*{id}">
-                    Select type param
                     <div class="form-group row">
                         <label for="typeTechParameter" class="col-sm-2 col-form-label">Тип параметра</label>
                         <div class="col-sm-8">
@@ -35,8 +35,9 @@
                             <input type="text" class="form-control" th:field="*{value}" id="techParamValue">
                         </div>
                     </div>
+                    <input type="hidden" th:field="*{customerId}">
                     <button type="submit" class="btn btn-primary">Сохранить</button>
-                    <a th:href="@{/techParams}" role="button" class="btn btn-primary">Отмена</a>
+                    <a th:href="@{'/customers/editForm/' + *{customerId}}" role="button" class="btn btn-primary">Отмена</a>
                 </form>
             </div>
         </div>

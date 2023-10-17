@@ -16,10 +16,13 @@ public class TechParameterDto {
 
     private Long typeId;
 
+    private Long customerId;
+
     public TechParameterDto(TechParameter parameter) {
         id = parameter.getId();
         value = parameter.getValue();
         typeId = parameter.getType().getId();
+        customerId = parameter.getCustomer().getId();
     }
 
 }

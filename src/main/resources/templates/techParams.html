@@ -30,6 +30,7 @@
             <tr>
                 <th scope="col">Тип параметра</th>
                 <th scope="col">Значение параметра</th>
+                <th scope="col">ID пользователя</th>
                 <th scope="col"></th>
             </tr>
             </thead>
@@ -38,6 +39,7 @@
                 <span>
                     <td th:text="${parameter.type.name}"></td>
                     <td th:text="${parameter.value}"></td>
+                    <td th:text="${parameter.customer.id}"></td>
                     <td>
                         <div class="container">
                         <div class="row">

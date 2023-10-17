@@ -18,7 +18,6 @@
             <div class="card-header">Новый параметр</div>
             <div class="card-body">
                 <form th:action="@{/techParams/create}" method="POST" th:object="${techParameterDto}">
-                    Select type param
                     <div class="form-group row">
                         <label for="typeTechParameter" class="col-sm-2 col-form-label">Тип параметра</label>
                         <div class="col-sm-8">
@@ -35,6 +34,7 @@
                             <input type="text" class="form-control" th:field="*{value}" id="techParamValue">
                         </div>
                     </div>
+                    <input type="hidden" th:field="*{customerId}">
                     <button type="submit" class="btn btn-primary">Сохранить</button>
                     <a th:href="@{/techParams}" role="button" class="btn btn-primary">Отмена</a>
                 </form>

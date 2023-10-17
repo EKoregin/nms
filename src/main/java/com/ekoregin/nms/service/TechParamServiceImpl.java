@@ -1,6 +1,7 @@
 package com.ekoregin.nms.service;
 
 import com.ekoregin.nms.dto.TechParameterDto;
+import com.ekoregin.nms.entity.Customer;
 import com.ekoregin.nms.entity.TechParameter;
 import com.ekoregin.nms.entity.TypeTechParameter;
 import com.ekoregin.nms.repository.TechParameterRepo;
@@ -18,11 +19,14 @@ public class TechParamServiceImpl implements TechParamService {
 
     private final TechParameterRepo repo;
     private final TypeTechParameterService typeTechParameterService;
+    private final CustomerService customerService;
 
     @Override
     public TechParameter create(TechParameterDto techParameterDto) {
         long typeId = techParameterDto.getTypeId();
+        long customerId = techParameterDto.getCustomerId();
         TypeTechParameter typeTechParameter = typeTechParameterService.findById(typeId);
+        Customer customer = customerService.findById(customerId);
         if (typeTechParameter == null) {
             log.error("TypeTechParam with ID: {} was not found", typeId);
             throw new NoSuchElementException("TypeTechParam with ID: " + typeId + " was not found");
@@ -30,6 +34,7 @@ public class TechParamServiceImpl implements TechParamService {
         TechParameter techParameter = TechParameter.builder()
                 .value(techParameterDto.getValue())
                 .type(typeTechParameter)
+                .customer(customer)
                 .build();
         repo.save(techParameter);
         log.info("TechParameter with ID: {} was created", techParameter.getId());
