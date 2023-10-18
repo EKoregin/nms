@@ -1,5 +1,6 @@
 package com.ekoregin.nms.entity;
 
+import com.ekoregin.nms.dto.ModelDeviceDto;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -22,4 +23,11 @@ public class ModelDevice {
 
     @Column(name = "manufacturer")
     private String manufacturer;
+
+    public ModelDevice(ModelDeviceDto modelDeviceDto) {
+        this.id = modelDeviceDto.getId();
+        this.type = modelDeviceDto.getType();
+        this.name = modelDeviceDto.getName();
+        this.manufacturer = modelDeviceDto.getManufacturer();
+    }
 }

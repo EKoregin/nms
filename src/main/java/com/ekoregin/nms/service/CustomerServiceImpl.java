@@ -25,6 +25,7 @@ public class CustomerServiceImpl implements CustomerService {
             customerRepo.save(customer);
             log.info("Customer with ID: {} was created", customer.getId());
         } else {
+            log.warn("CustomerDto is null");
             throw new NoSuchElementException("CustomerDto is null");
         }
         return customer;
@@ -48,7 +49,7 @@ public class CustomerServiceImpl implements CustomerService {
     public Customer findById(long id) {
         Customer customer = customerRepo.findById(id).orElse(null);
         if (customer == null) {
-            log.info("Customer with ID: {} not found!", id);
+            log.warn("Customer with ID: {} not found!", id);
             throw new NoSuchElementException("Customer with ID: " + id + " not found!");
         }
         return customer;

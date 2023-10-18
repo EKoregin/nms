@@ -10,6 +10,12 @@ CREATE TABLE IF NOT EXISTS device (
     device_name VARCHAR(255) NOT NULL default '',
     description VARCHAR(255) default '',
     ip inet NOT NULL,
+    login VARCHAR(255) DEFAULT 'admin',
+    password VARCHAR(255) DEFAULT 'admin',
+    snmp_community VARCHAR(255) DEFAULT 'public',
+    snmp_port INT DEFAULT 161,
+    manage_protocol VARCHAR(16) DEFAULT 'telnet',
+    manage_port INT DEFAULT 23,
     model_id INT NOT NULL,
     CONSTRAINT fk_model_device
         FOREIGN KEY (model_id)
