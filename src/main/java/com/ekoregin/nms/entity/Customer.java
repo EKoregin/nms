@@ -25,9 +25,6 @@ public class Customer {
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
     private List<TechParameter> params;
 
-    @Transient
-    private List<Check> checks;
-
     public Customer(CustomerDto customerDto) {
         id = customerDto.getId();
         name = customerDto.getName();
