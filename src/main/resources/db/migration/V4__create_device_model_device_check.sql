@@ -1,7 +1,8 @@
 CREATE TABLE IF NOT EXISTS model_device (
     id INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
     type_device VARCHAR(255) NOT NULL,
-    manufacturer VARCHAR(255) NOT NULL DEFAULT 'default manufacture'
+    name VARCHAR(255) NOT NULL DEFAULT 'Generic',
+    manufacturer VARCHAR(255) NOT NULL DEFAULT 'Generic'
 );
 
 CREATE TABLE IF NOT EXISTS device (

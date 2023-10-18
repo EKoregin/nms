@@ -1,19 +1,25 @@
 package com.ekoregin.nms.entity;
 
+import jakarta.persistence.*;
 import lombok.*;
 
 @Getter
 @Setter
 @NoArgsConstructor
-@ToString
 @AllArgsConstructor
+@Entity(name = "model_device")
 public class ModelDevice {
-    private Long id;
-    private TypeDevice type;
-    private String name;
-    private String manufacturer;
-}
 
-enum TypeDevice {
-    SWITCH, PON, ROUTER
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(name = "type_device")
+    private String type;
+
+    @Column(name = "name")
+    private String name;
+
+    @Column(name = "manufacturer")
+    private String manufacturer;
 }
