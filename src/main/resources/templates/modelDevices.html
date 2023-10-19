@@ -48,11 +48,11 @@
                             <div class="col-2 col-md-5">
                                 <a th:href="@{'/modelDevices/editForm/{modelId}'(modelId=${model.id})}"  class="btn btn-info" role="button">Редактировать</a>
                             </div>
-<!--                            <div class="col-2 col-md-5">-->
-<!--                                <form th:action="@{'/modelDevices/{modelId}'(modelId=${model.id})}" th:method="delete">-->
-<!--                                    <button type="submit" class="btn btn-danger">Delete</button>-->
-<!--                                </form>-->
-<!--                            </div>-->
+                            <div class="col-2 col-md-5">
+                                <form th:action="@{'/modelDevices/{modelId}'(modelId=${model.id})}" th:method="delete">
+                                    <button type="submit" class="btn btn-danger">Delete</button>
+                                </form>
+                            </div>
                         </div>
                         </div>
                     </td>
@@ -62,9 +62,7 @@
         </table>
     </div>
     <div class="row">
-        <a th:href="@{/modelDevices/addForm}" class="btn btn-info" role="button">Добавить</a>
-    </div>
-    <div class="row">
+        <a th:href="@{/modelDevices/addForm}" class="btn btn-info mr-1" role="button">Добавить</a>
         <a th:href="@{/}" class="btn btn-info" role="button">На главную</a>
     </div>
 </div>

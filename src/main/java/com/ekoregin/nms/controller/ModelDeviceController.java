@@ -64,4 +64,10 @@ public class ModelDeviceController {
         modelDeviceService.update(modelDeviceDto);
         return "redirect:/modelDevices";
     }
+
+    @DeleteMapping("/{modelId}")
+    public String delete(@PathVariable long modelId) {
+        modelDeviceService.delete(modelId);
+        return "redirect:/modelDevices";
+    }
 }
