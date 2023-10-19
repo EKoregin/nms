@@ -61,5 +61,9 @@ public class Device {
         this.ip = deviceDto.getIp();
         this.login = deviceDto.getLogin();
         this.password = deviceDto.getPassword();
+        this.snmpCommunity = "public";
+        this.snmpPort = 161;
+        this.protocol = "telnet";
+        this.port = 23;
     }
 }
