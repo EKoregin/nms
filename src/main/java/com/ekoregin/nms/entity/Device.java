@@ -1,5 +1,6 @@
 package com.ekoregin.nms.entity;
 
+import com.ekoregin.nms.dto.DeviceDto;
 import io.hypersistence.utils.hibernate.type.basic.Inet;
 import io.hypersistence.utils.hibernate.type.basic.PostgreSQLInetType;
 import jakarta.persistence.*;
@@ -52,4 +53,13 @@ public class Device {
     @ManyToOne
     @JoinColumn(name = "model_id")
     private ModelDevice model;
+
+    public Device(DeviceDto deviceDto) {
+        this.id = deviceDto.getId();
+        this.name = deviceDto.getName();
+        this.description = deviceDto.getDescription();
+        this.ip = deviceDto.getIp();
+        this.login = deviceDto.getLogin();
+        this.password = deviceDto.getPassword();
+    }
 }
