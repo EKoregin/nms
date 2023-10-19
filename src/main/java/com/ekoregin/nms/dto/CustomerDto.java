@@ -2,6 +2,7 @@ package com.ekoregin.nms.dto;
 
 
 import com.ekoregin.nms.entity.Customer;
+import com.ekoregin.nms.entity.Device;
 import com.ekoregin.nms.entity.TechParameter;
 import lombok.*;
 
@@ -21,10 +22,13 @@ public class CustomerDto {
 
     private List<TechParameter> params;
 
+    private List<Device> devices;
+
     public CustomerDto(Customer customer) {
         id = customer.getId();
         name = customer.getName();
         address = customer.getAddress();
         params = customer.getParams();
+        devices = customer.getDevices();
     }
 }

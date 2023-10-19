@@ -73,6 +73,46 @@
                         </div>
                     </div>
                     <p></p>
+                    <h3>Подключенное оборудование</h3>
+                    <hr>
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th scope="col">Название</th>
+                            <th scope="col">IP адрес</th>
+                            <th scope="col">Модель</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="device : *{devices}">
+                                <span>
+                                    <td th:text="${device.name}"></td>
+                                    <td th:text="${device.ip.address}"></td>
+                                    <td th:text="${device.model.name}"></td>
+                                    <td>
+                                        <div class="container">
+                                            <div class="row">
+                                                <div class="col-2 col-md-5">
+<!--                                                    <form th:action="@{'/techParams/' + ${parameter.id} + '/customer/' + *{id}}"-->
+<!--                                                          th:method="delete">-->
+<!--                                                        <button type="submit" class="btn btn-danger">Delete</button>-->
+<!--                                                    </form>-->
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </span>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <hr>
+                    <div class="row">
+                        <div class="col-5 col-md-5">
+                            <a th:href="@{'/customers/addDevice/{customerId}'(customerId=*{id})}"
+                               role="button" class="btn btn-success">Подключить к оборудованию</a>
+                        </div>
+                    </div>
+                    <p></p>
                     <button type="submit" class="btn btn-primary">Сохранить</button>
                     <a th:href="@{/customers}" role="button" class="btn btn-primary">Отмена</a>
                 </form>

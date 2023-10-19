@@ -12,12 +12,12 @@ import java.util.NoSuchElementException;
 
 @Slf4j
 @RequiredArgsConstructor
+@Transactional
 @Service
 public class TypeTechParamServiceImpl implements TypeTechParameterService{
 
     private final TypeTechParameterRepo repo;
 
-    @Transactional
     @Override
     public TypeTechParameter create(TypeTechParameter typeTechParam) {
         repo.save(typeTechParam);
@@ -25,7 +25,6 @@ public class TypeTechParamServiceImpl implements TypeTechParameterService{
         return typeTechParam;
     }
 
-    @Transactional
     @Override
     public void update(TypeTechParameter typeTechParam) {
             long paramId = typeTechParam != null ? typeTechParam.getId() : 0;
@@ -39,7 +38,6 @@ public class TypeTechParamServiceImpl implements TypeTechParameterService{
             }
     }
 
-    @Transactional
     @Override
     public void delete(long id) {
         repo.deleteById(id);

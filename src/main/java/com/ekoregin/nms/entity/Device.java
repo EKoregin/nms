@@ -7,6 +7,8 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.Type;
 
+import java.util.List;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -53,6 +55,14 @@ public class Device {
     @ManyToOne
     @JoinColumn(name = "model_id")
     private ModelDevice model;
+
+    @ManyToMany
+    @JoinTable(
+            name = "customer_device",
+            joinColumns = @JoinColumn(name = "device_id"),
+            inverseJoinColumns = @JoinColumn(name = "customer_id")
+    )
+    private List<Customer> customers;
 
     public Device(DeviceDto deviceDto) {
         this.id = deviceDto.getId();

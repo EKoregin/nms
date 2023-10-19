@@ -25,6 +25,14 @@ public class Customer {
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
     private List<TechParameter> params;
 
+    @ManyToMany
+    @JoinTable(
+            name = "customer_device",
+            joinColumns = @JoinColumn(name = "customer_id"),
+            inverseJoinColumns = @JoinColumn(name = "device_id")
+    )
+    private List<Device> devices;
+
     public Customer(CustomerDto customerDto) {
         id = customerDto.getId();
         name = customerDto.getName();

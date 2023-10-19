@@ -2,7 +2,9 @@ package com.ekoregin.nms.controller;
 
 import com.ekoregin.nms.dto.CustomerDto;
 import com.ekoregin.nms.entity.Customer;
+import com.ekoregin.nms.entity.Device;
 import com.ekoregin.nms.service.CustomerService;
+import com.ekoregin.nms.service.DeviceService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -18,6 +20,7 @@ import java.util.NoSuchElementException;
 public class CustomerController {
 
     private final CustomerService customerService;
+    private final DeviceService deviceService;
 
     @GetMapping
     public String allCustomers(Model model) {
@@ -60,6 +63,30 @@ public class CustomerController {
     public String delete(@PathVariable long customerId) {
         customerService.delete(customerId);
         return "redirect:/customers";
+    }
+
+    @GetMapping("/addDevice/{customerId}")
+    public String formAddDeviceToCustomer(@PathVariable long customerId, Model model) {
+        Customer foundCustomer = customerService.findById(customerId);
+        if (foundCustomer != null) {
+            CustomerDto customerDto = new CustomerDto(foundCustomer);
+            model.addAttribute("customerId", customerId);
+            model.addAttribute("allDevices", deviceService.findAll());
+        } else {
+            log.info("Customer with ID: {} not found", customerId);
+            throw new NoSuchElementException("Customer with ID: " + customerId + " not found");
+        }
+        return "addDeviceToCustomer";
+    }
+
+    @PostMapping("/addDeviceToCustomer")
+    public String addDeviceToCustomer(@RequestParam("customerId") long customerId,
+                                      @RequestParam("deviceId") long deviceId) {
+        Customer customer = customerService.findById(customerId);
+        Device device = deviceService.findById(deviceId);
+        customer.getDevices().add(device);
+        customerService.update(customer);
+        return "redirect:/customers/editForm/" + customerId;
     }
 
 }

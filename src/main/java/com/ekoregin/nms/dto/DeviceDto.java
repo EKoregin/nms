@@ -27,6 +27,8 @@ public class DeviceDto {
 
     private Long modelId;
 
+
+
     public DeviceDto(Device device) {
         this.id = device.getId();
         this.name = device.getName();

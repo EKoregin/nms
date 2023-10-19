@@ -1,7 +1,6 @@
 package com.ekoregin.nms.service;
 
 import com.ekoregin.nms.dto.ModelDeviceDto;
-import com.ekoregin.nms.entity.Customer;
 import com.ekoregin.nms.entity.ModelDevice;
 import com.ekoregin.nms.repository.ModelDeviceRepo;
 import lombok.RequiredArgsConstructor;
@@ -42,12 +41,6 @@ public class ModelDeviceServiceImpl implements ModelDeviceService {
     }
 
     @Override
-    public void delete(long id) {
-        modelDeviceRepo.deleteById(id);
-        log.info("ModelDevice with ID: {} was deleted", id);
-    }
-
-    @Override
     public ModelDevice findById(long id) {
         ModelDevice modelDevice = modelDeviceRepo.findById(id).orElse(null);
         if (modelDevice == null) {
@@ -60,5 +53,15 @@ public class ModelDeviceServiceImpl implements ModelDeviceService {
     @Override
     public List<ModelDevice> findAll() {
         return modelDeviceRepo.findAll();
+    }
+
+    @Override
+    public void delete(long id) {
+        try {
+            modelDeviceRepo.deleteById(id);
+            log.info("ModelDevice with ID: {} was deleted", id);
+        } catch (Exception e) {
+            log.error("Не могу удалить модель с ID: {}", id);
+        }
     }
 }
