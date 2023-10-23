@@ -1,10 +1,18 @@
 package com.ekoregin.nms.service;
 
+import com.ekoregin.nms.dto.CheckDto;
 import com.ekoregin.nms.entity.Check;
-import com.ekoregin.nms.entity.CheckResult;
-import com.ekoregin.nms.entity.Customer;
-import com.ekoregin.nms.entity.Device;
+
+import java.util.List;
 
 public interface CheckService {
-    CheckResult checkExec(Customer customer, Device device, Check check);
+    Check create(CheckDto checkDto);
+
+    void update(CheckDto checkDto);
+
+    void delete(long checkId);
+
+    Check findById(long checkId);
+
+    List<Check> findAll();
 }
