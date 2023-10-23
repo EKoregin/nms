@@ -34,7 +34,7 @@ public class Customer {
     private List<Device> devices;
 
     public Customer(CustomerDto customerDto) {
-        id = customerDto.getId();
+        id = customerDto.getCustomerId();
         name = customerDto.getName();
         address = customerDto.getAddress();
     }

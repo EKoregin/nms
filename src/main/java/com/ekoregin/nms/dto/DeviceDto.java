@@ -2,6 +2,7 @@ package com.ekoregin.nms.dto;
 
 import com.ekoregin.nms.entity.Device;
 import io.hypersistence.utils.hibernate.type.basic.Inet;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

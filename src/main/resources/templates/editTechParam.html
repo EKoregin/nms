@@ -18,7 +18,7 @@
             <div class="card-header">Изменение технического параметра</div>
             <div class="card-body">
                 <form th:action="@{/techParams/update}" th:method="PUT" th:object="${techParameterDto}">
-                    <input type="hidden" th:field="*{id}">
+                    <input type="hidden" th:field="*{getParamId}">
                     <div class="form-group row">
                         <label for="typeTechParameter" class="col-sm-2 col-form-label">Тип параметра</label>
                         <div class="col-sm-8">

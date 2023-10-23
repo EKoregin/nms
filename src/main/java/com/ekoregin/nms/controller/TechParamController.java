@@ -63,7 +63,7 @@ public class TechParamController {
     @PutMapping("/update")
     public String update(@ModelAttribute TechParameterDto techParameterDto) {
         log.info("TechParamDto for update: {}", techParameterDto);
-        long techParamId = techParameterDto.getId();
+        long techParamId = techParameterDto.getParamId();
         long customerId = techParameterDto.getCustomerId();
         TypeTechParameter typeTechParameter = typeTechParamService.findById(techParameterDto.getTypeId());
         TechParameter techParameter = techParamService.findById(techParamId);
@@ -76,6 +76,7 @@ public class TechParamController {
     @DeleteMapping("/{techParamId}/customer/{customerId}")
     public String delete(@PathVariable long techParamId,
                          @PathVariable long customerId) {
+        log.info("Delete techParam with ID {}, from customer ID: {}", techParamId, customerId);
         techParamService.delete(techParamId);
         return "redirect:/customers/editForm/" + customerId;
     }

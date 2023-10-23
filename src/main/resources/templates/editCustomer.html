@@ -18,7 +18,7 @@
             <div class="card-header">Изменение абонента</div>
             <div class="card-body">
                 <form th:action="@{/customers/update}" th:method="PUT" th:object="${customerDto}">
-                    <input type="hidden" th:field="*{id}">
+                    <input type="hidden" th:field="*{customerId}">
                     <div class="form-group row">
                         <label for="customerName" class="col-sm-2 col-form-label">Имя</label>
                         <div class="col-sm-8">
@@ -36,6 +36,7 @@
                     <table class="table">
                         <thead>
                             <tr>
+                                <th scope="col">ID</th>
                                 <th scope="col">Название</th>
                                 <th scope="col">Значение</th>
                             </tr>
@@ -43,17 +44,18 @@
                         <tbody>
                             <tr th:each="parameter : *{params}">
                                 <span>
+                                    <td th:text="${parameter.paramId}"></td>
                                     <td th:text="${parameter.type.name}"></td>
                                     <td th:text="${parameter.value}"></td>
                                     <td>
                                         <div class="container">
                                             <div class="row">
                                                 <div class="col-2 col-md-5">
-                                                    <a th:href="@{'/techParams/editForm/{techParamId}'(techParamId=${parameter.id})}"
+                                                    <a th:href="@{'/techParams/editForm/{techParamId}'(techParamId=${parameter.paramId})}"
                                                        class="btn btn-info" role="button">Редактировать</a>
                                                 </div>
                                                 <div class="col-2 col-md-5">
-                                                    <form th:action="@{'/techParams/' + ${parameter.id} + '/customer/' + *{id}}"
+                                                    <form th:action="@{'/techParams/' + ${parameter.paramId} + '/customer/' + *{customerId}}"
                                                           th:method="delete">
                                                         <button type="submit" class="btn btn-danger">Delete</button>
                                                     </form>
@@ -68,7 +70,7 @@
                     <hr>
                     <div class="row">
                         <div class="col-5 col-md-5">
-                            <a th:href="@{'/techParams/addForm/{customerId}'(customerId=*{id})}"
+                            <a th:href="@{'/techParams/addForm/{customerId}'(customerId=*{customerId})}"
                                role="button" class="btn btn-success">Добавить параметр</a>
                         </div>
                     </div>
@@ -78,6 +80,7 @@
                     <table class="table">
                         <thead>
                         <tr>
+                            <th scope="col">ID</th>
                             <th scope="col">Название</th>
                             <th scope="col">IP адрес</th>
                             <th scope="col">Модель</th>
@@ -86,6 +89,7 @@
                         <tbody>
                         <tr th:each="device : *{devices}">
                                 <span>
+                                    <td th:text="${device.id}"></td>
                                     <td th:text="${device.name}"></td>
                                     <td th:text="${device.ip.address}"></td>
                                     <td th:text="${device.model.name}"></td>
@@ -93,10 +97,10 @@
                                         <div class="container">
                                             <div class="row">
                                                 <div class="col-2 col-md-5">
-<!--                                                    <form th:action="@{'/techParams/' + ${parameter.id} + '/customer/' + *{id}}"-->
-<!--                                                          th:method="delete">-->
-<!--                                                        <button type="submit" class="btn btn-danger">Delete</button>-->
-<!--                                                    </form>-->
+                                                    <form th:action="@{'/customers/delDeviceFromCustomer/' + *{customerId} + '/device/' + ${device.id}}"
+                                                          th:method="delete">
+                                                        <button type="submit" class="btn btn-danger">Delete</button>
+                                                    </form>
                                                 </div>
                                             </div>
                                         </div>
@@ -108,7 +112,7 @@
                     <hr>
                     <div class="row">
                         <div class="col-5 col-md-5">
-                            <a th:href="@{'/customers/addDevice/{customerId}'(customerId=*{id})}"
+                            <a th:href="@{'/customers/addDevice/{customerId}'(customerId=*{customerId})}"
                                role="button" class="btn btn-success">Подключить к оборудованию</a>
                         </div>
                     </div>

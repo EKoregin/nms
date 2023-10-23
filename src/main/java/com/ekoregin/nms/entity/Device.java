@@ -6,6 +6,7 @@ import io.hypersistence.utils.hibernate.type.basic.PostgreSQLInetType;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.Type;
+import org.hibernate.validator.constraints.UniqueElements;
 
 import java.util.List;
 

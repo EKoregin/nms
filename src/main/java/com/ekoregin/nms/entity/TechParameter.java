@@ -16,7 +16,8 @@ public class TechParameter {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(name = "id")
+    private Long paramId;
 
     @OneToOne
     @JoinColumn(name = "type_tech_parameter_id")

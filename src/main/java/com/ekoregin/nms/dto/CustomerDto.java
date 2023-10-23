@@ -14,7 +14,7 @@ import java.util.List;
 @AllArgsConstructor
 public class CustomerDto {
 
-    private Long id;
+    private Long customerId;
 
     private String name;
 
@@ -25,7 +25,7 @@ public class CustomerDto {
     private List<Device> devices;
 
     public CustomerDto(Customer customer) {
-        id = customer.getId();
+        customerId = customer.getId();
         name = customer.getName();
         address = customer.getAddress();
         params = customer.getParams();

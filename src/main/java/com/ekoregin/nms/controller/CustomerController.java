@@ -89,4 +89,15 @@ public class CustomerController {
         return "redirect:/customers/editForm/" + customerId;
     }
 
+    @DeleteMapping("/delDeviceFromCustomer/{customerId}/device/{deviceId}")
+    public String delDeviceFromCustomer(@PathVariable long customerId,
+                                        @PathVariable long deviceId) {
+        log.info("Delete device with ID {}, from customer ID: {}", deviceId, customerId);
+        Customer foundCustomer = customerService.findById(customerId);
+        Device foundDevice = deviceService.findById(deviceId);
+        foundCustomer.getDevices().remove(foundDevice);
+        customerService.update(foundCustomer);
+        return "redirect:/customers/editForm/" + customerId;
+    }
+
 }

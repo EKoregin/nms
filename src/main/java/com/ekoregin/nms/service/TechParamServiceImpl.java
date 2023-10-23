@@ -39,13 +39,13 @@ public class TechParamServiceImpl implements TechParamService {
                 .customer(customer)
                 .build();
         repo.save(techParameter);
-        log.info("TechParameter with ID: {} was created", techParameter.getId());
+        log.info("TechParameter with ID: {} was created", techParameter.getParamId());
         return techParameter;
     }
 
     @Override
     public void update(TechParameter techParameter) {
-        long paramId = techParameter != null ? techParameter.getId() : 0;
+        long paramId = techParameter != null ? techParameter.getParamId() : 0;
         TechParameter techParameterFound = repo.findById(paramId).orElse(null);
         if (techParameterFound != null && techParameter != null) {
             repo.save(techParameter);

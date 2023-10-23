@@ -6,10 +6,12 @@ import com.ekoregin.nms.entity.ModelDevice;
 import com.ekoregin.nms.service.DeviceService;
 import com.ekoregin.nms.service.ModelDeviceService;
 import com.ekoregin.nms.util.TypeDevice;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;

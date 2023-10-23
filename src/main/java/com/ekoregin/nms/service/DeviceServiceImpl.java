@@ -4,11 +4,16 @@ import com.ekoregin.nms.dto.DeviceDto;
 import com.ekoregin.nms.entity.Device;
 import com.ekoregin.nms.entity.ModelDevice;
 import com.ekoregin.nms.repository.DeviceRepo;
+import jakarta.persistence.PersistenceException;
+import jakarta.validation.ConstraintViolationException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.engine.jdbc.spi.SqlExceptionHelper;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.SQLException;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -29,7 +34,12 @@ public class DeviceServiceImpl implements DeviceService {
             ModelDevice modelDevice = modelDeviceService.findById(modelId);
             device = new Device(deviceDto);
             device.setModel(modelDevice);
-            deviceRepo.save(device);
+            try {
+                deviceRepo.saveAndFlush(device);
+            } catch (ConstraintViolationException e) {
+//                log.error("Ошибка создания оборудования {}", deviceDto.getName());
+//                throw new RuntimeException("Ошибка создания оборудования :" + deviceDto.getName());
+            }
             log.info("Device with ID: {} was created", deviceDto.getId());
         } else {
             log.warn("DeviceDto is null");
@@ -47,7 +57,12 @@ public class DeviceServiceImpl implements DeviceService {
         device.setLogin(deviceDto.getLogin());
         device.setPassword(deviceDto.getPassword());
         device.setModel(modelDeviceService.findById(deviceDto.getModelId()));
-        deviceRepo.save(device);
+        try {
+            deviceRepo.save(device);
+        } catch (Exception e) {
+            log.error("Ошибка обновления оборудования с ID: {}", deviceDto.getId());
+            throw new RuntimeException();
+        }
     }
 
     @Override

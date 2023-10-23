@@ -10,7 +10,7 @@ import lombok.*;
 @AllArgsConstructor
 public class TechParameterDto {
 
-    private Long id;
+    private Long paramId;
 
     private String value;
 
@@ -19,7 +19,7 @@ public class TechParameterDto {
     private Long customerId;
 
     public TechParameterDto(TechParameter parameter) {
-        id = parameter.getId();
+        paramId = parameter.getParamId();
         value = parameter.getValue();
         typeId = parameter.getType().getId();
         customerId = parameter.getCustomer().getId();
