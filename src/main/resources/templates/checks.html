@@ -1,0 +1,62 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns="http://www.w3.org/1999/html" lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.7.0.js"
+            integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM="
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+            integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+            crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+            integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+            crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <title>Проверки</title>
+</head>
+<body>
+<div class="container">
+    <h1 class="display-4">Проверки</h1>
+    <div class="row">
+        <table class="table">
+            <thead>
+            <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Название</th>
+                <th scope="col">Тип проверки</th>
+                <th scope="col"></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="check : ${checks}">
+                    <td th:text="${check.checkId}"></td>
+                    <td th:text="${check.checkName}"></td>
+                    <td th:text="${check.checkType}"></td>
+                    <td>
+                        <div class="container">
+                        <div class="row">
+                                <a th:href="@{'/checks/editForm/{checkId}'(checkId=${check.checkId})}"  class="btn btn-info mr-1" role="button">Редактировать</a>
+                                <form th:action="@{'/checks/{checkId}'(checkId=${check.checkId})}" th:method="delete">
+                                    <button type="submit" class="btn btn-danger">Delete</button>
+                                </form>
+                        </div>
+                        </div>
+                    </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="row">
+        <a th:href="@{/checks/addForm}" class="btn btn-info mr-1" role="button">Добавить</a>
+        <a th:href="@{/}" class="btn btn-info" role="button">На главную</a>
+    </div>
+</div>
+</body>
+</html>
