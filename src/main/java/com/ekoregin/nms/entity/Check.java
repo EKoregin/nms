@@ -5,7 +5,6 @@ import lombok.*;
 @Getter
 @Setter
 @NoArgsConstructor
-@ToString
 @AllArgsConstructor
 public class Check {
     private Long id;

@@ -23,15 +23,6 @@ CREATE TABLE IF NOT EXISTS device (
             REFERENCES model_device(id)
 );
 
-CREATE TABLE IF NOT EXISTS checks (
-    id INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
-    name VARCHAR(255) NOT NULL DEFAULT '',
-    model_id INT NOT NULL,
-    CONSTRAINT fk_model_device
-        FOREIGN KEY (model_id)
-            REFERENCES model_device(id)
-);
-
 CREATE TABLE IF NOT EXISTS customer_device (
     id INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
     customer_id INT NOT NULL,
@@ -45,6 +36,13 @@ CREATE TABLE IF NOT EXISTS customer_device (
             REFERENCES device(id)
 );
 
+CREATE TABLE IF NOT EXISTS checks (
+    id INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+    check_name VARCHAR(255) NOT NULL DEFAULT '',
+    check_type VARCHAR(255) NOT NULL DEFAULT 'SNMP',
+    snmp_oid VARCHAR(255)
+);
+
 CREATE TABLE IF NOT EXISTS model_checks (
     id INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
     model_id INT NOT NULL,
@@ -52,5 +50,7 @@ CREATE TABLE IF NOT EXISTS model_checks (
     CONSTRAINT fk_model_device
         FOREIGN KEY (model_id)
             REFERENCES model_device(id),
-    CONSTRAINT fk_checks FOREIGN KEY (check_id) REFERENCES checks(id)
+    CONSTRAINT fk_checks
+        FOREIGN KEY (check_id)
+            REFERENCES checks(id)
 );
