@@ -4,6 +4,8 @@ import com.ekoregin.nms.dto.ModelDeviceDto;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -23,6 +25,14 @@ public class ModelDevice {
 
     @Column(name = "manufacturer")
     private String manufacturer;
+
+    @ManyToMany
+    @JoinTable(
+            name = "model_checks",
+            joinColumns = @JoinColumn(name = "check_id"),
+            inverseJoinColumns = @JoinColumn(name = "model_id")
+    )
+    private List<Check> checks;
 
     public ModelDevice(ModelDeviceDto modelDeviceDto) {
         this.id = modelDeviceDto.getId();
