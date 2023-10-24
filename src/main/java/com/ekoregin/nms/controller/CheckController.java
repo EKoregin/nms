@@ -1,12 +1,11 @@
 package com.ekoregin.nms.controller;
 
 import com.ekoregin.nms.dto.CheckDto;
-import com.ekoregin.nms.dto.CustomerDto;
 import com.ekoregin.nms.entity.Check;
-import com.ekoregin.nms.entity.Customer;
+import com.ekoregin.nms.entity.TypeTechParameter;
 import com.ekoregin.nms.service.CheckService;
+import com.ekoregin.nms.service.TypeTechParameterService;
 import com.ekoregin.nms.util.CheckType;
-import com.ekoregin.nms.util.TypeDevice;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -24,6 +23,7 @@ import java.util.NoSuchElementException;
 public class CheckController {
 
     private final CheckService checkService;
+    private final TypeTechParameterService typeTechParameterService;
 
     @GetMapping String allChecks(Model model) {
         model.addAttribute("checks", checkService.findAll());
@@ -69,5 +69,39 @@ public class CheckController {
     public String delete(@PathVariable long checkId) {
         checkService.delete(checkId);
         return "redirect:/checks";
+    }
+
+    @GetMapping("/addTypeParam/{checkId}")
+    public String formAddTypeParamToCheck(@PathVariable long checkId, Model model) {
+        Check foundCheck = checkService.findById(checkId);
+        if (foundCheck != null) {
+            model.addAttribute("checkId", checkId);
+            model.addAttribute("allTypeParams", typeTechParameterService.findAll());
+        } else {
+            log.info("Check with ID: {} not found", checkId);
+            throw new NoSuchElementException("Check with ID: " + checkId + " not found");
+        }
+        return "addTypeParamToCheck";
+    }
+
+    @PostMapping("/addTypeParamToCheck")
+    public String addTypeParamToCheck(@RequestParam("checkId") long checkId,
+                                      @RequestParam("typeParamId") long typeParamId) {
+        Check foundCheck = checkService.findById(checkId);
+        TypeTechParameter typeTechParameter = typeTechParameterService.findById(typeParamId);
+        foundCheck.getTypeTechParams().add(typeTechParameter);
+        checkService.update(foundCheck);
+        return "redirect:/checks/editForm/" + checkId;
+    }
+
+    @DeleteMapping("/delTypeParamFromCheck/{checkId}/typeParam/{typeParamId}")
+    public String delTypeParamFromCheck(@PathVariable long checkId,
+                                        @PathVariable long typeParamId) {
+        log.info("Delete typeTechParameter with ID {}, from Check ID: {}", typeParamId, checkId);
+        Check foundCheck = checkService.findById(checkId);
+        TypeTechParameter typeTechParameter = typeTechParameterService.findById(typeParamId);
+        foundCheck.getTypeTechParams().remove(typeTechParameter);
+        checkService.update(foundCheck);
+        return "redirect:/checks/editForm/" + checkId;
     }
 }

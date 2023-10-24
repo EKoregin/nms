@@ -10,6 +10,8 @@ public interface CheckService {
 
     void update(CheckDto checkDto);
 
+    void update(Check check);
+
     void delete(long checkId);
 
     Check findById(long checkId);

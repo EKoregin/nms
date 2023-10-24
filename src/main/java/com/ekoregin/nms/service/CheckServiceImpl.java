@@ -42,6 +42,11 @@ public class CheckServiceImpl implements CheckService{
     }
 
     @Override
+    public void update(Check check) {
+        checkRepo.save(check);
+    }
+
+    @Override
     public void delete(long checkId) {
         checkRepo.deleteById(checkId);
         log.info("Check with ID: {} was deleted", checkId);

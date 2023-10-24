@@ -28,11 +28,11 @@
                     <div class="form-group row">
                         <label for="checkType" class="col-sm-2 col-form-label">Тип проверки</label>
                         <div class="col-sm-8">
-                                <select th:field="*{checkType}" id="checkType">
-                                    <option th:each="type : ${checkTypes}"
-                                            th:value="${type}" th:text="${type}">
-                                    </option>
-                                </select>
+                            <select th:field="*{checkType}" id="checkType">
+                                <option th:each="type : ${checkTypes}"
+                                        th:value="${type}" th:text="${type}">
+                                </option>
+                            </select>
                         </div>
                     </div>
                     <div class="form-group row">
@@ -41,6 +41,45 @@
                             <input type="text" class="form-control" th:field="*{snmpOID}" id="snmpOID">
                         </div>
                     </div>
+
+
+                    <h3>Технические параметры</h3>
+                    <hr>
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th scope="col">ID</th>
+                            <th scope="col">Название</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="typeTechParam : *{typeTechParams}">
+                            <td th:text="${typeTechParam.id}"></td>
+                            <td th:text="${typeTechParam.name}"></td>
+                            <td>
+                                <div class="container">
+                                    <div class="row">
+                                        <div class="col-2 col-md-5">
+                                            <form th:action="@{'/checks/delTypeParamFromCheck/' + ${checkId} + '/typeParam/' + ${typeTechParam.id}}"
+                                                  th:method="delete">
+                                                <button type="submit" class="btn btn-danger">Delete</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <hr>
+                    <div class="row">
+                        <div class="col-5 col-md-5">
+                            <a th:href="@{'/checks/addTypeParam/{checkId}'(checkId=*{checkId})}"
+                               role="button" class="btn btn-success">Добавить тип параметра</a>
+                        </div>
+                    </div>
+                    <p></p>
+
 
                     <button type="submit" class="btn btn-primary">Сохранить</button>
                     <a th:href="@{'/checks'}" role="button" class="btn btn-primary">Отмена</a>
