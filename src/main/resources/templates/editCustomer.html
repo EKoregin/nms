@@ -35,36 +35,34 @@
                     <hr>
                     <table class="table">
                         <thead>
-                            <tr>
-                                <th scope="col">ID</th>
-                                <th scope="col">Название</th>
-                                <th scope="col">Значение</th>
-                            </tr>
+                        <tr>
+                            <th scope="col">ID</th>
+                            <th scope="col">Название</th>
+                            <th scope="col">Значение</th>
+                        </tr>
                         </thead>
                         <tbody>
-                            <tr th:each="parameter : *{params}">
-                                <span>
-                                    <td th:text="${parameter.paramId}"></td>
-                                    <td th:text="${parameter.type.name}"></td>
-                                    <td th:text="${parameter.value}"></td>
-                                    <td>
-                                        <div class="container">
-                                            <div class="row">
-                                                <div class="col-2 col-md-5">
-                                                    <a th:href="@{'/techParams/editForm/{techParamId}'(techParamId=${parameter.paramId})}"
-                                                       class="btn btn-info" role="button">Редактировать</a>
-                                                </div>
-                                                <div class="col-2 col-md-5">
-                                                    <form th:action="@{'/techParams/' + ${parameter.paramId} + '/customer/' + *{customerId}}"
-                                                          th:method="delete">
-                                                        <button type="submit" class="btn btn-danger">Delete</button>
-                                                    </form>
-                                                </div>
-                                            </div>
+                        <tr th:each="parameter : *{params}">
+                            <td th:text="${parameter.paramId}"></td>
+                            <td th:text="${parameter.type.name}"></td>
+                            <td th:text="${parameter.value}"></td>
+                            <td>
+                                <div class="container">
+                                    <div class="row">
+                                        <div class="col-2 col-md-5">
+                                            <a th:href="@{'/techParams/editForm/{techParamId}'(techParamId=${parameter.paramId})}"
+                                               class="btn btn-info" role="button">Редактировать</a>
                                         </div>
-                                    </td>
-                                </span>
-                            </tr>
+                                        <div class="col-2 col-md-5">
+                                            <form th:action="@{'/techParams/' + ${parameter.paramId} + '/customer/' + *{customerId}}"
+                                                  th:method="delete">
+                                                <button type="submit" class="btn btn-danger">Delete</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
                         </tbody>
                     </table>
                     <hr>
@@ -88,24 +86,22 @@
                         </thead>
                         <tbody>
                         <tr th:each="device : *{devices}">
-                                <span>
-                                    <td th:text="${device.id}"></td>
-                                    <td th:text="${device.name}"></td>
-                                    <td th:text="${device.ip.address}"></td>
-                                    <td th:text="${device.model.name}"></td>
-                                    <td>
-                                        <div class="container">
-                                            <div class="row">
-                                                <div class="col-2 col-md-5">
-                                                    <form th:action="@{'/customers/delDeviceFromCustomer/' + *{customerId} + '/device/' + ${device.id}}"
-                                                          th:method="delete">
-                                                        <button type="submit" class="btn btn-danger">Delete</button>
-                                                    </form>
-                                                </div>
-                                            </div>
+                            <td th:text="${device.id}"></td>
+                            <td th:text="${device.name}"></td>
+                            <td th:text="${device.ip.address}"></td>
+                            <td th:text="${device.model.name}"></td>
+                            <td>
+                                <div class="container">
+                                    <div class="row">
+                                        <div class="col-2 col-md-5">
+                                            <form th:action="@{'/customers/delDeviceFromCustomer/' + *{customerId} + '/device/' + ${device.id}}"
+                                                  th:method="delete">
+                                                <button type="submit" class="btn btn-danger">Delete</button>
+                                            </form>
                                         </div>
-                                    </td>
-                                </span>
+                                    </div>
+                                </div>
+                            </td>
                         </tr>
                         </tbody>
                     </table>
@@ -116,6 +112,25 @@
                                role="button" class="btn btn-success">Подключить к оборудованию</a>
                         </div>
                     </div>
+                    <p></p>
+                    <h3>Доступные проверки</h3>
+                    <hr>
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th scope="col">ID</th>
+                            <th scope="col">Название</th>
+                            <th scope="col">Тип</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="check : ${checks}">
+                            <td th:text="${check.checkId}"></td>
+                            <td th:text="${check.checkName}"></td>
+                            <td th:text="${check.checkType}"></td>
+                        </tr>
+                        </tbody>
+                    </table>
                     <p></p>
                     <button type="submit" class="btn btn-primary">Сохранить</button>
                     <a th:href="@{/customers}" role="button" class="btn btn-primary">Отмена</a>

@@ -1,6 +1,7 @@
 package com.ekoregin.nms.controller;
 
 import com.ekoregin.nms.dto.CustomerDto;
+import com.ekoregin.nms.entity.Check;
 import com.ekoregin.nms.entity.Customer;
 import com.ekoregin.nms.entity.Device;
 import com.ekoregin.nms.service.CustomerService;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.NoSuchElementException;
 
 @Slf4j
@@ -45,6 +47,11 @@ public class CustomerController {
         Customer foundCustomer = customerService.findById(customerId);
         if (foundCustomer != null) {
             CustomerDto customerDto = new CustomerDto(foundCustomer);
+            List<Check> checks = foundCustomer.getDevices().stream()
+                    .map(Device::getModel)
+                    .flatMap(modelDevice -> modelDevice.getChecks().stream())
+                    .toList();
+            model.addAttribute("checks", checks);
             model.addAttribute("customerDto", customerDto);
         } else {
             log.info("Customer with ID: {} not found", customerId);
