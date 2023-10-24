@@ -4,6 +4,8 @@ import com.ekoregin.nms.dto.CheckDto;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -25,6 +27,14 @@ public class Check {
 
     @Column(name = "snmp_oid")
     private String snmpOID;
+
+    @ManyToMany
+    @JoinTable(
+            name = "ttp_checks",
+            joinColumns = @JoinColumn(name = "check_id"),
+            inverseJoinColumns = @JoinColumn(name = "type_tech_parameter_id")
+    )
+    private List<TypeTechParameter> typeTechParams;
 
     public Check(CheckDto checkDto) {
         this.checkId = checkDto.getCheckId();
