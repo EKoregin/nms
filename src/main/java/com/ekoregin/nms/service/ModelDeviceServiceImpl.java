@@ -41,6 +41,11 @@ public class ModelDeviceServiceImpl implements ModelDeviceService {
     }
 
     @Override
+    public void update(ModelDevice modelDevice) {
+        modelDeviceRepo.save(modelDevice);
+    }
+
+    @Override
     public ModelDevice findById(long id) {
         ModelDevice modelDevice = modelDeviceRepo.findById(id).orElse(null);
         if (modelDevice == null) {

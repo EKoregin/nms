@@ -42,6 +42,49 @@
                             <input type="text" class="form-control" th:field="*{manufacturer}" id="manufacturer">
                         </div>
                     </div>
+
+
+                    <p></p>
+                    <h3>Подключенные проверки</h3>
+                    <hr>
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th scope="col">ID</th>
+                            <th scope="col">Тип</th>
+                            <th scope="col">Название</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="check : *{checks}">
+                            <td th:text="${check.checkId}"></td>
+                            <td th:text="${check.checkType}"></td>
+                            <td th:text="${check.checkName}"></td>
+                            <td>
+                                <div class="container">
+                                    <div class="row">
+                                        <div class="col-2 col-md-5">
+                                            <form th:action="@{'/modelDevices/delCheckFromModel/' + *{id} + '/check/' + ${check.checkId}}"
+                                                  th:method="delete">
+                                                <button type="submit" class="btn btn-danger">Delete</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <hr>
+                    <div class="row">
+                        <div class="col-5 col-md-5">
+                            <a th:href="@{'/modelDevices/addCheck/{modelId}'(modelId=*{id})}"
+                               role="button" class="btn btn-success">Подключить проверку</a>
+                        </div>
+                    </div>
+                    <p></p>
+
+
                     <button type="submit" class="btn btn-primary">Сохранить</button>
                     <a th:href="@{/modelDevices}" role="button" class="btn btn-primary">Отмена</a>
                 </form>

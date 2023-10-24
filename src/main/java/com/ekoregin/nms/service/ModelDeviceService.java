@@ -10,6 +10,8 @@ public interface ModelDeviceService {
 
     void update(ModelDeviceDto modelDeviceDto);
 
+    void update(ModelDevice modelDevice);
+
     void delete(long id);
 
     ModelDevice findById(long id);

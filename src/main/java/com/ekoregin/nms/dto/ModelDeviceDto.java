@@ -1,10 +1,13 @@
 package com.ekoregin.nms.dto;
 
+import com.ekoregin.nms.entity.Check;
 import com.ekoregin.nms.entity.ModelDevice;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.List;
 
 @Getter
 @Setter
@@ -20,10 +23,13 @@ public class ModelDeviceDto {
 
     private String manufacturer;
 
+    private List<Check> checks;
+
     public ModelDeviceDto(ModelDevice modelDevice) {
         this.id = modelDevice.getId();
         this.type = modelDevice.getType();
         this.name = modelDevice.getName();
         this.manufacturer = modelDevice.getManufacturer();
+        this.checks = modelDevice.getChecks();
     }
 }

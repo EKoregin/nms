@@ -29,8 +29,8 @@ public class ModelDevice {
     @ManyToMany
     @JoinTable(
             name = "model_checks",
-            joinColumns = @JoinColumn(name = "check_id"),
-            inverseJoinColumns = @JoinColumn(name = "model_id")
+            joinColumns = @JoinColumn(name = "model_id"),
+            inverseJoinColumns = @JoinColumn(name = "check_id")
     )
     private List<Check> checks;
 
