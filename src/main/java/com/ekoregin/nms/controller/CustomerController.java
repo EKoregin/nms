@@ -30,7 +30,7 @@ public class CustomerController {
 
     @GetMapping("/addForm")
     public String formCreateCustomer(Model model) {
-        model.addAttribute("customerDto", new Customer());
+        model.addAttribute("customerDto", new CustomerDto());
         return "addCustomer";
     }
 
