@@ -45,7 +45,6 @@
                     <div class="form-group row">
                         <label for="deviceIp" class="col-sm-2 col-form-label">IP адрес</label>
                         <div class="col-sm-8">
-<!--                            <input type="text" class="form-control" th:field="*{ip}" id="deviceIp">-->
                             <input type="text" class="form-control" th:name="ip" th:value="*{ip}" id="deviceIp">
                             <p th:if="${#fields.hasErrors('ip')}" th:errorclass="error" th:errors="*{ip}"></p>
                         </div>

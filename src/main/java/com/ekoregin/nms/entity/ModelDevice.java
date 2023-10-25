@@ -11,6 +11,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode
+@ToString
 @Entity(name = "model_device")
 public class ModelDevice {
 
@@ -27,7 +28,7 @@ public class ModelDevice {
     @Column(name = "manufacturer")
     private String manufacturer;
 
-    @OneToMany(mappedBy = "modelDevice", cascade = CascadeType.ALL)
+    @OneToMany(orphanRemoval = true, mappedBy = "modelDevice", cascade = CascadeType.ALL)
     private List<Check> checks;
 
     public ModelDevice(ModelDeviceDto modelDeviceDto) {

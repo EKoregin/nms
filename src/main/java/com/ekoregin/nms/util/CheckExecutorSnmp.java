@@ -5,7 +5,6 @@ import com.ekoregin.nms.service.ModelDeviceService;
 import io.hypersistence.utils.hibernate.type.basic.Inet;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 
 @Slf4j
@@ -13,7 +12,6 @@ import org.springframework.stereotype.Component;
 @Setter
 @RequiredArgsConstructor
 @Component
-@Primary
 public class CheckExecutorSnmp implements CheckExecutor {
 
     private final ModelDeviceService modelDeviceService;

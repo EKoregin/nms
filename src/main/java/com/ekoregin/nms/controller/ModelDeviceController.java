@@ -104,7 +104,9 @@ public class ModelDeviceController {
         log.info("Delete check with ID {}, from model ID: {}", checkId, modelId);
         ModelDevice foundModelDevice = modelDeviceService.findById(modelId);
         Check foundCheck = checkService.findById(checkId);
+        log.info(foundModelDevice.toString());
         foundModelDevice.getChecks().remove(foundCheck);
+        log.info(foundModelDevice.toString());
         modelDeviceService.update(foundModelDevice);
         return "redirect:/modelDevices/editForm/" + modelId;
     }

@@ -24,7 +24,8 @@ public class CheckServiceImpl implements CheckService{
     private final CheckRepo checkRepo;
     private final ModelDeviceService modelDeviceService;
     private final CustomerService customerService;
-    private final CheckExecutor checkExecutor;
+    private final CheckExecutor checkExecutorSnmp;
+    private final CheckExecutor checkExecutorTelnet;
 
     @Override
     public Check create(CheckDto checkDto) {
@@ -80,9 +81,12 @@ public class CheckServiceImpl implements CheckService{
     public CheckResult execute(long checkId, long customerId) {
         Check foundCheck = findById(checkId);
         Customer foundCustomer = customerService.findById(customerId);
-//        if (check.getCheckType().equals("SNMP")) {
-//            checkExecutor = ;
-//        }
-        return checkExecutor.checkExecute(foundCheck, foundCustomer);
+        CheckResult checkResult;
+        switch (foundCheck.getCheckType()) {
+            case "SNMP" -> checkResult = checkExecutorSnmp.checkExecute(foundCheck, foundCustomer);
+            case "TELNET" -> checkResult = checkExecutorTelnet.checkExecute(foundCheck, foundCustomer);
+            default -> throw new IllegalArgumentException("That method not support!");
+        }
+        return checkResult;
     }
 }
