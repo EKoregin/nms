@@ -16,7 +16,7 @@
     <h2 class="display-4">Модели</h2>
     <div class="row pt3">
         <div class="card" style="width: 80%">
-            <div class="card-header">Изменение модели</div>
+            <h5 class="card-header">Изменение модели</h5>
             <div class="card-body">
                 <form th:action="@{/modelDevices/update}" th:method="PUT" th:object="${modelDeviceDto}">
                     <input type="hidden" th:field="*{id}">

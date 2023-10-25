@@ -15,7 +15,7 @@
 <div class="container">
     <div class="row pt3">
         <div class="card" style="width: 80%">
-            <div class="card-header">Изменение технического параметра</div>
+            <h5 class="card-header">Изменение технического параметра</h5>
             <div class="card-body">
                 <form th:action="@{/techParams/update}" th:method="PUT" th:object="${techParameterDto}">
                     <input type="hidden" th:field="*{paramId}">

@@ -15,7 +15,7 @@
 <div class="container">
     <div class="row pt3">
         <div class="card" style="width: 80%">
-            <div class="card-header">Изменение проверки</div>
+            <h5 class="card-header">Изменение проверки</h5>
             <div class="card-body">
                 <form th:action="@{/checks/update}" th:method="PUT" th:object="${checkDto}">
                     <input type="hidden" th:field="*{checkId}">

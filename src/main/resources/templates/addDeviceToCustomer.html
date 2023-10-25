@@ -15,7 +15,7 @@
 <div class="container">
     <div class="row pt3">
         <div class="card" style="width: 80%">
-            <div class="card-header">Подключение абонента к оборудованию</div>
+            <h5 class="card-header">Подключение абонента к оборудованию</h5>
             <div class="card-body">
                 <form th:action="@{/customers/addDeviceToCustomer}" method="POST">
                     <input type="hidden" th:name="customerId" th:value="${customerId}">

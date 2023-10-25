@@ -16,7 +16,7 @@
     <h2 class="display-4">Оборудование</h2>
     <div class="row pt3">
         <div class="card" style="width: 80%">
-            <div class="card-header">Редактирование оборудование</div>
+            <h5 class="card-header">Редактирование оборудование</h5>
             <div class="card-body">
                 <form th:action="@{/devices/update}" th:method="PUT" th:object="${deviceDto}">
                     <input type="hidden" th:field="*{id}">
