@@ -37,16 +37,16 @@
             </thead>
             <tbody>
             <tr th:each="model : ${models}">
-                <span>
-                    <td th:text="${model.id}"></td>
-                    <td th:text="${model.type}"></td>
-                    <td th:text="${model.name}"></td>
-                    <td th:text="${model.manufacturer}"></td>
-                    <td>
-                        <div class="container">
+                <td th:text="${model.id}"></td>
+                <td th:text="${model.type}"></td>
+                <td th:text="${model.name}"></td>
+                <td th:text="${model.manufacturer}"></td>
+                <td>
+                    <div class="container">
                         <div class="row">
                             <div class="col-2 col-md-5">
-                                <a th:href="@{'/modelDevices/editForm/{modelId}'(modelId=${model.id})}"  class="btn btn-info" role="button">Редактировать</a>
+                                <a th:href="@{'/modelDevices/editForm/{modelId}'(modelId=${model.id})}"
+                                   class="btn btn-info" role="button">Редактировать</a>
                             </div>
                             <div class="col-2 col-md-5">
                                 <form th:action="@{'/modelDevices/{modelId}'(modelId=${model.id})}" th:method="delete">
@@ -54,9 +54,8 @@
                                 </form>
                             </div>
                         </div>
-                        </div>
-                    </td>
-                </span>
+                    </div>
+                </td>
             </tr>
             </tbody>
         </table>

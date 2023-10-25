@@ -23,6 +23,8 @@ public class CheckDto {
 
     private String snmpOID;
 
+    private Long modelDeviceId;
+
     private List<TypeTechParameter> typeTechParams;
 
     public CheckDto(Check check) {
@@ -31,5 +33,6 @@ public class CheckDto {
         this.checkType = check.getCheckType();
         this.snmpOID = check.getSnmpOID();
         this.typeTechParams = check.getTypeTechParams();
+        this.modelDeviceId = check.getModelDevice().getId();
     }
 }

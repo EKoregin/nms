@@ -2,6 +2,7 @@ package com.ekoregin.nms.service;
 
 import com.ekoregin.nms.dto.CheckDto;
 import com.ekoregin.nms.entity.Check;
+import com.ekoregin.nms.entity.ModelDevice;
 import com.ekoregin.nms.repository.CheckRepo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,12 +19,15 @@ import java.util.NoSuchElementException;
 public class CheckServiceImpl implements CheckService{
 
     private final CheckRepo checkRepo;
+    private final ModelDeviceService modelDeviceService;
 
     @Override
     public Check create(CheckDto checkDto) {
         Check check;
         if (checkDto != null) {
+            ModelDevice modelDevice = modelDeviceService.findById(checkDto.getModelDeviceId());
             check = new Check(checkDto);
+            check.setModelDevice(modelDevice);
             log.info("Check with ID: {} was created", checkRepo.save(check).getCheckId());
         } else {
             log.warn("CheckDto is null");

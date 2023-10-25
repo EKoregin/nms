@@ -40,9 +40,9 @@
                             <input type="text" class="form-control" th:field="*{snmpOID}" id="snmpOID">
                         </div>
                     </div>
-
+                    <input type="hidden" th:field="*{modelDeviceId}">
                     <button type="submit" class="btn btn-primary">Сохранить</button>
-                    <a th:href="@{'/checks'}" role="button" class="btn btn-primary">Отмена</a>
+                    <a th:href="@{'/modelDevices/editForm/' + *{modelDeviceId}}" role="button" class="btn btn-primary">Отмена</a>
                 </form>
             </div>
         </div>

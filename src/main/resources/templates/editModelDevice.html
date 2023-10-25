@@ -64,6 +64,10 @@
                                 <div class="container">
                                     <div class="row">
                                         <div class="col-2 col-md-5">
+                                            <a th:href="@{'/checks/editForm/{checkId}'(checkId=${check.checkId})}"
+                                               class="btn btn-info" role="button">Редактировать</a>
+                                        </div>
+                                        <div class="col-2 col-md-5">
                                             <form th:action="@{'/modelDevices/delCheckFromModel/' + *{id} + '/check/' + ${check.checkId}}"
                                                   th:method="delete">
                                                 <button type="submit" class="btn btn-danger">Delete</button>
@@ -78,8 +82,8 @@
                     <hr>
                     <div class="row">
                         <div class="col-5 col-md-5">
-                            <a th:href="@{'/modelDevices/addCheck/{modelId}'(modelId=*{id})}"
-                               role="button" class="btn btn-success">Подключить проверку</a>
+                            <a th:href="@{'/checks/addForm/{modelId}'(modelId=*{id})}"
+                               role="button" class="btn btn-success">Добавить проверку</a>
                         </div>
                     </div>
                     <p></p>

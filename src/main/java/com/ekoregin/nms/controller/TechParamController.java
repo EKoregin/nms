@@ -37,7 +37,7 @@ public class TechParamController {
 
     @GetMapping("/addForm/{customerId}")
     public String formCreateTechParam(@PathVariable long customerId, Model model) {
-        model.addAttribute("customerId");
+        model.addAttribute("customerId", customerId);
         TechParameterDto techParameterDto = new TechParameterDto();
         techParameterDto.setCustomerId(customerId);
         model.addAttribute("techParameterDto", techParameterDto);

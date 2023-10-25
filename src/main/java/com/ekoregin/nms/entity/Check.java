@@ -28,6 +28,10 @@ public class Check {
     @Column(name = "snmp_oid")
     private String snmpOID;
 
+    @ManyToOne
+    @JoinColumn(name = "model_device_id")
+    private ModelDevice modelDevice;
+
     @ManyToMany
     @JoinTable(
             name = "ttp_checks",

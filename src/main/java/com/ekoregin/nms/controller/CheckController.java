@@ -30,18 +30,21 @@ public class CheckController {
         return "checks";
     }
 
-    @GetMapping("/addForm")
-    public String formCreateCheck(Model model) {
+    @GetMapping("/addForm/{modelDeviceId}")
+    public String formCreateCheck(@PathVariable long modelDeviceId, Model model) {
+//        model.addAttribute("modelDeviceId", modelDeviceId);
         List<String> checkTypes = Arrays.stream(CheckType.class.getEnumConstants()).map(Enum::name).toList();
         model.addAttribute("checkTypes", checkTypes);
-        model.addAttribute("checkDto", new CheckDto());
+        CheckDto checkDto = new CheckDto();
+        checkDto.setModelDeviceId(modelDeviceId);
+        model.addAttribute("checkDto", checkDto);
         return "addCheck";
     }
 
     @PostMapping("/create")
     public String create(@ModelAttribute CheckDto checkDto) {
         checkService.create(checkDto);
-        return "redirect:/checks";
+        return "redirect:/modelDevices/editForm/" + checkDto.getModelDeviceId();
     }
 
     @GetMapping("/editForm/{checkId}")
@@ -62,7 +65,7 @@ public class CheckController {
     @PutMapping("/update")
     public String update(@ModelAttribute CheckDto checkDto) {
         checkService.update(checkDto);
-        return "redirect:/checks";
+        return "redirect:/modelDevices/editForm/" + checkDto.getModelDeviceId();
     }
 
     @DeleteMapping("/{checkId}")

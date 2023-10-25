@@ -26,12 +26,7 @@ public class ModelDevice {
     @Column(name = "manufacturer")
     private String manufacturer;
 
-    @ManyToMany
-    @JoinTable(
-            name = "model_checks",
-            joinColumns = @JoinColumn(name = "model_id"),
-            inverseJoinColumns = @JoinColumn(name = "check_id")
-    )
+    @OneToMany(mappedBy = "modelDevice", cascade = CascadeType.ALL)
     private List<Check> checks;
 
     public ModelDevice(ModelDeviceDto modelDeviceDto) {
