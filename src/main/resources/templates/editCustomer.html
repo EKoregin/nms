@@ -31,8 +31,7 @@
                             <input type="text" class="form-control" th:field="*{address}" id="customerAddress">
                         </div>
                     </div>
-                    <h3>Параметры</h3>
-                    <hr>
+                    <h5 class="card-header">Параметры</h5>
                     <table class="table">
                         <thead>
                         <tr>
@@ -73,8 +72,7 @@
                         </div>
                     </div>
                     <p></p>
-                    <h3>Подключенное оборудование</h3>
-                    <hr>
+                    <h5 class="card-header">Подключенное оборудование</h5>
                     <table class="table">
                         <thead>
                         <tr>
@@ -113,8 +111,7 @@
                         </div>
                     </div>
                     <p></p>
-                    <h3>Доступные проверки</h3>
-                    <hr>
+                    <h5 class="card-header">Доступные проверки</h5>
                     <table class="table">
                         <thead>
                         <tr>
@@ -128,6 +125,18 @@
                             <td th:text="${check.checkId}"></td>
                             <td th:text="${check.checkName}"></td>
                             <td th:text="${check.checkType}"></td>
+                            <td>
+                                <div class="container">
+                                    <div class="row">
+                                        <div class="col-2 col-md-5">
+                                            <form th:action="@{'/checks/' + ${check.checkId} + '/customer/' + *{customerId}}"
+                                                  th:method="GET">
+                                                <button type="submit" class="btn btn-info">Проверить</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
                         </tr>
                         </tbody>
                     </table>

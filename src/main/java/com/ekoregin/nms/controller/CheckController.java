@@ -2,6 +2,7 @@ package com.ekoregin.nms.controller;
 
 import com.ekoregin.nms.dto.CheckDto;
 import com.ekoregin.nms.entity.Check;
+import com.ekoregin.nms.entity.CheckResult;
 import com.ekoregin.nms.entity.TypeTechParameter;
 import com.ekoregin.nms.service.CheckService;
 import com.ekoregin.nms.service.TypeTechParameterService;
@@ -106,5 +107,12 @@ public class CheckController {
         foundCheck.getTypeTechParams().remove(typeTechParameter);
         checkService.update(foundCheck);
         return "redirect:/checks/editForm/" + checkId;
+    }
+
+    @GetMapping("/{checkId}/customer/{customerId}")
+    @ResponseBody
+    public CheckResult checkExecute(@PathVariable long checkId,
+                                    @PathVariable long customerId) {
+        return checkService.execute(checkId, customerId);
     }
 }

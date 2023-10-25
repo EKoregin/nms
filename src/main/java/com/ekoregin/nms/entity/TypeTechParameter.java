@@ -9,8 +9,8 @@ import lombok.*;
 @Getter
 @Setter
 @NoArgsConstructor
-@ToString
 @AllArgsConstructor
+@EqualsAndHashCode
 @Entity(name = "type_tech_parameter")
 public class TypeTechParameter {
 

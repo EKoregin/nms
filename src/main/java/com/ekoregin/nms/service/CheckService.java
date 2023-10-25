@@ -2,7 +2,7 @@ package com.ekoregin.nms.service;
 
 import com.ekoregin.nms.dto.CheckDto;
 import com.ekoregin.nms.entity.Check;
-
+import com.ekoregin.nms.entity.CheckResult;
 import java.util.List;
 
 public interface CheckService {
@@ -17,4 +17,6 @@ public interface CheckService {
     Check findById(long checkId);
 
     List<Check> findAll();
+
+    CheckResult execute(long checkId, long customerId);
 }

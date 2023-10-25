@@ -2,8 +2,11 @@ package com.ekoregin.nms.service;
 
 import com.ekoregin.nms.dto.CheckDto;
 import com.ekoregin.nms.entity.Check;
+import com.ekoregin.nms.entity.CheckResult;
+import com.ekoregin.nms.entity.Customer;
 import com.ekoregin.nms.entity.ModelDevice;
 import com.ekoregin.nms.repository.CheckRepo;
+import com.ekoregin.nms.util.CheckExecutor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -20,6 +23,8 @@ public class CheckServiceImpl implements CheckService{
 
     private final CheckRepo checkRepo;
     private final ModelDeviceService modelDeviceService;
+    private final CustomerService customerService;
+    private final CheckExecutor checkExecutor;
 
     @Override
     public Check create(CheckDto checkDto) {
@@ -69,5 +74,15 @@ public class CheckServiceImpl implements CheckService{
     @Override
     public List<Check> findAll() {
         return checkRepo.findAll();
+    }
+
+    @Override
+    public CheckResult execute(long checkId, long customerId) {
+        Check foundCheck = findById(checkId);
+        Customer foundCustomer = customerService.findById(customerId);
+//        if (check.getCheckType().equals("SNMP")) {
+//            checkExecutor = ;
+//        }
+        return checkExecutor.checkExecute(foundCheck, foundCustomer);
     }
 }
