@@ -36,7 +36,6 @@ public class SnmpClient {
     }
 
     private CommunityTarget<UdpAddress> getTarget(String community) {
-        // Create Target Address object
         CommunityTarget<UdpAddress> communityTarget = new CommunityTarget<>();
         communityTarget.setCommunity(new OctetString(community));
         communityTarget.setVersion(snmpVersion);
@@ -68,7 +67,6 @@ public class SnmpClient {
                 startTransport();
                 CommunityTarget<UdpAddress> communityTarget = getTarget(community);
 
-                // Create the PDU object
                 PDU pdu = new PDU();
                 pdu.add(new VariableBinding(new OID(snmpOID)));
                 pdu.setType(PDU.GET);
@@ -78,7 +76,6 @@ public class SnmpClient {
                 ResponseEvent<UdpAddress> response;
                 response = snmp.get(pdu, communityTarget);
 
-                // Process Agent Response
                 if (response != null) {
                     log.info("Got Response from Agent {}:{}", ipAddress, port);
                     PDU responsePDU = response.getResponse();

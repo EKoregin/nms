@@ -113,6 +113,7 @@ public class CheckController {
     @ResponseBody
     public CheckResult checkExecute(@PathVariable long checkId,
                                     @PathVariable long customerId) {
+        log.info("Run Check with ID: {} for cCustomer with ID: {}", checkId, customerId);
         return checkService.execute(checkId, customerId);
     }
 }
