@@ -2,7 +2,6 @@ package com.ekoregin.nms.util;
 
 import com.ekoregin.nms.entity.*;
 import com.ekoregin.nms.service.ModelDeviceService;
-import io.hypersistence.utils.hibernate.type.basic.Inet;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -21,22 +20,30 @@ import java.util.Map;
 public class CheckExecutorSnmp implements CheckExecutor {
 
     private final ModelDeviceService modelDeviceService;
+    private final SnmpClient snmpClient;
 
     @Override
     public CheckResult checkExecute(Check check, Customer customer) {
         log.info("Starting check execute with SNMP");
-        // Получаем модель на основании проверки
-        ModelDevice modelDevice = modelDeviceService.findById(check.getModelDevice().getId());
-
-        //Получаем устройство у которого совпадает модель
-        Device checkDevice = customer.getDevices().stream()
-                .filter(device -> device.getModel().equals(modelDevice))
-                .findFirst().orElse(null);
-
+        Device checkDevice = getDeviceForCheck(check, customer);
         if (checkDevice == null)
             throw new RuntimeException("Check device cannot be null!");
+        Map<String, String> paramsForCheck = getParamsForCheck(check, customer);
+        String snmpOID = updateVariablesInOIDwithValues(check.getSnmpOID(), paramsForCheck);
+        String community = checkDevice.getSnmpCommunity();
+        snmpClient.setIpAddress(checkDevice.getIp().getAddress());
+        snmpClient.setPort(String.valueOf(checkDevice.getSnmpPort()));
+        return snmpClient.snmpGet(community, snmpOID);
+    }
 
-        // Получаем необходимые для проверки параметры и сохраняем их в мапу
+    private Device getDeviceForCheck(Check check, Customer customer){
+        ModelDevice modelDevice = modelDeviceService.findById(check.getModelDevice().getId());
+        return customer.getDevices().stream()
+                .filter(device -> device.getModel().equals(modelDevice))
+                .findFirst().orElse(null);
+    }
+
+    private Map<String, String> getParamsForCheck(Check check, Customer customer) {
         Map<String, String> paramsForCheck = new HashMap<>();
         for (TypeTechParameter type : check.getTypeTechParams()) {
             String paramValue = customer.getParams().stream()
@@ -45,18 +52,7 @@ public class CheckExecutorSnmp implements CheckExecutor {
                     .findFirst().orElse(Strings.EMPTY);
             paramsForCheck.put(type.getName(), paramValue);
         }
-
-        log.info("Params and values: {}", paramsForCheck);
-        // Необходимо в конечном OID заменить пераметры типа {PORT} на значения, указанные у пользователя
-        String snmpOID = updateVariablesInOIDwithValues(check.getSnmpOID(), paramsForCheck);
-        Inet ipDevice = checkDevice.getIp();
-        String community = checkDevice.getSnmpCommunity();
-
-        return CheckResult.builder()
-                .status(CheckResultStatus.OK)
-                .id(1L)
-                .result("IP: " + ipDevice.getAddress() + ", community: " + community + ", OID: " + snmpOID)
-                .build();
+        return paramsForCheck;
     }
 
     private String updateVariablesInOIDwithValues(String sourceOID, Map<String, String> params) {
