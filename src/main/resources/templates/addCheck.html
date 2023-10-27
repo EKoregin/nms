@@ -27,11 +27,11 @@
                     <div class="form-group row">
                         <label for="checkType" class="col-sm-2 col-form-label">Тип проверки</label>
                         <div class="col-sm-8">
-                                <select th:field="*{checkType}" id="checkType">
-                                    <option th:each="type : ${checkTypes}"
-                                            th:value="${type}" th:text="${type}">
-                                    </option>
-                                </select>
+                            <select th:field="*{checkType}" id="checkType">
+                                <option th:each="type : ${checkTypes}"
+                                        th:value="${type}" th:text="${type}">
+                                </option>
+                            </select>
                         </div>
                     </div>
                     <div class="form-group row">
@@ -40,9 +40,29 @@
                             <input type="text" class="form-control" th:field="*{snmpOID}" id="snmpOID">
                         </div>
                     </div>
+                    <div class="form-group row">
+                        <label for="telnetCommands" class="col-sm-2 col-form-label">Команды TELNET</label>
+                        <div class="col-sm-8">
+                            <textarea class="form-control" th:field="*{telnetCommands}" id="telnetCommands" rows="2"></textarea>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="description" class="col-sm-2 col-form-label">Описание</label>
+                        <div class="col-sm-8">
+                            <textarea class="form-control" th:field="*{description}" id="description" rows="5"></textarea>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="substRules" class="col-sm-2 col-form-label">Правила подстановки</label>
+                        <div class="col-sm-8">
+                            <textarea class="form-control" th:field="*{substRules}" id="substRules" rows="2"
+                                      placeholder="1=UP// в результате вместо 1 будет выводится UP"></textarea>
+                        </div>
+                    </div>
                     <input type="hidden" th:field="*{modelDeviceId}">
                     <button type="submit" class="btn btn-primary">Сохранить</button>
-                    <a th:href="@{'/modelDevices/editForm/' + *{modelDeviceId}}" role="button" class="btn btn-primary">Отмена</a>
+                    <a th:href="@{'/modelDevices/editForm/' + *{modelDeviceId}}" role="button"
+                       class="btn btn-primary">Отмена</a>
                 </form>
             </div>
         </div>

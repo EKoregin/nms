@@ -23,7 +23,13 @@ public class CheckDto {
 
     private String snmpOID;
 
+    private String telnetCommands;
+
     private Long modelDeviceId;
+
+    private String description;
+
+    private String substRules;
 
     private List<TypeTechParameter> typeTechParams;
 
@@ -34,5 +40,8 @@ public class CheckDto {
         this.snmpOID = check.getSnmpOID();
         this.typeTechParams = check.getTypeTechParams();
         this.modelDeviceId = check.getModelDevice().getId();
+        this.description = check.getDescription();
+        this.description = check.getTelnetCommands();
+        this.substRules = check.getSubstRules();
     }
 }

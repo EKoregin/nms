@@ -28,6 +28,15 @@ public class Check {
     @Column(name = "snmp_oid")
     private String snmpOID;
 
+    @Column(name = "telnet_commands")
+    private String telnetCommands;
+
+    @Column(name = "description")
+    private String description;
+
+    @Column(name = "subst_rules")
+    private String substRules;
+
     @ManyToOne
     @JoinColumn(name = "model_device_id")
     private ModelDevice modelDevice;
@@ -45,5 +54,8 @@ public class Check {
         this.checkName = checkDto.getCheckName();
         this.checkType = checkDto.getCheckType();
         this.snmpOID = checkDto.getSnmpOID();
+        this.description = checkDto.getDescription();
+        this.telnetCommands = checkDto.getTelnetCommands();
+        this.substRules = checkDto.getSubstRules();
     }
 }

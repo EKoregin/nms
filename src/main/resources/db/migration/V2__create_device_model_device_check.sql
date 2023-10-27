@@ -65,6 +65,9 @@ CREATE TABLE IF NOT EXISTS checks
     check_name      VARCHAR(255) NOT NULL DEFAULT '',
     check_type      VARCHAR(255) NOT NULL DEFAULT 'SNMP',
     snmp_oid        VARCHAR(255),
+    telnet_commands TEXT,
+    description     TEXT,
+    subst_rules     TEXT,
     model_device_id INT          NOT NULL,
     CONSTRAINT fk_model_device
         FOREIGN KEY (model_device_id)
