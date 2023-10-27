@@ -1,13 +1,21 @@
 package com.ekoregin.nms.util;
 
-import com.ekoregin.nms.entity.Check;
-import com.ekoregin.nms.entity.CheckResult;
-import com.ekoregin.nms.entity.Customer;
+import com.ekoregin.nms.entity.*;
+import com.ekoregin.nms.service.ModelDeviceService;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import net.sf.expectit.Expect;
+import net.sf.expectit.ExpectBuilder;
+import net.sf.expectit.Result;
+import org.apache.commons.net.telnet.TelnetClient;
 import org.springframework.stereotype.Component;
+
+import java.io.IOException;
+import java.util.Map;
+
+import static net.sf.expectit.matcher.Matchers.contains;
 
 
 @Slf4j
@@ -17,11 +25,61 @@ import org.springframework.stereotype.Component;
 @Component
 public class CheckExecutorTelnet implements CheckExecutor {
 
+    private final ModelDeviceService modelDeviceService;
 
     @Override
     public CheckResult checkExecute(Check check, Customer customer) {
         log.info("Starting check execute with TELNET");
+        Device checkDevice = getDeviceForCheck(modelDeviceService, check, customer);
+        if (checkDevice == null)
+            throw new RuntimeException("Check device cannot be null!");
+        Map<String, String> paramsForCheck = getParamsForCheck(check, customer);
+        paramsForCheck.put("LOGIN", checkDevice.getLogin());
+        paramsForCheck.put("PASSWORD", checkDevice.getPassword());
+        /* Получить telnetCommands в следующем формате
+        username:=[#LOGIN]
+        password:=[#PASSWORD]
+        admin#=show fdb port [#PORT]
+         */
+        String commandsWithValues = replacingVariablesWithValues(check.getTelnetCommands(), paramsForCheck);
+        log.info("Telnet commands: {}", commandsWithValues);
 
-        return null;
+//        return new CheckResult();
+        return telnetExec(checkDevice, commandsWithValues);
     }
+
+    private CheckResult telnetExec(Device device, String commands) {
+        CheckResult checkResult = new CheckResult();
+
+        TelnetClient telnet = new TelnetClient();
+        try {
+            telnet.connect(device.getIp().getAddress(), device.getPort());
+            StringBuilder bufferIn = new StringBuilder();
+            StringBuilder bufferOut = new StringBuilder();
+            try (Expect expect = new ExpectBuilder()
+                    .withOutput(telnet.getOutputStream())
+                    .withInputs(telnet.getInputStream())
+                    .withEchoOutput(bufferOut)
+                    .withEchoInput(bufferIn)
+                    .withExceptionOnFailure()
+                    .build()) {
+
+                for (String keyValue : commands.split(";")) {
+                    String[] parts = keyValue.split("=");
+                    log.info("Request: {}", parts[0].trim());
+                    expect.expect(contains(parts[0].trim()));
+                    log.info("Send: {}", parts[1].trim());
+                    expect.sendLine(parts[1].trim());
+                }
+
+                Result result = expect.expect(contains(">"));
+                log.info(result.getBefore());
+            }
+        } catch (IOException e) {
+            checkResult.setStatus(CheckResultStatus.ERROR);
+            checkResult.setResult(e.getMessage());
+        }
+        return checkResult;
+    }
+
 }

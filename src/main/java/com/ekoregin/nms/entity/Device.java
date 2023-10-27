@@ -6,7 +6,6 @@ import io.hypersistence.utils.hibernate.type.basic.PostgreSQLInetType;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.Type;
-import org.hibernate.validator.constraints.UniqueElements;
 
 import java.util.List;
 
@@ -51,7 +50,7 @@ public class Device {
     private String protocol;
 
     @Column(name = "manage_port")
-    private int port;
+    private int port = 23;
 
     @ManyToOne
     @JoinColumn(name = "model_id")
@@ -75,6 +74,6 @@ public class Device {
         this.snmpCommunity = "public";
         this.snmpPort = 161;
         this.protocol = "telnet";
-        this.port = 23;
+        this.port = deviceDto.getManagePort();
     }
 }

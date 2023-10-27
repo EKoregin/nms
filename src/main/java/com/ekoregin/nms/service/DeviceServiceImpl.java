@@ -4,16 +4,12 @@ import com.ekoregin.nms.dto.DeviceDto;
 import com.ekoregin.nms.entity.Device;
 import com.ekoregin.nms.entity.ModelDevice;
 import com.ekoregin.nms.repository.DeviceRepo;
-import jakarta.persistence.PersistenceException;
 import jakarta.validation.ConstraintViolationException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.engine.jdbc.spi.SqlExceptionHelper;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.sql.SQLException;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -54,6 +50,7 @@ public class DeviceServiceImpl implements DeviceService {
         device.setName(deviceDto.getName());
         device.setDescription(deviceDto.getDescription());
         device.setIp(deviceDto.getIp());
+        device.setPort(deviceDto.getManagePort());
         device.setLogin(deviceDto.getLogin());
         device.setPassword(deviceDto.getPassword());
         device.setModel(modelDeviceService.findById(deviceDto.getModelId()));

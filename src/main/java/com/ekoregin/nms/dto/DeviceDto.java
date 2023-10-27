@@ -2,7 +2,6 @@ package com.ekoregin.nms.dto;
 
 import com.ekoregin.nms.entity.Device;
 import io.hypersistence.utils.hibernate.type.basic.Inet;
-import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,6 +21,8 @@ public class DeviceDto {
 
     private Inet ip;
 
+    private int managePort = 23;
+
     private String login;
 
     private String password;
@@ -35,6 +36,7 @@ public class DeviceDto {
         this.name = device.getName();
         this.description = device.getDescription();
         this.ip = device.getIp();
+        this.managePort = device.getPort();
         this.login = device.getLogin();
         this.password = device.getPassword();
         this.modelId = device.getModel().getId();
