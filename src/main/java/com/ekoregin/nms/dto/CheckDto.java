@@ -41,7 +41,7 @@ public class CheckDto {
         this.typeTechParams = check.getTypeTechParams();
         this.modelDeviceId = check.getModelDevice().getId();
         this.description = check.getDescription();
-        this.description = check.getTelnetCommands();
+        this.telnetCommands = check.getTelnetCommands();
         this.substRules = check.getSubstRules();
     }
 }

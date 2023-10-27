@@ -49,6 +49,8 @@ public class CheckServiceImpl implements CheckService{
         check.setCheckName(checkDto.getCheckName());
         check.setSnmpOID(checkDto.getSnmpOID());
         check.setDescription(checkDto.getDescription());
+        check.setSubstRules(checkDto.getSubstRules());
+        check.setTelnetCommands(checkDto.getTelnetCommands());
         checkRepo.save(check);
     }
 

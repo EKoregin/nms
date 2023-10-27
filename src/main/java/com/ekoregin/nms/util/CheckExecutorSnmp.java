@@ -33,7 +33,27 @@ public class CheckExecutorSnmp implements CheckExecutor {
         String community = checkDevice.getSnmpCommunity();
         snmpClient.setIpAddress(checkDevice.getIp().getAddress());
         snmpClient.setPort(String.valueOf(checkDevice.getSnmpPort()));
-        return snmpClient.snmpGet(community, snmpOID);
+
+        String substRules = check.getSubstRules();
+        CheckResult checkResult = snmpClient.snmpGet(community, snmpOID);
+        if (substRules != null && !substRules.isEmpty()) {
+            log.info("Substitution rules: " + substRules);
+            addSubstitutionToCheckResult(substRules, checkResult);
+        }
+        return checkResult;
+    }
+
+    private void addSubstitutionToCheckResult(String substRules, CheckResult checkResult) {
+        Map<String, String> substRulesMap = new HashMap<>();
+        for (String keyValue : substRules.split(";")) {
+            String[] parts = keyValue.split("=");
+            substRulesMap.put(parts[0], parts[1]);
+        }
+        String updResult = checkResult.getResult();
+        for (String value : substRulesMap.keySet()) {
+            updResult = updResult.replace(value, substRulesMap.get(value));
+        }
+        checkResult.setResult(updResult);
     }
 
     private Device getDeviceForCheck(Check check, Customer customer){
