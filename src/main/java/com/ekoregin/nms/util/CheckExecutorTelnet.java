@@ -36,7 +36,7 @@ public class CheckExecutorTelnet implements CheckExecutor {
         Map<String, String> paramsForCheck = getParamsForCheck(check, customer);
         paramsForCheck.put("LOGIN", checkDevice.getLogin());
         paramsForCheck.put("PASSWORD", checkDevice.getPassword());
-        /* Получить telnetCommands в следующем формате
+        /* Получить telnetCommands в следующем формате и заменить их на значения переменных
         username:=[#LOGIN]
         password:=[#PASSWORD]
         admin#=show fdb port [#PORT]
@@ -44,7 +44,6 @@ public class CheckExecutorTelnet implements CheckExecutor {
         String commandsWithValues = replacingVariablesWithValues(check.getTelnetCommands(), paramsForCheck);
         log.info("Telnet commands: {}", commandsWithValues);
 
-//        return new CheckResult();
         return telnetExec(checkDevice, commandsWithValues);
     }
 
@@ -64,15 +63,20 @@ public class CheckExecutorTelnet implements CheckExecutor {
                     .withExceptionOnFailure()
                     .build()) {
 
-                for (String keyValue : commands.split(";")) {
-                    String[] parts = keyValue.split("=");
+                String[] keyValueArr = commands.split(";");
+                int keyValueArrLength = keyValueArr.length - 1;
+
+                for (int i = 0; i < keyValueArrLength; i++) {
+                    String[] parts = keyValueArr[i].split("=");
                     log.info("Request: {}", parts[0].trim());
                     expect.expect(contains(parts[0].trim()));
                     log.info("Send: {}", parts[1].trim());
                     expect.sendLine(parts[1].trim());
                 }
-
-                Result result = expect.expect(contains(">"));
+                String finishKey = keyValueArr[keyValueArrLength].split("=")[0].trim();
+                Result result = expect.expect(contains(finishKey));
+                checkResult.setStatus(CheckResultStatus.OK);
+                checkResult.setResult(result.getBefore());
                 log.info(result.getBefore());
             }
         } catch (IOException e) {
