@@ -15,7 +15,7 @@
 <body>
 <div class="container">
     <div class="row pt3">
-        <div class="card" style="width: 80%">
+        <div class="card">
             <h5 class="card-header">Изменение абонента</h5>
             <div class="card-body">
                 <form th:action="@{/customers/update}" th:method="PUT" th:object="${customerDto}">
@@ -119,6 +119,7 @@
                             <th scope="col">ID</th>
                             <th scope="col">Название</th>
                             <th scope="col">Тип</th>
+                            <th scope="col">Параметры</th>
                             <th scope="col">Результат</th>
                         </tr>
                         </thead>
@@ -127,6 +128,7 @@
                             <td th:text="${check.checkId}"></td>
                             <td th:text="${check.checkName}"></td>
                             <td th:text="${check.checkType}"></td>
+                            <td th:text="${check.typeTechParams.isEmpty()} ? 'НЕТ' : ${check.typeTechParams}"></td>
                             <td th:id="checkResult + ${check.checkId}"></td>
                             <td>
                                 <div class="container">
