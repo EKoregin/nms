@@ -14,6 +14,8 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static net.sf.expectit.matcher.Matchers.contains;
 
@@ -43,8 +45,13 @@ public class CheckExecutorTelnet implements CheckExecutor {
          */
         String commandsWithValues = replacingVariablesWithValues(check.getTelnetCommands(), paramsForCheck);
         log.info("Telnet commands: {}", commandsWithValues);
-
-        return telnetExec(checkDevice, commandsWithValues);
+        CheckResult checkResult = telnetExec(checkDevice, commandsWithValues);
+        String regex = check.getSubstRules();
+        if (regex != null && !regex.isEmpty()) {
+            log.info("Regex: " + regex);
+            findRegexInStringAndPutToResult(regex, checkResult);
+        }
+        return checkResult;
     }
 
     private CheckResult telnetExec(Device device, String commands) {
@@ -84,6 +91,16 @@ public class CheckExecutorTelnet implements CheckExecutor {
             checkResult.setResult(e.getMessage());
         }
         return checkResult;
+    }
+
+    private void findRegexInStringAndPutToResult(String regex, CheckResult checkResult) {
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(checkResult.getResult());
+        StringBuilder result = new StringBuilder();
+        while (matcher.find()) {
+            result.append(matcher.group(0)).append("\n");
+        }
+        checkResult.setResult(result.toString());
     }
 
 }
