@@ -8,12 +8,17 @@ import com.ekoregin.nms.service.CustomerService;
 import com.ekoregin.nms.service.DeviceService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -24,9 +29,31 @@ public class CustomerController {
     private final CustomerService customerService;
     private final DeviceService deviceService;
 
+//    @GetMapping
+//    public String allCustomers(Model model) {
+//        model.addAttribute("customers", customerService.findAll());
+//        return "customers";
+//    }
+
     @GetMapping
-    public String allCustomers(Model model) {
-        model.addAttribute("customers", customerService.findAll());
+    public String allCustomers(Model model,
+                               @RequestParam("page") Optional<Integer> page,
+                               @RequestParam("size") Optional<Integer> size) {
+        int currentPage = page.orElse(1);
+        int pageSize = size.orElse(100);
+
+        Page<Customer> customerPage =
+                customerService.findPaginated(PageRequest.of(currentPage - 1, pageSize));
+
+        model.addAttribute("customerPage", customerPage);
+        int totalPages = customerPage.getTotalPages();
+        if(totalPages > 0) {
+            List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages)
+                    .boxed()
+                    .collect(Collectors.toList());
+            model.addAttribute("pageNumbers", pageNumbers);
+        }
+
         return "customers";
     }
 

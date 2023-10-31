@@ -25,6 +25,16 @@
 <div class="container">
     <h1 class="display-4">Абоненты</h1>
     <div class="row">
+        Страницы:&nbsp
+        <div th:if="${customerPage.totalPages > 0}" class="pagination"
+             th:each="pageNumber : ${pageNumbers}" style="list-style: none; overflow: hidden">
+            <a th:href="@{/customers(size=${customerPage.size}, page=${pageNumber})}"
+               th:text="${pageNumber}"
+               th:class="${pageNumber==customerPage.number + 1} ? active"></a>&nbsp;
+        </div>
+    </div>
+    <p></p>
+    <div class="row">
         <table class="table">
             <thead>
             <tr>
@@ -35,30 +45,40 @@
             </tr>
             </thead>
             <tbody>
-            <tr th:each="customer : ${customers}">
-                <span>
-                    <td th:text="${customer.id}"></td>
-                    <td th:text="${customer.name}"></td>
-                    <td th:text="${customer.address}"></td>
-                    <td>
-                        <div class="container">
+            <tr th:each="customer : ${customerPage}">
+                <td th:text="${customer.id}"></td>
+                <td th:text="${customer.name}"></td>
+                <td th:text="${customer.address}"></td>
+                <td>
+                    <div class="container">
                         <div class="row">
                             <div class="col-2 col-md-5">
-                                <a th:href="@{'/customers/editForm/{customerId}'(customerId=${customer.id})}"  class="btn btn-info" role="button">Редактировать</a>
+                                <a th:href="@{'/customers/editForm/{customerId}'(customerId=${customer.id})}"
+                                   class="btn btn-info" role="button">Редактировать</a>
                             </div>
                             <div class="col-2 col-md-5">
-                                <form th:action="@{'/customers/{customerId}'(customerId=${customer.id})}" th:method="delete">
+                                <form th:action="@{'/customers/{customerId}'(customerId=${customer.id})}"
+                                      th:method="delete">
                                     <button type="submit" class="btn btn-danger">Delete</button>
                                 </form>
                             </div>
                         </div>
-                        </div>
-                    </td>
-                </span>
+                    </div>
+                </td>
             </tr>
             </tbody>
         </table>
     </div>
+    <div class="row">
+        Страницы:&nbsp
+        <div th:if="${customerPage.totalPages > 0}" class="pagination"
+             th:each="pageNumber : ${pageNumbers}" style="list-style: none; overflow: hidden">
+            <a th:href="@{/customers(size=${customerPage.size}, page=${pageNumber})}"
+               th:text="${pageNumber}"
+               th:class="${pageNumber==customerPage.number + 1} ? active"></a>&nbsp;
+        </div>
+    </div>
+    <p></p>
     <div class="row">
         <a th:href="@{/customers/addForm}" class="btn btn-info mr-1" role="button">Добавить</a>
         <a th:href="@{/}" class="btn btn-info" role="button">На главную</a>
