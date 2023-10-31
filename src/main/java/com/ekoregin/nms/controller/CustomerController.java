@@ -29,11 +29,13 @@ public class CustomerController {
     private final CustomerService customerService;
     private final DeviceService deviceService;
 
-//    @GetMapping
-//    public String allCustomers(Model model) {
-//        model.addAttribute("customers", customerService.findAll());
-//        return "customers";
-//    }
+    /*
+    @GetMapping("/all")
+    public String allCustomers(Model model) {
+        model.addAttribute("customers", customerService.findAll());
+        return "customers";
+    }
+     */
 
     @GetMapping
     public String allCustomers(Model model,
