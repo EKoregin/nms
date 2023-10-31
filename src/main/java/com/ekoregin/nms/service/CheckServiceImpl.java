@@ -26,6 +26,7 @@ public class CheckServiceImpl implements CheckService{
     private final CustomerService customerService;
     private final CheckExecutor checkExecutorSnmp;
     private final CheckExecutor checkExecutorTelnet;
+    private final CheckExecutor checkExecutorMikrotik;
 
     @Override
     public Check create(CheckDto checkDto) {
@@ -88,6 +89,7 @@ public class CheckServiceImpl implements CheckService{
         switch (foundCheck.getCheckType()) {
             case "SNMP" -> checkResult = checkExecutorSnmp.checkExecute(foundCheck, foundCustomer);
             case "TELNET" -> checkResult = checkExecutorTelnet.checkExecute(foundCheck, foundCustomer);
+            case "MIKROTIK_API" -> checkResult = checkExecutorMikrotik.checkExecute(foundCheck, foundCustomer);
             default -> throw new IllegalArgumentException("That method not support!");
         }
         return checkResult;

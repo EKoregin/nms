@@ -1,5 +1,5 @@
 package com.ekoregin.nms.util;
 
 public enum CheckType {
-    SNMP, TELNET, SSH
+    SNMP, TELNET, MIKROTIK_API
 }
