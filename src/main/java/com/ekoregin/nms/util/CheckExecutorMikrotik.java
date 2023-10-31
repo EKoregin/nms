@@ -40,18 +40,21 @@ public class CheckExecutorMikrotik implements CheckExecutor {
     }
 
     private CheckResult restExec(Device device, String request) {
-        StringBuilder fullURI = new StringBuilder("https://").append(device.getIp().getAddress()).append(request);
+        StringBuilder fullURI = new StringBuilder("http://").append(device.getIp().getAddress()).append(request);
 //        StringBuilder fullURI = new StringBuilder("https://").append("openlibrary.org").append(request);
         log.info("FullURL: {}", fullURI);
         CheckResult checkResult = new CheckResult();
-        String result = WebClient.create()
+        WebClient webClient = WebClient.builder()
+                .defaultHeaders(header -> header.setBasicAuth(device.getLogin(), device.getPassword()))
+                .build();
+        String result = webClient
                 .get()
                 .uri(fullURI.toString())
                 .retrieve()
                 .bodyToMono(String.class)
                 .block();
 
-        checkResult.setResult(prettyPrintUsingGson(result));
+        checkResult.setResult(prettyPrintUsingGson(result).replaceAll("[{}]", "").trim());
         return checkResult;
     }
 
