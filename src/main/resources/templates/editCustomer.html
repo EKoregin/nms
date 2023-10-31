@@ -118,6 +118,7 @@
                         <tr>
                             <th scope="col">ID</th>
                             <th scope="col">Название</th>
+                            <th scope="col">Оборудование</th>
                             <th scope="col">Тип</th>
                             <th scope="col">Параметры</th>
                             <th scope="col">Результат</th>
@@ -127,6 +128,7 @@
                         <tr th:each="check : ${checks}">
                             <td th:text="${check.checkId}"></td>
                             <td th:text="${check.checkName}"></td>
+                            <td th:text="${check.getModelDevice().name}"></td>
                             <td th:text="${check.checkType}"></td>
                             <td th:text="${check.typeTechParams.isEmpty()} ? 'НЕТ' : ${check.typeTechParams}"></td>
                             <td th:id="checkResult + ${check.checkId}"></td>
