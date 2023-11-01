@@ -19,44 +19,59 @@
             integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
             crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link th:href="@{/styles/main.css}" rel="stylesheet"/>
+    <link rel="stylesheet" th:href="@{/font-awesome/css/font-awesome.min.css}">
+    <script type="text/javascript" th:src="@{/js/menu.js}"></script>
     <title>ITEMS List</title>
 </head>
 <body>
-<div class="container">
-    <h1 class="display-4">Type Tech Parameters</h1>
-    <div class="row">
-        <table class="table">
-            <thead>
-            <tr>
-                <th scope="col">Название</th>
-                <th scope="col">Описание</th>
-                <th scope="col"></th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="parameter : ${typeTechParams}">
-                    <td th:text="${parameter.name}"></td>
-                    <td th:text="${parameter.description}"></td>
-                    <td>
-                        <div class="container">
-<!--                        <div class="row">-->
-<!--                            <div class="col-2 col-md-5">-->
-<!--                                <a th:href="@{'/items/editForm/{itemId}'(itemId=${item.id})}"  class="btn btn-info" role="button">Редактировать</a>-->
-<!--                            </div>-->
-<!--                            <div class="col-2 col-md-5">-->
-<!--                                <form th:action="@{'/items/{id}'(id=${item.id})}" th:method="delete">-->
-<!--                                    <button type="submit" class="btn btn-danger">Delete</button>-->
-<!--                                </form>-->
-<!--                            </div>-->
-<!--                        </div>-->
-                        </div>
-                    </td>
-            </tr>
-            </tbody>
-        </table>
-    </div>
-    <div class="row">
-        <a th:href="@{/typeTechParams/addForm}" class="btn btn-info" role="button">Добавить</a>
+<div class='dashboard'>
+    <div th:replace="~{fragments/menu::menu}"></div>
+    <div class='dashboard-app'>
+        <header class='dashboard-toolbar'>
+            <a href="#!" class="menu-toggle">
+                <i class="fa fa-bars"></i></a>
+            <h1 class="display-4">Type Tech Parameters</h1>
+        </header>
+        <div class='dashboard-content'>
+            <div class="container">
+                <div class="row">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th scope="col">Название</th>
+                            <th scope="col">Описание</th>
+                            <th scope="col"></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="parameter : ${typeTechParams}">
+                            <td th:text="${parameter.name}"></td>
+                            <td th:text="${parameter.description}"></td>
+                            <td>
+                                <div class="container">
+                                    <!--                        <div class="row">-->
+                                    <!--                            <div class="col-2 col-md-5">-->
+                                    <!--                                <a th:href="@{'/items/editForm/{itemId}'(itemId=${item.id})}"  class="btn btn-info" role="button">Редактировать</a>-->
+                                    <!--                            </div>-->
+                                    <!--                            <div class="col-2 col-md-5">-->
+                                    <!--                                <form th:action="@{'/items/{id}'(id=${item.id})}" th:method="delete">-->
+                                    <!--                                    <button type="submit" class="btn btn-danger">Delete</button>-->
+                                    <!--                                </form>-->
+                                    <!--                            </div>-->
+                                    <!--                        </div>-->
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="row">
+                    <a th:href="@{/typeTechParams/addForm}" class="btn btn-info" role="button">Добавить</a>
+                </div>
+            </div>
+        </div>
+        <div th:replace="~{fragments/footer::footer}">&nbsp;</div>
     </div>
 </div>
 </body>

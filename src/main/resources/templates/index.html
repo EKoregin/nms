@@ -23,40 +23,19 @@
 </head>
 <body>
 <div class='dashboard'>
-    <div class="dashboard-nav">
-        <header><a href="#!" class="menu-toggle"><i class="fas fa-bars"></i></a><a href="#" class="brand-logo"><i
-                class="fa fa-sitemap"></i> <span>NMS</span></a></header>
-        <nav class="dashboard-nav-list">
-            <a th:href="@{/}" class="dashboard-nav-item"><i class="fa fa-home"></i>Главная</a>
-            <a th:href="@{/customers}" class="dashboard-nav-item active"><i
-                    class="fa fa-users"></i>Абоненты</a>
-            <div class='dashboard-nav-dropdown'>
-                <a href="#!" class="dashboard-nav-item dashboard-nav-dropdown-toggle">
-                    <i class="fa fa-microchip"></i>Оборудование</a>
-                <div class='dashboard-nav-dropdown-menu'>
-                    <a th:href="@{/devices}" class="dashboard-nav-dropdown-item">Устройства</a>
-                    <a th:href="@{/modelDevices}" class="dashboard-nav-dropdown-item">Модели</a>
-                </div>
-                <div class='dashboard-nav-dropdown'>
-                    <a href="#!" class="dashboard-nav-item dashboard-nav-dropdown-toggle">
-                        <i class="fa fa-sliders"></i>Параметры</a>
-                    <div class='dashboard-nav-dropdown-menu'>
-                        <a th:href="@{/typeTechParams}" class="dashboard-nav-dropdown-item">Типы параметров</a>
-                    </div>
-                </div>
-                <a href="http://172.17.4.21/zabbix.php" class="dashboard-nav-item"><i class="fa fa-eye"></i>Zabbix</a>
-                <div class="nav-item-divider"></div>
-                <a href="#" class="dashboard-nav-item"><i class="fas fa-sign-out-alt"></i>Выйти</a>
-            </div>
-        </nav>
-    </div>
+    <div th:replace="~{fragments/menu::menu}"></div>
     <div class='dashboard-app'>
-        <header class='dashboard-toolbar'><a href="#!" class="menu-toggle"><i class="fa fa-bars"></i></a></header>
+        <header class='dashboard-toolbar'>
+            <a href="#!" class="menu-toggle">
+                <i class="fa fa-bars"></i></a>
+            <h1 class="display-4">Network Management System</h1>
+        </header>
         <div class='dashboard-content'>
             <div class="container">
-                <h1 class="display-4">Network Management System</h1>
+
             </div>
         </div>
+        <div th:replace="~{fragments/footer::footer}">&nbsp;</div>
     </div>
 </div>
 </body>

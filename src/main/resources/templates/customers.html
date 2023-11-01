@@ -19,74 +19,85 @@
             integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
             crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link th:href="@{/styles/main.css}" rel="stylesheet"/>
+    <link rel="stylesheet" th:href="@{/font-awesome/css/font-awesome.min.css}">
+    <script type="text/javascript" th:src="@{/js/menu.js}"></script>
     <title>Пользователи</title>
 </head>
 <body>
-<div class="container">
-    <h1 class="display-4">Абоненты</h1>
-    <form th:action="@{/customers/search}" method="get">
-        <input type="text" name="searchKeyword" th:value="${searchKeyword}"  placeholder="Поиск по имени" size="50" >
-        <button type="submit" class="btn btn-info" >Найти</button>
-        <button type="submit" class="btn btn-info" >Сброс</button>
-    </form>
-    <div class="row">
-        Страницы:&nbsp
-        <div th:if="${customerPage.totalPages > 0}" class="pagination"
-             th:each="pageNumber : ${pageNumbers}" style="list-style: none; overflow: hidden">
-            <a th:href="@{/customers(size=${customerPage.size}, page=${pageNumber})}"
-               th:text="${pageNumber}"
-               th:class="${pageNumber==customerPage.number + 1} ? active"></a>&nbsp;
-        </div>
-    </div>
-    <p></p>
-    <div class="row">
-        <table class="table">
-            <thead>
-            <tr>
-                <th scope="col">ID</th>
-                <th scope="col">Имя</th>
-                <th scope="col">Адрес</th>
-                <th scope="col"></th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="customer : ${customerPage}">
-                <td th:text="${customer.id}"></td>
-                <td th:text="${customer.name}"></td>
-                <td th:text="${customer.address}"></td>
-                <td>
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-2 col-md-5">
-                                <a th:href="@{'/customers/editForm/{customerId}'(customerId=${customer.id})}"
-                                   class="btn btn-info" role="button">Редактировать</a>
-                            </div>
-                            <div class="col-2 col-md-5">
-                                <form th:action="@{'/customers/{customerId}'(customerId=${customer.id})}"
-                                      th:method="delete">
-                                    <button type="submit" class="btn btn-danger">Delete</button>
-                                </form>
-                            </div>
-                        </div>
+<div class='dashboard'>
+    <div th:replace="~{fragments/menu::menu}"></div>
+    <div class='dashboard-app'>
+        <header class='dashboard-toolbar'><a href="#!" class="menu-toggle"><i class="fa fa-bars"></i></a><h1 class="display-4">Абоненты</h1></header>
+        <div class='dashboard-content'>
+            <div class="container">
+                <form th:action="@{/customers/search}" method="get">
+                    <input type="text" name="searchKeyword" th:value="${searchKeyword}" placeholder="Поиск по имени"
+                           size="50">
+                    <button type="submit" class="btn btn-info">Найти</button>
+                    <button type="submit" class="btn btn-info">Сброс</button>
+                </form>
+                <div class="row">
+                    Страницы:&nbsp
+                    <div th:if="${customerPage.totalPages > 0}" class="pagination"
+                         th:each="pageNumber : ${pageNumbers}" style="list-style: none; overflow: hidden">
+                        <a th:href="@{/customers(size=${customerPage.size}, page=${pageNumber})}"
+                           th:text="${pageNumber}"
+                           th:class="${pageNumber==customerPage.number + 1} ? active"></a>&nbsp;
                     </div>
-                </td>
-            </tr>
-            </tbody>
-        </table>
-    </div>
-    <div class="row">
-        Страницы:&nbsp
-        <div th:if="${customerPage.totalPages > 0}" class="pagination"
-             th:each="pageNumber : ${pageNumbers}" style="list-style: none; overflow: hidden">
-            <a th:href="@{/customers(size=${customerPage.size}, page=${pageNumber})}"
-               th:text="${pageNumber}"
-               th:class="${pageNumber==customerPage.number + 1} ? active"></a>&nbsp;
+                </div>
+                <p></p>
+                <div class="row">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th scope="col">ID</th>
+                            <th scope="col">Имя</th>
+                            <th scope="col">Адрес</th>
+                            <th scope="col"></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="customer : ${customerPage}">
+                            <td th:text="${customer.id}"></td>
+                            <td th:text="${customer.name}"></td>
+                            <td th:text="${customer.address}"></td>
+                            <td>
+                                <div class="container">
+                                    <div class="row">
+                                        <div class="col-2 col-md-5">
+                                            <a th:href="@{'/customers/editForm/{customerId}'(customerId=${customer.id})}"
+                                               class="btn btn-info" role="button">Редактировать</a>
+                                        </div>
+                                        <div class="col-2 col-md-5">
+                                            <form th:action="@{'/customers/{customerId}'(customerId=${customer.id})}"
+                                                  th:method="delete">
+                                                <button type="submit" class="btn btn-danger">Delete</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="row">
+                    Страницы:&nbsp
+                    <div th:if="${customerPage.totalPages > 0}" class="pagination"
+                         th:each="pageNumber : ${pageNumbers}" style="list-style: none; overflow: hidden">
+                        <a th:href="@{/customers(size=${customerPage.size}, page=${pageNumber})}"
+                           th:text="${pageNumber}"
+                           th:class="${pageNumber==customerPage.number + 1} ? active"></a>&nbsp;
+                    </div>
+                </div>
+                <p></p>
+                <div class="row">
+                    <a th:href="@{/customers/addForm}" class="btn btn-info mr-1" role="button">Добавить</a>
+                </div>
+            </div>
         </div>
-    </div>
-    <p></p>
-    <div class="row">
-        <a th:href="@{/customers/addForm}" class="btn btn-info mr-1" role="button">Добавить</a>
-        <a th:href="@{/}" class="btn btn-info" role="button">На главную</a>
+        <div th:replace="~{fragments/footer::footer}">&nbsp;</div>
     </div>
 </div>
 </body>
