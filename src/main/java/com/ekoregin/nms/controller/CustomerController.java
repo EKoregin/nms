@@ -29,27 +29,26 @@ public class CustomerController {
     private final CustomerService customerService;
     private final DeviceService deviceService;
 
-    /*
-    @GetMapping("/all")
-    public String allCustomers(Model model) {
-        model.addAttribute("customers", customerService.findAll());
-        return "customers";
-    }
-     */
-
-    @GetMapping
-    public String allCustomers(Model model,
-                               @RequestParam("page") Optional<Integer> page,
-                               @RequestParam("size") Optional<Integer> size) {
+    @RequestMapping(path = {"", "/search"})
+    public String searchCustomers(Model model, String searchKeyword,
+                                  @RequestParam("page") Optional<Integer> page,
+                                  @RequestParam("size") Optional<Integer> size) {
         int currentPage = page.orElse(1);
-        int pageSize = size.orElse(100);
+        int pageSize = size.orElse(50);
+        var pageRequest = PageRequest.of(currentPage - 1, pageSize);
+        Page<Customer> customerPage;
+        if (searchKeyword != null && !searchKeyword.isEmpty()) {
+            log.info("Search keyword is: " + searchKeyword);
+            customerPage = customerService.findByNamePaginated(searchKeyword, pageRequest);
+            model.addAttribute("customerPage", customerPage);
+        } else {
+            log.info("Get all customers");
+            customerPage = customerService.findPaginated(pageRequest);
+            model.addAttribute("customerPage", customerPage);
+        }
 
-        Page<Customer> customerPage =
-                customerService.findPaginated(PageRequest.of(currentPage - 1, pageSize));
-
-        model.addAttribute("customerPage", customerPage);
         int totalPages = customerPage.getTotalPages();
-        if(totalPages > 0) {
+        if (totalPages > 0) {
             List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages)
                     .boxed()
                     .collect(Collectors.toList());

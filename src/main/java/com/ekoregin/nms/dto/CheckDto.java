@@ -31,6 +31,8 @@ public class CheckDto {
 
     private String substRules;
 
+    private String jsonFilter;
+
     private List<TypeTechParameter> typeTechParams;
 
     public CheckDto(Check check) {
@@ -43,5 +45,6 @@ public class CheckDto {
         this.description = check.getDescription();
         this.telnetCommands = check.getTelnetCommands();
         this.substRules = check.getSubstRules();
+        this.jsonFilter = check.getJsonFilter();
     }
 }

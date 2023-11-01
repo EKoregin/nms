@@ -89,4 +89,22 @@ public class CustomerServiceImpl implements CustomerService {
 
         return new PageImpl<>(list, PageRequest.of(currentPage, pageSize), customers.size());
     }
+
+    @Override
+    public Page<Customer> findByNamePaginated(String name, Pageable pageable) {
+        List<Customer> customers = customerRepo.findCustomersByNameContainsIgnoreCase(name, pageable);
+        int pageSize = pageable.getPageSize();
+        int currentPage = pageable.getPageNumber();
+        int startItem = currentPage * pageSize;
+
+        List<Customer> list;
+        if (customers.size() < startItem) {
+            list = Collections.emptyList();
+        } else {
+            int toIndex = Math.min(startItem + pageSize, customers.size());
+            list = customers.subList(startItem, toIndex);
+        }
+
+        return new PageImpl<>(list, PageRequest.of(currentPage, pageSize), customers.size());
+    }
 }

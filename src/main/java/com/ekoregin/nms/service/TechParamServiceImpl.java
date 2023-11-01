@@ -34,7 +34,7 @@ public class TechParamServiceImpl implements TechParamService {
             throw new NoSuchElementException("TypeTechParam with ID: " + typeId + " was not found");
         }
         TechParameter techParameter = TechParameter.builder()
-                .value(techParameterDto.getValue())
+                .value(techParameterDto.getValue().toUpperCase())
                 .type(typeTechParameter)
                 .customer(customer)
                 .build();

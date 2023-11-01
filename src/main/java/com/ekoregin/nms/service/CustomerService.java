@@ -22,4 +22,6 @@ public interface CustomerService {
     List<Customer> findAll();
 
     Page<Customer> findPaginated(Pageable pageable);
+
+    Page<Customer> findByNamePaginated(String name, Pageable pageable);
 }

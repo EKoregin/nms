@@ -52,6 +52,7 @@ public class CheckServiceImpl implements CheckService{
         check.setDescription(checkDto.getDescription());
         check.setSubstRules(checkDto.getSubstRules());
         check.setTelnetCommands(checkDto.getTelnetCommands());
+        check.setJsonFilter(checkDto.getJsonFilter());
         checkRepo.save(check);
     }
 
@@ -89,7 +90,7 @@ public class CheckServiceImpl implements CheckService{
         switch (foundCheck.getCheckType()) {
             case "SNMP" -> checkResult = checkExecutorSnmp.checkExecute(foundCheck, foundCustomer);
             case "TELNET" -> checkResult = checkExecutorTelnet.checkExecute(foundCheck, foundCustomer);
-            case "MIKROTIK_API" -> checkResult = checkExecutorMikrotik.checkExecute(foundCheck, foundCustomer);
+            case "REST_API" -> checkResult = checkExecutorMikrotik.checkExecute(foundCheck, foundCustomer);
             default -> throw new IllegalArgumentException("That method not support!");
         }
         return checkResult;

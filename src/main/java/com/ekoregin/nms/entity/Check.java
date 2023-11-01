@@ -37,6 +37,9 @@ public class Check {
     @Column(name = "subst_rules")
     private String substRules;
 
+    @Column(name = "json_filter")
+    private String jsonFilter;
+
     @ManyToOne
     @JoinColumn(name = "model_device_id")
     private ModelDevice modelDevice;
@@ -57,5 +60,6 @@ public class Check {
         this.description = checkDto.getDescription();
         this.telnetCommands = checkDto.getTelnetCommands();
         this.substRules = checkDto.getSubstRules();
+        this.jsonFilter = checkDto.getJsonFilter();
     }
 }

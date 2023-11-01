@@ -68,6 +68,7 @@ CREATE TABLE IF NOT EXISTS checks
     telnet_commands TEXT,
     description     TEXT,
     subst_rules     TEXT,
+    json_filter     TEXT,
     model_device_id INT          NOT NULL,
     CONSTRAINT fk_model_device
         FOREIGN KEY (model_device_id)

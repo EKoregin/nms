@@ -24,6 +24,11 @@
 <body>
 <div class="container">
     <h1 class="display-4">Абоненты</h1>
+    <form th:action="@{/customers/search}" method="get">
+        <input type="text" name="searchKeyword" th:value="${searchKeyword}"  placeholder="Поиск по имени" size="50" >
+        <button type="submit" class="btn btn-info" >Найти</button>
+        <button type="submit" class="btn btn-info" >Сброс</button>
+    </form>
     <div class="row">
         Страницы:&nbsp
         <div th:if="${customerPage.totalPages > 0}" class="pagination"
