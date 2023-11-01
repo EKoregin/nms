@@ -22,27 +22,29 @@ import java.util.Map;
 @Setter
 @RequiredArgsConstructor
 @Component
-public class CheckExecutorMikrotik implements CheckExecutor {
+public class CheckExecutorRest implements CheckExecutor {
 
     private final ModelDeviceService modelDeviceService;
 
     @Override
     public CheckResult checkExecute(Check check, Customer customer) {
-        log.info("Starting check execute with MIKROTIK API");
+        log.info("Starting check execute with REST API");
         Device checkDevice = getDeviceForCheck(modelDeviceService, check, customer);
         if (checkDevice == null)
             throw new RuntimeException("Check device cannot be null!");
         Map<String, String> paramsForCheck = getParamsForCheck(check, customer);
         String requestWithValues = replacingVariablesWithValues(check.getTelnetCommands(), paramsForCheck);
         List<String> filter = Collections.emptyList();
-        if (check.getJsonFilter() != null)
+        if (check.getJsonFilter() != null && !check.getJsonFilter().isEmpty()) {
             filter = List.of(check.getJsonFilter().split(";"));
+            log.info("Filter set: " + filter);
+        }
         return restExec(checkDevice, requestWithValues, filter);
     }
 
     private CheckResult restExec(Device device, String request, List<String> filter) {
-        StringBuilder fullURI = new StringBuilder("http://").append(device.getIp().getAddress()).append(request);
-//        StringBuilder fullURI = new StringBuilder("https://").append("jsonplaceholder.typicode.com").append(request);
+//        StringBuilder fullURI = new StringBuilder("http://").append(device.getIp().getAddress()).append(request);
+        StringBuilder fullURI = new StringBuilder("https://").append("jsonplaceholder.typicode.com").append(request);
         log.info("FullURL: {}", fullURI);
         CheckResult checkResult = new CheckResult();
         WebClient webClient = WebClient.builder()
@@ -67,11 +69,12 @@ public class CheckExecutorMikrotik implements CheckExecutor {
             jsonElement = jsonElement.getAsJsonArray().get(0);
 
         String resultJson = gson.toJson(jsonElement);
-        System.out.println("Result Json: " + resultJson);
+        log.info("Result Json: " + resultJson);
 
         JsonElement filteredJsonElement = new JsonObject();
         log.info("Цикл по элементам JSON");
-        if (!allowKeys.isEmpty()) {
+        log.info("ALlow keys: " + allowKeys.size());
+        if (allowKeys.size() > 0) {
             for (String key : allowKeys) {
                 log.info(jsonElement.getAsJsonObject().get(key).toString());
                 if (!jsonElement.getAsJsonObject().get(key).isJsonNull()) {

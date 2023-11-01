@@ -167,14 +167,21 @@
         }
     }
 
+    function waiting(element) {
+        element.innerHTML = "Ждите...";
+    }
+
     $('.checks').click(function () {
         let checkId = $(this).data('target');
         let customerId = $(this).data('info');
+        let parent = document.getElementById("checkResult" + checkId);
+        waiting(parent);
         fetchCheckResult(checkId, customerId).then(json => {
             let resultMessage = json.result;
             let div = document.createElement('div');
             div.innerText = resultMessage;
             let checkResult = document.querySelector("#checkResult" + checkId);
+            parent.innerHTML = "";
             checkResult.prepend(div);
         })
     });
