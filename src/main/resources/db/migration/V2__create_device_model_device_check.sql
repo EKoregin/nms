@@ -22,7 +22,7 @@ CREATE TABLE IF NOT EXISTS model_device
 (
     id           INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
     type_device  VARCHAR(255) NOT NULL,
-    name         VARCHAR(255) NOT NULL DEFAULT 'Generic',
+    name         VARCHAR(255) NOT NULL unique,
     manufacturer VARCHAR(255) NOT NULL DEFAULT 'Generic',
     ports        INT                   default 0
 );
@@ -30,9 +30,10 @@ CREATE TABLE IF NOT EXISTS model_device
 CREATE TABLE IF NOT EXISTS device
 (
     id              INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
-    device_name     VARCHAR(255) NOT NULL default '',
+    device_name     VARCHAR(255) NOT NULL UNIQUE,
     description     VARCHAR(255)          default '',
     ip              inet         NOT NULL UNIQUE,
+    mac             CHAR(17)              UNIQUE,
     login           VARCHAR(255)          DEFAULT 'admin',
     password        VARCHAR(255)          DEFAULT 'admin',
     snmp_community  VARCHAR(255)          DEFAULT 'public',

@@ -34,6 +34,9 @@ public class Device {
     )
     private Inet ip;
 
+    @Column(name = "mac")
+    private String mac;
+
     @Column(name = "login")
     private String login;
 
@@ -75,5 +78,6 @@ public class Device {
         this.snmpPort = 161;
         this.protocol = "telnet";
         this.port = deviceDto.getManagePort();
+        this.mac = deviceDto.getMac();
     }
 }

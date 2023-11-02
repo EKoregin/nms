@@ -50,6 +50,7 @@ public class DeviceServiceImpl implements DeviceService {
         device.setName(deviceDto.getName());
         device.setDescription(deviceDto.getDescription());
         device.setIp(deviceDto.getIp());
+        device.setMac(deviceDto.getMac());
         device.setPort(deviceDto.getManagePort());
         device.setLogin(deviceDto.getLogin());
         device.setPassword(deviceDto.getPassword());

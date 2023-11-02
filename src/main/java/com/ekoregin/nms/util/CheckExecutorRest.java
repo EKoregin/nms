@@ -43,8 +43,8 @@ public class CheckExecutorRest implements CheckExecutor {
     }
 
     private CheckResult restExec(Device device, String request, List<String> filter) {
-//        StringBuilder fullURI = new StringBuilder("http://").append(device.getIp().getAddress()).append(request);
-        StringBuilder fullURI = new StringBuilder("https://").append("jsonplaceholder.typicode.com").append(request);
+        StringBuilder fullURI = new StringBuilder("http://").append(device.getIp().getAddress()).append(request);
+//        StringBuilder fullURI = new StringBuilder("https://").append("jsonplaceholder.typicode.com").append(request);
         log.info("FullURL: {}", fullURI);
         CheckResult checkResult = new CheckResult();
         WebClient webClient = WebClient.builder()

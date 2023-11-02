@@ -21,6 +21,8 @@ public class DeviceDto {
 
     private Inet ip;
 
+    private String mac;
+
     private int managePort = 23;
 
     private String login;
@@ -40,5 +42,6 @@ public class DeviceDto {
         this.login = device.getLogin();
         this.password = device.getPassword();
         this.modelId = device.getModel().getId();
+        this.mac = device.getMac();
     }
 }
