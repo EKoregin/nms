@@ -41,6 +41,7 @@
                             <th scope="col">Тип</th>
                             <th scope="col">Марка</th>
                             <th scope="col">Производитель</th>
+                            <th scope="col">Кол-во устройств</th>
                             <th scope="col"></th>
                         </tr>
                         </thead>
@@ -50,6 +51,7 @@
                             <td th:text="${model.type}"></td>
                             <td th:text="${model.name}"></td>
                             <td th:text="${model.manufacturer}"></td>
+                            <td th:text="${model.devices.size()}"></td>
                             <td>
                                 <div class="container">
                                     <div class="row">

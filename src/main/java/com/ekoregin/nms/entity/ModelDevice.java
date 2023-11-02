@@ -31,6 +31,10 @@ public class ModelDevice {
     @OneToMany(orphanRemoval = true, mappedBy = "modelDevice", cascade = CascadeType.ALL)
     private List<Check> checks;
 
+    @OneToMany
+    @JoinColumn(name = "model_id")
+    private List<Device> devices;
+
     public ModelDevice(ModelDeviceDto modelDeviceDto) {
         this.id = modelDeviceDto.getId();
         this.type = modelDeviceDto.getType();

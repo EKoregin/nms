@@ -38,6 +38,7 @@
                     <table class="table">
                         <thead>
                         <tr>
+                            <th scope="col">ID</th>
                             <th scope="col">Название</th>
                             <th scope="col">IP адрес</th>
                             <th scope="col">Модель</th>
@@ -47,6 +48,7 @@
                         <tbody>
                         <tr th:each="device : ${devices}">
                 <span>
+                    <td th:text="${device.id}"></td>
                     <td th:text="${device.name}"></td>
                     <td th:text="${device.ip.address}"></td>
                     <td th:text="${device.model.name}"></td>
