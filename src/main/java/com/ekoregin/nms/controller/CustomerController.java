@@ -2,6 +2,7 @@ package com.ekoregin.nms.controller;
 
 import com.ekoregin.nms.dto.CustomerDto;
 import com.ekoregin.nms.entity.Check;
+import com.ekoregin.nms.entity.CheckScope;
 import com.ekoregin.nms.entity.Customer;
 import com.ekoregin.nms.entity.Device;
 import com.ekoregin.nms.service.CustomerService;
@@ -35,6 +36,7 @@ public class CustomerController {
                                   @RequestParam("size") Optional<Integer> size) {
         int currentPage = page.orElse(1);
         int pageSize = size.orElse(50);
+        model.addAttribute("countCustomers", customerService.count());
         var pageRequest = PageRequest.of(currentPage - 1, pageSize);
         Page<Customer> customerPage;
         if (searchKeyword != null && !searchKeyword.isEmpty()) {
@@ -78,6 +80,7 @@ public class CustomerController {
             List<Check> checks = foundCustomer.getDevices().stream()
                     .map(Device::getModel)
                     .flatMap(modelDevice -> modelDevice.getChecks().stream())
+                    .filter(check -> check.getCheckScope().equals(CheckScope.CUSTOMER.name()))
                     .toList();
             model.addAttribute("checks", checks);
             model.addAttribute("customerDto", customerDto);

@@ -35,6 +35,8 @@ public class CheckDto {
 
     private List<TypeTechParameter> typeTechParams;
 
+    private String checkScope;
+
     public CheckDto(Check check) {
         this.checkId = check.getCheckId();
         this.checkName = check.getCheckName();
@@ -46,5 +48,6 @@ public class CheckDto {
         this.telnetCommands = check.getTelnetCommands();
         this.substRules = check.getSubstRules();
         this.jsonFilter = check.getJsonFilter();
+        this.checkScope = check.getCheckScope();
     }
 }

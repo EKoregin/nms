@@ -3,6 +3,7 @@ package com.ekoregin.nms.controller;
 import com.ekoregin.nms.dto.CheckDto;
 import com.ekoregin.nms.entity.Check;
 import com.ekoregin.nms.entity.CheckResult;
+import com.ekoregin.nms.entity.CheckScope;
 import com.ekoregin.nms.entity.TypeTechParameter;
 import com.ekoregin.nms.service.CheckService;
 import com.ekoregin.nms.service.TypeTechParameterService;
@@ -31,11 +32,16 @@ public class CheckController {
         return "checks";
     }
 
+    @ModelAttribute
+    private void checkTypesScopes(Model model) {
+        List<String> checkTypes = Arrays.stream(CheckType.class.getEnumConstants()).map(Enum::name).toList();
+        List<String> checkScopes = Arrays.stream(CheckScope.class.getEnumConstants()).map(Enum::name).toList();
+        model.addAttribute("checkTypes", checkTypes);
+        model.addAttribute("checkScopes", checkScopes);
+    }
+
     @GetMapping("/addForm/{modelDeviceId}")
     public String formCreateCheck(@PathVariable long modelDeviceId, Model model) {
-//        model.addAttribute("modelDeviceId", modelDeviceId);
-        List<String> checkTypes = Arrays.stream(CheckType.class.getEnumConstants()).map(Enum::name).toList();
-        model.addAttribute("checkTypes", checkTypes);
         CheckDto checkDto = new CheckDto();
         checkDto.setModelDeviceId(modelDeviceId);
         model.addAttribute("checkDto", checkDto);
@@ -50,8 +56,6 @@ public class CheckController {
 
     @GetMapping("/editForm/{checkId}")
     public String formEditCheck(@PathVariable long checkId, Model model) {
-        List<String> checkTypes = Arrays.stream(CheckType.class.getEnumConstants()).map(Enum::name).toList();
-        model.addAttribute("checkTypes", checkTypes);
         Check foundCheck = checkService.findById(checkId);
         if (foundCheck != null) {
             CheckDto checkDto = new CheckDto(foundCheck);
@@ -111,9 +115,17 @@ public class CheckController {
 
     @GetMapping("/{checkId}/customer/{customerId}")
     @ResponseBody
-    public CheckResult checkExecute(@PathVariable long checkId,
+    public CheckResult checkExecuteForCustomer(@PathVariable long checkId,
                                     @PathVariable long customerId) {
-        log.info("Run Check with ID: {} for cCustomer with ID: {}", checkId, customerId);
-        return checkService.execute(checkId, customerId);
+        log.info("Run Check with ID: {} for Customer with ID: {}", checkId, customerId);
+        return checkService.executeForCustomer(checkId, customerId);
+    }
+
+    @GetMapping("/{checkId}/device/{deviceId}")
+    @ResponseBody
+    public CheckResult checkExecuteForDevice(@PathVariable long checkId,
+                                    @PathVariable long deviceId) {
+        log.info("Run Check with ID: {} for Device with ID: {}", checkId, deviceId);
+        return checkService.executeForDevice(checkId, deviceId);
     }
 }

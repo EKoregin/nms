@@ -42,8 +42,7 @@
                             <input type="text" class="form-control" th:field="*{manufacturer}" id="manufacturer">
                         </div>
                     </div>
-                    <span th:if="*{listDevices.size() > 0}">
-                        <div class="form-group col-first">
+                    <div th:if="*{listDevices.size() > 0}">
                             <div style="cursor:pointer;color:blue;text-decoration:underline;">
                                 <a onclick="return toggleMe('listOfDevices')">Список устройств данной модели</a>
                             </div>
@@ -52,17 +51,16 @@
                                     <span th:text="${deviceName}"></span><br>
                                 </span>
                             </div>
-                        </div>
-                    </span>
+                    </div>
                     <p></p>
                     <h5 class="card-header">Подключенные проверки</h5>
-                    <hr>
                     <table class="table">
                         <thead>
                         <tr>
                             <th scope="col">ID</th>
                             <th scope="col">Тип</th>
                             <th scope="col">Название</th>
+                            <th scope="col">Область действия</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -71,6 +69,7 @@
                             <td th:text="${check.checkId}"></td>
                             <td th:text="${check.checkType}"></td>
                             <td th:text="${check.checkName}"></td>
+                            <td th:text="${check.checkScope}"></td>
                             <td>
                                 <div class="container">
                                     <div class="row">

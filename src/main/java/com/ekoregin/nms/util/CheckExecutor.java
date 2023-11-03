@@ -9,7 +9,7 @@ import java.util.Map;
 
 public interface CheckExecutor {
 
-    CheckResult checkExecute(Check check, Customer customer);
+    CheckResult checkExecute(Check check, Customer customer, Device device);
 
     default Device getDeviceForCheck(ModelDeviceService modelDeviceService, Check check, Customer customer){
         ModelDevice modelDevice = modelDeviceService.findById(check.getModelDevice().getId());

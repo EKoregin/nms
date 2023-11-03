@@ -13,6 +13,7 @@ import org.apache.commons.net.telnet.TelnetClient;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -30,12 +31,20 @@ public class CheckExecutorTelnet implements CheckExecutor {
     private final ModelDeviceService modelDeviceService;
 
     @Override
-    public CheckResult checkExecute(Check check, Customer customer) {
-        log.info("Starting check execute with TELNET");
-        Device checkDevice = getDeviceForCheck(modelDeviceService, check, customer);
+    public CheckResult checkExecute(Check check, Customer customer, Device device) {
+        Device checkDevice = null;
+        Map<String, String> paramsForCheck = new HashMap<>();
+        if (check.getCheckScope().equals(CheckScope.CUSTOMER.name())) {
+            log.info("Starting check execute with TELNET for customer");
+            checkDevice = getDeviceForCheck(modelDeviceService, check, customer);
+            paramsForCheck = getParamsForCheck(check, customer);
+        } else if (check.getCheckScope().equals(CheckScope.DEVICE.name())) {
+            log.info("Starting check execute with TELNET for device");
+            checkDevice = device;
+        }
         if (checkDevice == null)
             throw new RuntimeException("Check device cannot be null!");
-        Map<String, String> paramsForCheck = getParamsForCheck(check, customer);
+
         paramsForCheck.put("LOGIN", checkDevice.getLogin());
         paramsForCheck.put("PASSWORD", checkDevice.getPassword());
         /* Получить telnetCommands в следующем формате и заменить их на значения переменных

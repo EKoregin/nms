@@ -73,6 +73,11 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
+    public long count() {
+        return customerRepo.count();
+    }
+
+    @Override
     public Page<Customer> findPaginated(Pageable pageable) {
         List<Customer> customers = customerRepo.findAll();
         int pageSize = pageable.getPageSize();

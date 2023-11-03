@@ -52,6 +52,9 @@ public class Check {
     )
     private List<TypeTechParameter> typeTechParams;
 
+    @Column(name = "check_scope")
+    private String checkScope = CheckScope.CUSTOMER.name();
+
     public Check(CheckDto checkDto) {
         this.checkId = checkDto.getCheckId();
         this.checkName = checkDto.getCheckName();
@@ -61,5 +64,6 @@ public class Check {
         this.telnetCommands = checkDto.getTelnetCommands();
         this.substRules = checkDto.getSubstRules();
         this.jsonFilter = checkDto.getJsonFilter();
+        this.checkScope = checkDto.getCheckScope();
     }
 }

@@ -5,7 +5,9 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
+    <script src="https://code.jquery.com/jquery-3.7.0.js"
+            integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM="
+            crossorigin="anonymous"></script>
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
           integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
@@ -73,6 +75,43 @@
                             <input type="text" class="form-control" th:field="*{password}" id="devicePassw">
                         </div>
                     </div>
+                    <p></p>
+                    <h5 class="card-header">Доступные проверки</h5>
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th scope="col">ID</th>
+                            <th scope="col">Название</th>
+                            <th scope="col">Модель</th>
+                            <th scope="col">Тип</th>
+                            <th scope="col">Параметры</th>
+                            <th scope="col">Результат</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="check : ${checks}">
+                            <td th:text="${check.checkId}"></td>
+                            <td th:text="${check.checkName}"></td>
+                            <td th:text="${check.getModelDevice().name}"></td>
+                            <td th:text="${check.checkType}"></td>
+                            <td th:text="${check.typeTechParams.isEmpty()} ? 'НЕТ' : ${check.typeTechParams}"></td>
+                            <td th:id="checkResult + ${check.checkId}"></td>
+                            <td>
+                                <div class="container">
+                                    <div class="row">
+                                        <div class="col-2 col-md-5">
+                                            <button id="checkButton" type="button" class="checks btn btn-info"
+                                                    th:data-info="*{id}"
+                                                    th:data-target="${check.checkId}">Проверить
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <p></p>
                     <button type="submit" class="btn btn-primary">Сохранить</button>
                     <a th:href="@{/devices}" role="button" class="btn btn-primary">Отмена</a>
                 </form>
@@ -80,5 +119,35 @@
         </div>
     </div>
 </div>
+
+<script>
+    async function fetchCheckResult(checkId, deviceId) {
+        let response = await fetch("/checks/" + checkId + "/device/" + deviceId);
+        if (response.ok) {
+            return response.json();
+        } else {
+            alert("Ошибка HTTP: " + response);
+        }
+    }
+
+    function waiting(element) {
+        element.innerHTML = "Ждите...";
+    }
+
+    $('.checks').click(function () {
+        let checkId = $(this).data('target');
+        let deviceId = $(this).data('info');
+        let parent = document.getElementById("checkResult" + checkId);
+        waiting(parent);
+        fetchCheckResult(checkId, deviceId).then(json => {
+            let resultMessage = json.result;
+            let div = document.createElement('div');
+            div.innerText = resultMessage;
+            let checkResult = document.querySelector("#checkResult" + checkId);
+            parent.innerHTML = "";
+            checkResult.prepend(div);
+        })
+    });
+</script>
 </body>
 </html>

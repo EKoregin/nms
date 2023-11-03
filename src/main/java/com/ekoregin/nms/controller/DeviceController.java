@@ -1,20 +1,17 @@
 package com.ekoregin.nms.controller;
 
 import com.ekoregin.nms.dto.DeviceDto;
+import com.ekoregin.nms.entity.Check;
+import com.ekoregin.nms.entity.CheckScope;
 import com.ekoregin.nms.entity.Device;
 import com.ekoregin.nms.entity.ModelDevice;
 import com.ekoregin.nms.service.DeviceService;
 import com.ekoregin.nms.service.ModelDeviceService;
-import com.ekoregin.nms.util.TypeDevice;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Arrays;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -29,7 +26,6 @@ public class DeviceController {
 
     @ModelAttribute
     public void addModelDevices(Model model) {
-        List<String> types = Arrays.stream(TypeDevice.class.getEnumConstants()).map(Enum::name).toList();
         List<ModelDevice> models = modelDeviceService.findAll();
         model.addAttribute("models", models);
     }
@@ -57,6 +53,9 @@ public class DeviceController {
         Device device = deviceService.findById(deviceId);
         if (device != null) {
             DeviceDto deviceDto = new DeviceDto(device);
+            List<Check> checks = device.getModel().getChecks().stream()
+                    .filter(check -> check.getCheckScope().equals(CheckScope.DEVICE.name())).toList();
+            model.addAttribute("checks", checks);
             model.addAttribute("deviceDto", deviceDto);
         } else {
             log.info("Device with ID: {} not found", deviceId);

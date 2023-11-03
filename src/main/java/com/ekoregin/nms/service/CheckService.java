@@ -18,5 +18,7 @@ public interface CheckService {
 
     List<Check> findAll();
 
-    CheckResult execute(long checkId, long customerId);
+    CheckResult executeForCustomer(long checkId, long customerId);
+
+    CheckResult executeForDevice(long checkId, long deviceId);
 }

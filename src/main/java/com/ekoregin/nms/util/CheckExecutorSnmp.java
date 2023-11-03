@@ -22,12 +22,21 @@ public class CheckExecutorSnmp implements CheckExecutor {
     private final SnmpClient snmpClient;
 
     @Override
-    public CheckResult checkExecute(Check check, Customer customer) {
-        log.info("Starting check execute with SNMP");
-        Device checkDevice = getDeviceForCheck(modelDeviceService, check, customer);
+    public CheckResult checkExecute(Check check, Customer customer, Device device) {
+        Device checkDevice = null;
+
+        Map<String, String> paramsForCheck = new HashMap<>();
+        if (check.getCheckScope().equals(CheckScope.CUSTOMER.name())) {
+            log.info("Starting check execute with SNMP for customer");
+            checkDevice = getDeviceForCheck(modelDeviceService, check, customer);
+            paramsForCheck = getParamsForCheck(check, customer);
+        } else if (check.getCheckScope().equals(CheckScope.DEVICE.name())) {
+            log.info("Starting check execute with SNMP for device");
+            checkDevice = device;
+        }
         if (checkDevice == null)
             throw new RuntimeException("Check device cannot be null!");
-        Map<String, String> paramsForCheck = getParamsForCheck(check, customer);
+
         String snmpOID = replacingVariablesWithValues(check.getSnmpOID(), paramsForCheck);
         String community = checkDevice.getSnmpCommunity();
         snmpClient.setIpAddress(checkDevice.getIp().getAddress());

@@ -1,10 +1,7 @@
 package com.ekoregin.nms.service;
 
 import com.ekoregin.nms.dto.CheckDto;
-import com.ekoregin.nms.entity.Check;
-import com.ekoregin.nms.entity.CheckResult;
-import com.ekoregin.nms.entity.Customer;
-import com.ekoregin.nms.entity.ModelDevice;
+import com.ekoregin.nms.entity.*;
 import com.ekoregin.nms.repository.CheckRepo;
 import com.ekoregin.nms.util.CheckExecutor;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +19,7 @@ import java.util.NoSuchElementException;
 public class CheckServiceImpl implements CheckService{
 
     private final CheckRepo checkRepo;
+    private final DeviceService deviceService;
     private final ModelDeviceService modelDeviceService;
     private final CustomerService customerService;
     private final CheckExecutor checkExecutorSnmp;
@@ -53,6 +51,7 @@ public class CheckServiceImpl implements CheckService{
         check.setSubstRules(checkDto.getSubstRules());
         check.setTelnetCommands(checkDto.getTelnetCommands());
         check.setJsonFilter(checkDto.getJsonFilter());
+        check.setCheckScope(checkDto.getCheckScope());
         checkRepo.save(check);
     }
 
@@ -83,14 +82,28 @@ public class CheckServiceImpl implements CheckService{
     }
 
     @Override
-    public CheckResult execute(long checkId, long customerId) {
+    public CheckResult executeForCustomer(long checkId, long customerId) {
         Check foundCheck = findById(checkId);
         Customer foundCustomer = customerService.findById(customerId);
         CheckResult checkResult;
         switch (foundCheck.getCheckType()) {
-            case "SNMP" -> checkResult = checkExecutorSnmp.checkExecute(foundCheck, foundCustomer);
-            case "TELNET" -> checkResult = checkExecutorTelnet.checkExecute(foundCheck, foundCustomer);
-            case "REST_API" -> checkResult = checkExecutorRest.checkExecute(foundCheck, foundCustomer);
+            case "SNMP" -> checkResult = checkExecutorSnmp.checkExecute(foundCheck, foundCustomer, null);
+            case "TELNET" -> checkResult = checkExecutorTelnet.checkExecute(foundCheck, foundCustomer, null);
+            case "REST_API" -> checkResult = checkExecutorRest.checkExecute(foundCheck, foundCustomer, null);
+            default -> throw new IllegalArgumentException("That method not support!");
+        }
+        return checkResult;
+    }
+
+    @Override
+    public CheckResult executeForDevice(long checkId, long deviceId) {
+        Check foundCheck = findById(checkId);
+        Device foundDevice = deviceService.findById(deviceId);
+        CheckResult checkResult;
+        switch (foundCheck.getCheckType()) {
+            case "SNMP" -> checkResult = checkExecutorSnmp.checkExecute(foundCheck, null, foundDevice);
+            case "TELNET" -> checkResult = checkExecutorTelnet.checkExecute(foundCheck, null, foundDevice);
+            case "REST_API" -> checkResult = checkExecutorRest.checkExecute(foundCheck, null, foundDevice);
             default -> throw new IllegalArgumentException("That method not support!");
         }
         return checkResult;

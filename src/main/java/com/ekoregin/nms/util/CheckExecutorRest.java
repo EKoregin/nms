@@ -1,9 +1,6 @@
 package com.ekoregin.nms.util;
 
-import com.ekoregin.nms.entity.Check;
-import com.ekoregin.nms.entity.CheckResult;
-import com.ekoregin.nms.entity.Customer;
-import com.ekoregin.nms.entity.Device;
+import com.ekoregin.nms.entity.*;
 import com.ekoregin.nms.service.ModelDeviceService;
 import com.google.gson.*;
 import lombok.Getter;
@@ -13,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -27,12 +25,20 @@ public class CheckExecutorRest implements CheckExecutor {
     private final ModelDeviceService modelDeviceService;
 
     @Override
-    public CheckResult checkExecute(Check check, Customer customer) {
-        log.info("Starting check execute with REST API");
-        Device checkDevice = getDeviceForCheck(modelDeviceService, check, customer);
+    public CheckResult checkExecute(Check check, Customer customer, Device device) {
+        Device checkDevice = null;
+        Map<String, String> paramsForCheck = new HashMap<>();
+        if (check.getCheckScope().equals(CheckScope.CUSTOMER.name())) {
+            log.info("Starting check execute with REST API for customer");
+            checkDevice = getDeviceForCheck(modelDeviceService, check, customer);
+            paramsForCheck = getParamsForCheck(check, customer);
+        } else if (check.getCheckScope().equals(CheckScope.DEVICE.name())) {
+            log.info("Starting check execute with REST API for device");
+            checkDevice = device;
+        }
         if (checkDevice == null)
             throw new RuntimeException("Check device cannot be null!");
-        Map<String, String> paramsForCheck = getParamsForCheck(check, customer);
+
         String requestWithValues = replacingVariablesWithValues(check.getTelnetCommands(), paramsForCheck);
         List<String> filter = Collections.emptyList();
         if (check.getJsonFilter() != null && !check.getJsonFilter().isEmpty()) {
@@ -43,8 +49,8 @@ public class CheckExecutorRest implements CheckExecutor {
     }
 
     private CheckResult restExec(Device device, String request, List<String> filter) {
-        StringBuilder fullURI = new StringBuilder("http://").append(device.getIp().getAddress()).append(request);
-//        StringBuilder fullURI = new StringBuilder("https://").append("jsonplaceholder.typicode.com").append(request);
+//        StringBuilder fullURI = new StringBuilder("http://").append(device.getIp().getAddress()).append(request);
+        StringBuilder fullURI = new StringBuilder("https://").append("jsonplaceholder.typicode.com").append(request);
         log.info("FullURL: {}", fullURI);
         CheckResult checkResult = new CheckResult();
         WebClient webClient = WebClient.builder()
