@@ -75,6 +75,16 @@
                             <input type="text" class="form-control" th:field="*{password}" id="devicePassw">
                         </div>
                     </div>
+                    <div th:if="*{customers.size() > 0}">
+                        <div style="cursor:pointer;color:blue;text-decoration:underline;">
+                            <a onclick="return toggleMe('listOfCustomers')">Подключенные абоненты</a>
+                        </div>
+                        <div id="listOfCustomers" class="col-sm-8">
+                                <span th:each="name : *{customers}">
+                                    <span th:text="${name}"></span><br>
+                                </span>
+                        </div>
+                    </div>
                     <p></p>
                     <h5 class="card-header">Доступные проверки</h5>
                     <table class="table">
@@ -151,3 +161,19 @@
 </script>
 </body>
 </html>
+
+<script type="text/javascript">
+    function toggleMe(a) {
+        var e = document.getElementById(a);
+        if (!e) return true;
+
+        if (e.style.display === "none") {
+            e.style.display = "block"
+        } else {
+            e.style.display = "none"
+        }
+        return true;
+    }
+
+    toggleMe('listOfCustomers');
+</script>

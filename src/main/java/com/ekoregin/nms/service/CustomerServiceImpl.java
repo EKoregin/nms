@@ -5,10 +5,7 @@ import com.ekoregin.nms.entity.Customer;
 import com.ekoregin.nms.repository.CustomerRepo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -78,8 +75,9 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public Page<Customer> findPaginated(Pageable pageable) {
-        List<Customer> customers = customerRepo.findAll();
+    public Page<Customer> findPaginated(Pageable pageable, String sortField) {
+        Sort sort = Sort.by(sortField).ascending();
+        List<Customer> customers = customerRepo.findAll(Sort.by(sortField));
         int pageSize = pageable.getPageSize();
         int currentPage = pageable.getPageNumber();
         int startItem = currentPage * pageSize;
@@ -92,7 +90,7 @@ public class CustomerServiceImpl implements CustomerService {
             list = customers.subList(startItem, toIndex);
         }
 
-        return new PageImpl<>(list, PageRequest.of(currentPage, pageSize), customers.size());
+        return new PageImpl<>(list, PageRequest.of(currentPage, pageSize, sort), customers.size());
     }
 
     @Override

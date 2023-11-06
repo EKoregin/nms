@@ -14,6 +14,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -31,8 +32,11 @@ public class DeviceController {
     }
 
     @GetMapping
-    public String allDevices(Model model) {
-        model.addAttribute("devices", deviceService.findAll());
+    public String allDevices(@RequestParam("sortField") Optional<String> sortField,
+                             Model model) {
+        String currentSortField = sortField.orElse("id");
+        model.addAttribute("devices", deviceService.findAll(currentSortField));
+        model.addAttribute("sortField", sortField);
         return "devices";
     }
 

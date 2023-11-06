@@ -1,11 +1,14 @@
 package com.ekoregin.nms.dto;
 
+import com.ekoregin.nms.entity.Customer;
 import com.ekoregin.nms.entity.Device;
 import io.hypersistence.utils.hibernate.type.basic.Inet;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.List;
 
 @Getter
 @Setter
@@ -31,6 +34,8 @@ public class DeviceDto {
 
     private Long modelId;
 
+    private List<String> customers;
+
 
 
     public DeviceDto(Device device) {
@@ -43,5 +48,9 @@ public class DeviceDto {
         this.password = device.getPassword();
         this.modelId = device.getModel().getId();
         this.mac = device.getMac();
+        this.customers = device.getCustomers()
+                .stream()
+                .map(Customer::getName)
+                .toList();
     }
 }

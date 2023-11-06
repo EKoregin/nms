@@ -33,9 +33,11 @@ public class CustomerController {
     @RequestMapping(path = {"", "/search"})
     public String searchCustomers(Model model, String searchKeyword,
                                   @RequestParam("page") Optional<Integer> page,
-                                  @RequestParam("size") Optional<Integer> size) {
+                                  @RequestParam("size") Optional<Integer> size,
+                                  @RequestParam("sortField") Optional<String> sortField) {
         int currentPage = page.orElse(1);
         int pageSize = size.orElse(50);
+        String currentSortField = sortField.orElse("id");
         model.addAttribute("countCustomers", customerService.count());
         var pageRequest = PageRequest.of(currentPage - 1, pageSize);
         Page<Customer> customerPage;
@@ -43,9 +45,12 @@ public class CustomerController {
             log.info("Search keyword is: " + searchKeyword);
             customerPage = customerService.findByNamePaginated(searchKeyword, pageRequest);
             model.addAttribute("customerPage", customerPage);
+            model.addAttribute("searchFlag", true);
         } else {
             log.info("Get all customers");
-            customerPage = customerService.findPaginated(pageRequest);
+            customerPage = customerService.findPaginated(pageRequest, currentSortField);
+            model.addAttribute("sortField", sortField);
+            model.addAttribute("currentPage", currentPage);
             model.addAttribute("customerPage", customerPage);
         }
 
@@ -108,7 +113,7 @@ public class CustomerController {
         Customer foundCustomer = customerService.findById(customerId);
         if (foundCustomer != null) {
             model.addAttribute("customerId", customerId);
-            model.addAttribute("allDevices", deviceService.findAll());
+            model.addAttribute("allDevices", deviceService.findAll("id"));
         } else {
             log.info("Customer with ID: {} not found", customerId);
             throw new NoSuchElementException("Customer with ID: " + customerId + " not found");

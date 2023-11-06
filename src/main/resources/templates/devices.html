@@ -39,10 +39,12 @@
                     <table class="table">
                         <thead>
                         <tr>
-                            <th scope="col">ID</th>
-                            <th scope="col">Название</th>
-                            <th scope="col">IP адрес</th>
-                            <th scope="col">Модель</th>
+                            <th scope="col"><a th:href="@{/devices(sortField='id')}">ID</a></th>
+                            <th scope="col"><a th:href="@{/devices(sortField='name')}">Название</a></th>
+                            <th scope="col"><a th:href="@{/devices(sortField='ip')}">IP адрес</a></th>
+                            <th scope="col"><a th:href="@{/devices(sortField='model.name')}">Модель</a></th>
+                            <th scope="col"><a th:href="@{/devices(sortField='model.type')}">Тип</a></th>
+                            <th scope="col">Абонентов</th>
                             <th scope="col"></th>
                         </tr>
                         </thead>
@@ -52,6 +54,8 @@
                             <td th:text="${device.name}"></td>
                             <td th:text="${device.ip.address}"></td>
                             <td th:text="${device.model.name}"></td>
+                            <td th:text="${device.model.type}"></td>
+                            <td th:text="${device.customers.size()}"></td>
                             <td>
                                 <div class="container">
                                     <div class="row">

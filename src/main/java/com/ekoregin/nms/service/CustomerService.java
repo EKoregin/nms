@@ -23,7 +23,7 @@ public interface CustomerService {
 
     long count();
 
-    Page<Customer> findPaginated(Pageable pageable);
+    Page<Customer> findPaginated(Pageable pageable, String sortField);
 
     Page<Customer> findByNamePaginated(String name, Pageable pageable);
 }

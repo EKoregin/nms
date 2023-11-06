@@ -14,5 +14,5 @@ public interface DeviceService {
 
     Device findById(long id);
 
-    List<Device> findAll();
+    List<Device> findAll(String sortField);
 }

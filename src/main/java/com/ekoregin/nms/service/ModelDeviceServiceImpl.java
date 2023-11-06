@@ -5,6 +5,7 @@ import com.ekoregin.nms.entity.ModelDevice;
 import com.ekoregin.nms.repository.ModelDeviceRepo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -57,7 +58,7 @@ public class ModelDeviceServiceImpl implements ModelDeviceService {
 
     @Override
     public List<ModelDevice> findAll() {
-        return modelDeviceRepo.findAll();
+        return modelDeviceRepo.findAll(Sort.by("manufacturer"));
     }
 
     @Override

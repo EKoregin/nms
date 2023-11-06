@@ -7,6 +7,7 @@ import com.ekoregin.nms.repository.DeviceRepo;
 import jakarta.validation.ConstraintViolationException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -80,7 +81,7 @@ public class DeviceServiceImpl implements DeviceService {
     }
 
     @Override
-    public List<Device> findAll() {
-        return deviceRepo.findAll();
+    public List<Device> findAll(String sortField) {
+        return deviceRepo.findAll(Sort.by(sortField));
     }
 }

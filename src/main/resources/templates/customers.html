@@ -52,9 +52,30 @@
                     <table class="table">
                         <thead>
                         <tr>
-                            <th scope="col">ID</th>
-                            <th scope="col">Имя</th>
-                            <th scope="col">Адрес</th>
+                            <th scope="col">
+                                <span th:if="${searchFlag}">
+                                    ID
+                                </span>
+                                <span th:unless="${searchFlag}">
+                                    <a th:href="@{/customers(size=${customerPage.size}, page=${currentPage}, sortField='id')}">ID</a>
+                                </span>
+                            </th>
+                            <th scope="col">
+                                <span th:if="${searchFlag}">
+                                    Имя
+                                </span>
+                                <span th:unless="${searchFlag}">
+                                    <a th:href="@{/customers(size=${customerPage.size}, page=${currentPage}, sortField='name')}">Имя</a>
+                                </span>
+                            </th>
+                            <th scope="col">
+                                <span th:if="${searchFlag}">
+                                    Адрес
+                                </span>
+                                <span th:unless="${searchFlag}">
+                                    <a th:href="@{/customers(size=${customerPage.size}, page=${currentPage}, sortField='address')}">Адрес</a>
+                                </span>
+                            </th>
                             <th scope="col"></th>
                         </tr>
                         </thead>
