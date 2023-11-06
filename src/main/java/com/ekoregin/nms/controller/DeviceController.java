@@ -1,5 +1,6 @@
 package com.ekoregin.nms.controller;
 
+import com.ekoregin.nms.dto.CheckDto;
 import com.ekoregin.nms.dto.DeviceDto;
 import com.ekoregin.nms.entity.Check;
 import com.ekoregin.nms.entity.CheckScope;
@@ -78,5 +79,12 @@ public class DeviceController {
     public String delete(@PathVariable long deviceId) {
         deviceService.delete(deviceId);
         return "redirect:/devices";
+    }
+
+    @ResponseBody
+    @GetMapping("/{deviceId}")
+    public List<CheckDto> findAllChecksByDeviceId(@PathVariable long deviceId) {
+        log.info("Request for checks for deviceId: {}", deviceId);
+        return deviceService.findAllChecksByDeviceId(deviceId);
     }
 }

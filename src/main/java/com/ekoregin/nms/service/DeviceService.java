@@ -1,5 +1,6 @@
 package com.ekoregin.nms.service;
 
+import com.ekoregin.nms.dto.CheckDto;
 import com.ekoregin.nms.dto.DeviceDto;
 import com.ekoregin.nms.entity.Device;
 
@@ -15,4 +16,8 @@ public interface DeviceService {
     Device findById(long id);
 
     List<Device> findAll(String sortField);
+
+    List<Device> findAll();
+
+    List<CheckDto> findAllChecksByDeviceId(long deviceId);
 }

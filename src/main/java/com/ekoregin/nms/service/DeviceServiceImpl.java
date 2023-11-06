@@ -1,5 +1,6 @@
 package com.ekoregin.nms.service;
 
+import com.ekoregin.nms.dto.CheckDto;
 import com.ekoregin.nms.dto.DeviceDto;
 import com.ekoregin.nms.entity.Device;
 import com.ekoregin.nms.entity.ModelDevice;
@@ -83,5 +84,22 @@ public class DeviceServiceImpl implements DeviceService {
     @Override
     public List<Device> findAll(String sortField) {
         return deviceRepo.findAll(Sort.by(sortField));
+    }
+
+    @Override
+    public List<Device> findAll() {
+        return deviceRepo.findAll();
+    }
+
+    @Override
+    public List<CheckDto> findAllChecksByDeviceId(long deviceId) {
+        Device device = deviceRepo.findById(deviceId).orElse(null);
+        if (device == null)
+            throw new RuntimeException("Device is null for deviceId " + deviceId);
+        List<CheckDto> checkDtos = device.getModel().getChecks().stream()
+                .map(CheckDto::new)
+                .toList();
+        checkDtos.stream().map(CheckDto::getCheckName).forEach(System.out::println);
+        return checkDtos;
     }
 }

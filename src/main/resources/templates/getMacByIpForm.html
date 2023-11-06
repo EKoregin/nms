@@ -1,0 +1,95 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns="http://www.w3.org/1999/html" lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <script src="https://code.jquery.com/jquery-3.7.0.js"
+            integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM="
+            crossorigin="anonymous"></script>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <title>Получение MAC адресов</title>
+</head>
+<body>
+<div class="container">
+    <h2 class="display-4">Сбор данных</h2>
+    <div class="row pt3">
+        <div class="card" style="width: 80%">
+            <h5 class="card-header">Получение MAC адресов</h5>
+            <div class="card-body">
+                <form th:action="@{/gathering/getMacByIp}" method="POST">
+                    <div class="form-group row">
+                        <label for="deviceId" class="col-sm-2 col-form-label">Устройство</label>
+                        <div class="col-sm-8">
+                            <select name="deviceId" id="deviceId">
+                                <option value="" selected>Выбрать модель</option>
+                                <option th:each="device : ${devices}"
+                                        th:value="${device.id}" th:text="${device.name}">
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div th:id="checkSelect" class="col-sm-8">
+                            <!--                                dynamic part-->
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Выполнить</button>
+                    <a th:href="@{/devices}" role="button" class="btn btn-primary">Отмена</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        $('#deviceId').change(function () {
+            let deviceId = this.value;
+            let checkSelectElement = document.getElementById('checkSelect');
+            checkSelectElement.innerHTML = "";
+            if (deviceId) {
+                $.get({
+                    url: '/devices/' + deviceId,
+                    success: (checks) => {
+
+                        let label = document.createElement('label');
+                        label.innerText = "Проверка";
+                        label.htmlFor = "checkId";
+                        label.className = "col-sm-2 col-form-label";
+                        checkSelectElement.before(label);
+
+                        let select = document.createElement('select');
+                        select.name = "checkId";
+
+                        let startOption = document.createElement('option');
+                        startOption.value = "";
+                        startOption.innerHTML = "Выбрать проверку";
+                        select.appendChild(startOption);
+
+                        for (let check of checks) {
+                            let option = document.createElement('option');
+                            option.value = check.checkId;
+                            option.innerHTML = check.checkName;
+                            select.appendChild(option);
+                        }
+                        checkSelectElement.appendChild(select);
+                        $('#checkSelect').append(checkSelectElement);
+                    },
+                    error: (err) => {
+                        alert("Error");
+                        alert(err);
+                    }
+                });
+            } else {
+                alert("Выберите устройство")
+            }
+        });
+    });
+
+</script>
+</body>
+</html>

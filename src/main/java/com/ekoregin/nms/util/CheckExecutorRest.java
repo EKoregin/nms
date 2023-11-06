@@ -109,8 +109,8 @@ public class CheckExecutorRest implements CheckExecutor {
         JsonElement filteredJsonElement = new JsonObject();
         log.info("Фильтрация элементов в JSON");
         for (String key : allowKeys) {
-            log.info(jsonElement.getAsJsonObject().get(key).toString());
-            if (!jsonElement.getAsJsonObject().get(key).isJsonNull()) {
+            if (jsonElement != null && !jsonElement.getAsJsonObject().get(key).isJsonNull()) {
+                log.info("Key: {}, Value: {}", key, jsonElement.getAsJsonObject().get(key).toString());
                 filteredJsonElement.getAsJsonObject().add(key, jsonElement.getAsJsonObject().get(key));
             }
         }
