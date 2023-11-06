@@ -8,7 +8,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import org.springframework.web.reactive.function.client.ExchangeStrategies;
 import org.springframework.web.reactive.function.client.WebClient;
+
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -28,11 +30,12 @@ public class CheckExecutorRest implements CheckExecutor {
     public CheckResult checkExecute(Check check, Customer customer, Device device) {
         Device checkDevice = null;
         Map<String, String> paramsForCheck = new HashMap<>();
-        if (check.getCheckScope().equals(CheckScope.CUSTOMER.name())) {
+        String checkScope = check.getCheckScope();
+        if (checkScope.equals(CheckScope.CUSTOMER.name())) {
             log.info("Starting check execute with REST API for customer");
             checkDevice = getDeviceForCheck(modelDeviceService, check, customer);
             paramsForCheck = getParamsForCheck(check, customer);
-        } else if (check.getCheckScope().equals(CheckScope.DEVICE.name())) {
+        } else if (checkScope.equals(CheckScope.DEVICE.name())) {
             log.info("Starting check execute with REST API for device");
             checkDevice = device;
         }
@@ -45,15 +48,25 @@ public class CheckExecutorRest implements CheckExecutor {
             filter = List.of(check.getJsonFilter().split(";"));
             log.info("Filter set: " + filter);
         }
-        return restExec(checkDevice, requestWithValues, filter);
+        CheckResult checkResult = new CheckResult();
+        String resultJson = restExec(checkDevice, requestWithValues, filter);
+        if (checkScope.equals(CheckScope.CUSTOMER.name())) {
+            resultJson = resultJson.replaceAll("[{}]", "").replaceAll("[\\[\\]]", "").trim();
+        }
+        checkResult.setResult(resultJson);
+        return checkResult;
     }
 
-    private CheckResult restExec(Device device, String request, List<String> filter) {
-        StringBuilder fullURI = new StringBuilder("http://").append(device.getIp().getAddress()).append(request);
-//        StringBuilder fullURI = new StringBuilder("https://").append("jsonplaceholder.typicode.com").append(request);
+    private String restExec(Device device, String request, List<String> filter) {
+//        StringBuilder fullURI = new StringBuilder("http://").append(device.getIp().getAddress()).append(request);
+        StringBuilder fullURI = new StringBuilder("https://").append("jsonplaceholder.typicode.com").append(request);
         log.info("FullURL: {}", fullURI);
-        CheckResult checkResult = new CheckResult();
+
+        final ExchangeStrategies strategies = ExchangeStrategies.builder()
+                .codecs(codecs -> codecs.defaultCodecs().maxInMemorySize(5 * 1024 * 1024))
+                .build();
         WebClient webClient = WebClient.builder()
+                .exchangeStrategies(strategies)
                 .defaultHeaders(header -> header.setBasicAuth(device.getLogin(), device.getPassword()))
                 .build();
         String result = webClient
@@ -62,34 +75,45 @@ public class CheckExecutorRest implements CheckExecutor {
                 .retrieve()
                 .bodyToMono(String.class)
                 .block();
-
-        checkResult.setResult(prettyPrintUsingGson(result, filter).replaceAll("[{}]", "").trim());
-        return checkResult;
+        return prettyPrintUsingGson(result, filter);
     }
 
     public String prettyPrintUsingGson(String uglyJson, List<String> allowKeys) {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         JsonElement jsonElement = JsonParser.parseString(uglyJson);
 
-        if (jsonElement.isJsonArray())
-            jsonElement = jsonElement.getAsJsonArray().get(0);
-
         String resultJson = gson.toJson(jsonElement);
-        log.info("Result Json: " + resultJson);
 
-        JsonElement filteredJsonElement = new JsonObject();
-        log.info("Цикл по элементам JSON");
-        log.info("ALlow keys: " + allowKeys.size());
-        if (allowKeys.size() > 0) {
-            for (String key : allowKeys) {
-                log.info(jsonElement.getAsJsonObject().get(key).toString());
-                if (!jsonElement.getAsJsonObject().get(key).isJsonNull()) {
-                    filteredJsonElement.getAsJsonObject().add(key, jsonElement.getAsJsonObject().get(key));
+        if (jsonElement.isJsonArray()) {
+            log.info("JSON is ARRAY!");
+            JsonArray jsonArray = jsonElement.getAsJsonArray();
+            if (allowKeys.size() > 0) {
+                log.info("ALlow keys: " + allowKeys.size());
+                jsonArray = new JsonArray();
+                for (JsonElement element : jsonElement.getAsJsonArray()) {
+                    jsonArray.add(filterJson(allowKeys, element));
                 }
             }
-            resultJson = gson.toJson(filteredJsonElement);
+            resultJson = gson.toJson(jsonArray);
+        } else {
+            if (allowKeys.size() > 0) {
+                filterJson(allowKeys, jsonElement);
+                resultJson = gson.toJson(jsonElement);
+            }
         }
-
+        log.info("Result Json: " + resultJson);
         return resultJson;
+    }
+
+    private JsonElement filterJson(List<String> allowKeys, JsonElement jsonElement) {
+        JsonElement filteredJsonElement = new JsonObject();
+        log.info("Фильтрация элементов в JSON");
+        for (String key : allowKeys) {
+            log.info(jsonElement.getAsJsonObject().get(key).toString());
+            if (!jsonElement.getAsJsonObject().get(key).isJsonNull()) {
+                filteredJsonElement.getAsJsonObject().add(key, jsonElement.getAsJsonObject().get(key));
+            }
+        }
+        return filteredJsonElement;
     }
 }
