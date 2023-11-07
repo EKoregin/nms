@@ -87,7 +87,7 @@ public class CheckExecutorRest implements CheckExecutor {
         if (jsonElement.isJsonArray()) {
             log.info("JSON is ARRAY!");
             JsonArray jsonArray = jsonElement.getAsJsonArray();
-            if (allowKeys.size() > 0) {
+            if (!allowKeys.isEmpty()) {
                 log.info("ALlow keys: " + allowKeys.size());
                 jsonArray = new JsonArray();
                 for (JsonElement element : jsonElement.getAsJsonArray()) {
@@ -96,7 +96,7 @@ public class CheckExecutorRest implements CheckExecutor {
             }
             resultJson = gson.toJson(jsonArray);
         } else {
-            if (allowKeys.size() > 0) {
+            if (!allowKeys.isEmpty()) {
                 filterJson(allowKeys, jsonElement);
                 resultJson = gson.toJson(jsonElement);
             }
@@ -110,7 +110,7 @@ public class CheckExecutorRest implements CheckExecutor {
         log.info("Фильтрация элементов в JSON");
         for (String key : allowKeys) {
             if (jsonElement != null && !jsonElement.getAsJsonObject().get(key).isJsonNull()) {
-                log.info("Key: {}, Value: {}", key, jsonElement.getAsJsonObject().get(key).toString());
+//                log.info("Key: {}, Value: {}", key, jsonElement.getAsJsonObject().get(key).toString());
                 filteredJsonElement.getAsJsonObject().add(key, jsonElement.getAsJsonObject().get(key));
             }
         }
