@@ -40,8 +40,8 @@ public class GatherDataController {
     private String getMacByIp(Model model,
                               @RequestParam("deviceId") long deviceId,
                               @RequestParam("checkId") long checkId) {
-        gatherDataService.getMacByIP(deviceId, checkId);
-
+        List<String> result = gatherDataService.getMacByIP(deviceId, checkId);
+        model.addAttribute("results", result);
         return "getMacByIpResult";
     }
 }

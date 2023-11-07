@@ -58,8 +58,8 @@ public class CheckExecutorRest implements CheckExecutor {
     }
 
     private String restExec(Device device, String request, List<String> filter) {
-//        StringBuilder fullURI = new StringBuilder("http://").append(device.getIp().getAddress()).append(request);
-        StringBuilder fullURI = new StringBuilder("https://").append("jsonplaceholder.typicode.com").append(request);
+        StringBuilder fullURI = new StringBuilder("http://").append(device.getIp().getAddress()).append(request);
+//        StringBuilder fullURI = new StringBuilder("https://").append("jsonplaceholder.typicode.com").append(request);
         log.info("FullURL: {}", fullURI);
 
         final ExchangeStrategies strategies = ExchangeStrategies.builder()
@@ -101,7 +101,7 @@ public class CheckExecutorRest implements CheckExecutor {
                 resultJson = gson.toJson(jsonElement);
             }
         }
-        log.info("Result Json: " + resultJson);
+//        log.info("Result Json: " + resultJson);
         return resultJson;
     }
 
@@ -109,7 +109,7 @@ public class CheckExecutorRest implements CheckExecutor {
         JsonElement filteredJsonElement = new JsonObject();
         log.info("Фильтрация элементов в JSON");
         for (String key : allowKeys) {
-            if (jsonElement != null && !jsonElement.getAsJsonObject().get(key).isJsonNull()) {
+            if (jsonElement != null && !jsonElement.getAsJsonObject().isJsonNull()) {
 //                log.info("Key: {}, Value: {}", key, jsonElement.getAsJsonObject().get(key).toString());
                 filteredJsonElement.getAsJsonObject().add(key, jsonElement.getAsJsonObject().get(key));
             }
