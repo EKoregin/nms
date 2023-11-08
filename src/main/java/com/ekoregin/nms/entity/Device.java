@@ -71,7 +71,7 @@ public class Device {
         this.id = deviceDto.getId();
         this.name = deviceDto.getName();
         this.description = deviceDto.getDescription();
-        this.ip = deviceDto.getIp();
+        this.ip = new Inet(deviceDto.getIp());
         this.login = deviceDto.getLogin();
         this.password = deviceDto.getPassword();
         this.snmpCommunity = "public";

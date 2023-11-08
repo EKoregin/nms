@@ -8,10 +8,12 @@ import com.ekoregin.nms.entity.Device;
 import com.ekoregin.nms.entity.ModelDevice;
 import com.ekoregin.nms.service.DeviceService;
 import com.ekoregin.nms.service.ModelDeviceService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -48,7 +50,10 @@ public class DeviceController {
     }
 
     @PostMapping("/create")
-    public String create(@ModelAttribute DeviceDto deviceDto) {
+    public String create(@Valid @ModelAttribute DeviceDto deviceDto, Errors errors) {
+        if (errors.hasErrors()) {
+            return "addDevice";
+        }
         deviceService.create(deviceDto);
         return "redirect:/devices";
     }
@@ -70,7 +75,10 @@ public class DeviceController {
     }
 
     @PutMapping("/update")
-    public String update(@ModelAttribute DeviceDto deviceDto) {
+    public String update(@Valid @ModelAttribute DeviceDto deviceDto, Errors errors) {
+        if (errors.hasErrors()) {
+            return "editDevice";
+        }
         deviceService.update(deviceDto);
         return "redirect:/devices";
     }

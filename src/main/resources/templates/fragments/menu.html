@@ -44,6 +44,13 @@
                         <a th:href="@{/typeTechParams}" class="dashboard-nav-dropdown-item">Типы параметров</a>
                     </div>
                 </div>
+                <div class='dashboard-nav-dropdown'>
+                    <a href="#!" class="dashboard-nav-item dashboard-nav-dropdown-toggle">
+                        <i class="fa fa-database"></i>Сбор данных</a>
+                    <div class='dashboard-nav-dropdown-menu'>
+                        <a th:href="@{/gathering/getMacByIpAllCustomers}" class="dashboard-nav-dropdown-item">Обновление MAC адресов</a>
+                    </div>
+                </div>
                 <a href="http://172.17.4.21" class="dashboard-nav-item"><i class="fa fa-eye"></i>Zabbix</a>
                 <div class="nav-item-divider"></div>
                 <a href="#" class="dashboard-nav-item"><i class="fas fa-sign-out-alt"></i>Выйти</a>

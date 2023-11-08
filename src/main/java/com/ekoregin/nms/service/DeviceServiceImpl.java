@@ -5,6 +5,7 @@ import com.ekoregin.nms.dto.DeviceDto;
 import com.ekoregin.nms.entity.Device;
 import com.ekoregin.nms.entity.ModelDevice;
 import com.ekoregin.nms.repository.DeviceRepo;
+import io.hypersistence.utils.hibernate.type.basic.Inet;
 import jakarta.validation.ConstraintViolationException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -51,7 +52,7 @@ public class DeviceServiceImpl implements DeviceService {
         Device device = findById(deviceDto.getId());
         device.setName(deviceDto.getName());
         device.setDescription(deviceDto.getDescription());
-        device.setIp(deviceDto.getIp());
+        device.setIp(new Inet(deviceDto.getIp()));
         device.setMac(deviceDto.getMac());
         device.setPort(deviceDto.getManagePort());
         device.setLogin(deviceDto.getLogin());

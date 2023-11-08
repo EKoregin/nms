@@ -37,6 +37,7 @@
                         <label for="deviceName" class="col-sm-2 col-form-label">Название</label>
                         <div class="col-sm-8">
                             <input type="text" class="form-control" th:field="*{name}" id="deviceName">
+                            <p class="text-danger" th:if="${#fields.hasErrors('name')}" th:errorclass="error" th:errors="*{name}"></p>
                         </div>
                     </div>
                     <div class="form-group row">
@@ -48,13 +49,15 @@
                     <div class="form-group row">
                         <label for="deviceIp" class="col-sm-2 col-form-label">IP адрес</label>
                         <div class="col-sm-8">
-                            <input type="text" class="form-control" th:name="ip" th:value="*{ip.address}" id="deviceIp">
+                            <input type="text" class="form-control" th:name="ip" th:value="*{ip}" id="deviceIp">
+                            <p class="text-danger" th:if="${#fields.hasErrors('ip')}" th:errorclass="error" th:errors="*{ip}"></p>
                         </div>
                     </div>
                     <div class="form-group row">
                         <label for="deviceMac" class="col-sm-2 col-form-label">MAC адрес</label>
                         <div class="col-sm-8">
                             <input type="text" class="form-control" th:field="*{mac}" id="deviceMac">
+                            <p class="text-danger" th:if="${#fields.hasErrors('mac')}" th:errorclass="error" th:errors="*{mac}"></p>
                         </div>
                     </div>
                     <div class="form-group row">
@@ -75,7 +78,7 @@
                             <input type="text" class="form-control" th:field="*{password}" id="devicePassw">
                         </div>
                     </div>
-                    <div th:if="*{customers.size() > 0}">
+                    <div th:if="*{customers != null && customers.size() > 0}">
                         <div style="cursor:pointer;color:blue;text-decoration:underline;">
                             <a onclick="return toggleMe('listOfCustomers')">Подключенные абоненты</a>
                         </div>
