@@ -84,11 +84,16 @@ public class GatherDataService {
                         }
                     } else { // Если мак есть и он другой, то обновляем значение
                         if (!macAddress.getValue().equals(newMacAddressValue)) {
-                            stringForReport.append(" -> MAC ИЗМЕНИЛСЯ!");
-                            stringForReport.append(macAddress.getValue()).append(" ,New MAC: ");
+                            stringForReport.append(macAddress.getValue())
+                                    .append(" ,New MAC: ")
+                                    .append(newMacAddressValue)
+                                    .append(" -> MAC ИЗМЕНИЛСЯ!");
                             macAddress.setValue(newMacAddressValue);
-                            stringForReport.append(newMacAddressValue);
                             techParameterRepo.save(macAddress);
+                        } else {
+                            stringForReport.append(macAddress.getValue())
+                                    .append(" , Found MAC: ")
+                                    .append(newMacAddressValue);
                         }
                     }
                 }
