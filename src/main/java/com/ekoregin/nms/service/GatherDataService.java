@@ -3,6 +3,8 @@ package com.ekoregin.nms.service;
 import com.ekoregin.nms.entity.Customer;
 import com.ekoregin.nms.entity.TechParameter;
 import com.ekoregin.nms.entity.TypeTechParameter;
+import com.ekoregin.nms.repository.TechParameterRepo;
+import com.ekoregin.nms.repository.TypeTechParameterRepo;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import lombok.RequiredArgsConstructor;
@@ -21,23 +23,8 @@ public class GatherDataService {
 
     private final CustomerService customerService;
     private final CheckService checkService;
-
-//    public void getMacByIP(long deviceId, long checkId) {
-//        List<Customer> customers = customerService.findAll();
-//        String resultString = checkService.executeForDevice(checkId, deviceId).getResult();
-//        // Get JSON from String
-//        JsonElement jsonElement = JsonParser.parseString(resultString);
-//        // Loop for elements
-//        for (JsonElement element : jsonElement.getAsJsonArray()) {
-//            log.info(element.getAsJsonObject().toString());
-//            if (!element.getAsJsonObject().isJsonNull()) {
-//                String status = String.valueOf(element.getAsJsonObject().get("name"));
-//                String activeIpAddress = String.valueOf(element.getAsJsonObject().get("username"));
-//                String activeMacAddress = String.valueOf(element.getAsJsonObject().get("email"));
-//                log.info("IP: {}, MAC: {}, STATUS: {}", activeIpAddress, activeMacAddress, status);
-//            }
-//        }
-//    }
+    private final TechParameterRepo techParameterRepo;
+    private final TypeTechParameterRepo ttpRepo;
 
     public List<String> getMacByIP(long deviceId, long checkId) {
         List<Customer> customers = customerService.findAll();
@@ -46,15 +33,15 @@ public class GatherDataService {
         JsonElement jsonElement = JsonParser.parseString(resultString);
         // Loop for elements
         Map<String, String> mapIpMac = new HashMap<>();
-        List<String> list = new ArrayList<>();
+        List<String> listForReport = new ArrayList<>();
 
         for (JsonElement element : jsonElement.getAsJsonArray()) {
             if (!element.getAsJsonObject().isJsonNull()) {
-                log.info(element.getAsJsonObject().toString());
+
                 String status = String.valueOf(element.getAsJsonObject().get("status")).replaceAll("\"", "");
                 String activeIpAddress = String.valueOf(element.getAsJsonObject().get("active-address")).replaceAll("\"", "");
                 String activeMacAddress = String.valueOf(element.getAsJsonObject().get("active-mac-address")).replaceAll("\"", "");
-//                log.info("IP: {}, MAC: {}, STATUS: {}", activeIpAddress, activeMacAddress, status);
+
                 String getRecord = "IP: " +
                         activeIpAddress + ", MAC: " +
                         activeMacAddress + ", Status: " +
@@ -62,36 +49,57 @@ public class GatherDataService {
                 if (status.equals("bound")) {
                     mapIpMac.put(activeIpAddress, activeMacAddress);
                 }
-                list.add(getRecord);
+                listForReport.add(getRecord);
             }
         }
 
-
         //loop for customers
         for (Customer customer : customers) {
-            String name = customer.getName();
-            //get ip address
-            String ipAddress = customer.getParams().stream()
+            StringBuilder stringForReport = new StringBuilder(customer.getName() + ", IP: ");
+
+            // Получить IP адрес абонента
+            TechParameter ipAddress = customer.getParams().stream()
                     .filter(param -> param.getType().getName().equals("IP"))
-                    .findFirst().orElse(new TechParameter(null, null, "Не определен", null)).getValue();
-            //get mac address
-            String macAddress = customer.getParams().stream()
+                    .findFirst().orElse(null);
+
+            TechParameter macAddress = customer.getParams().stream()
                     .filter(param -> param.getType().getName().equals("MAC"))
-                    .findFirst().orElse(new TechParameter(null, null, "Не определен", null)).getValue();
+                    .findFirst().orElse(null);
 
-            String newMacAddress = mapIpMac.getOrDefault(ipAddress, "Не найден");
+            if (ipAddress == null) {
+                log.warn("IP адрес для абонента {} не определен", customer.getName());
+                stringForReport.append("не определен");
+            } else {
+                String ipAddressValue = ipAddress.getValue();
+                stringForReport.append(ipAddressValue).append(", MAC: ");
+                // Если такой IP есть в найденных DHCP связках, то добавляем или обновляем MAC-адрес
+                if (mapIpMac.containsKey(ipAddressValue)) {
+                    String newMacAddressValue = mapIpMac.get(ipAddressValue);
+                    // Если у абонента нет мак адреса, то создаем новый параметр и добавляем абоненту.
+                    if (macAddress == null) {
+                        // Находим MAC параметр
+                        TypeTechParameter ttpMac = ttpRepo.findByName("MAC");
+                        macAddress = TechParameter.builder()
+                                .value(newMacAddressValue)
+                                .type(ttpMac)
+                                .customer(customer)
+                                .build();
+                        stringForReport.append("не определен, New MAC: ").append(newMacAddressValue);
+                    } else { // Если мак есть, то обновляем значение
+                        stringForReport.append(macAddress.getValue()).append("New MAC: ");
+                        macAddress.setValue(newMacAddressValue);
+                        stringForReport.append(newMacAddressValue);
+                        if (macAddress.getValue().equals(newMacAddressValue))
+                            stringForReport.append(" -> MAC ИЗМЕНИЛСЯ!");
+                    }
+                    techParameterRepo.save(macAddress);
+                }
+            }
+            listForReport.add(stringForReport.toString());
+        }
 
-//            log.info("Name: {}, IP: {}, MAC: {}, New MAC: {}", name, ipAddress, macAddress, newMacAddress);
-            String currentRecord = name + ", IP: " +
-                    ipAddress + ", MAC: " +
-                    macAddress + ", New MAC: " +
-                    newMacAddress;
-            list.add(currentRecord);
-        }
-        System.out.println("Map IPMac");
-        for (String ip : mapIpMac.keySet()) {
-            System.out.println("Key: " + ip + ", MAC: " + mapIpMac.get(ip));
-        }
-        return list;
+        return listForReport;
     }
+
+
 }
