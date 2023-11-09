@@ -96,10 +96,12 @@
                         select.appendChild(startOption);
 
                         for (let check of checks) {
-                            let option = document.createElement('option');
-                            option.value = check.checkId;
-                            option.innerHTML = check.checkName;
-                            select.appendChild(option);
+                            if (check.checkScope === 'DEVICE') {
+                                let option = document.createElement('option');
+                                option.value = check.checkId;
+                                option.innerHTML = check.checkName;
+                                select.appendChild(option);
+                            }
                         }
                         checkSelectElement.appendChild(select);
                         $('#checkSelect').append(checkSelectElement);
