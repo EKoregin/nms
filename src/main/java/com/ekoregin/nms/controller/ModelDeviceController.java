@@ -3,8 +3,10 @@ package com.ekoregin.nms.controller;
 import com.ekoregin.nms.dto.ModelDeviceDto;
 import com.ekoregin.nms.entity.Check;
 import com.ekoregin.nms.entity.ModelDevice;
+import com.ekoregin.nms.entity.TypeTechParameter;
 import com.ekoregin.nms.service.CheckService;
 import com.ekoregin.nms.service.ModelDeviceService;
+import com.ekoregin.nms.service.TypeTechParameterService;
 import com.ekoregin.nms.util.TypeDevice;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -26,11 +28,18 @@ public class ModelDeviceController {
 
     public final ModelDeviceService modelDeviceService;
     private final CheckService checkService;
+    private final TypeTechParameterService ttpService;
 
     @ModelAttribute
     public void addDeviceType(Model model) {
         List<String> types = Arrays.stream(TypeDevice.class.getEnumConstants()).map(Enum::name).toList();
         model.addAttribute("deviceTypes", types);
+    }
+
+    @ModelAttribute
+    public void addTypeParameter(Model model) {
+        List<TypeTechParameter> typeTechParameters = ttpService.findAll();
+        model.addAttribute("typeParams", typeTechParameters);
     }
 
     @GetMapping

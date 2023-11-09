@@ -3,6 +3,7 @@ package com.ekoregin.nms.dto;
 import com.ekoregin.nms.entity.Check;
 import com.ekoregin.nms.entity.Device;
 import com.ekoregin.nms.entity.ModelDevice;
+import com.ekoregin.nms.entity.TypeTechParameter;
 import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -32,6 +33,8 @@ public class ModelDeviceDto {
     @Digits(integer = 10, fraction = 0, message = "Некорректный ввод")
     private int numberOfPorts;
 
+    private long typePortId;
+
     private List<Check> checks;
 
     private List<String> listDevices;
@@ -44,6 +47,7 @@ public class ModelDeviceDto {
         this.name = modelDevice.getName();
         this.manufacturer = modelDevice.getManufacturer();
         this.numberOfPorts = modelDevice.getNumberOfPorts();
+        this.typePortId = modelDevice.getTypePort().getId();
         this.checks = modelDevice.getChecks();
         this.listDevices = modelDevice.getDevices().stream().map(Device::getName).toList();
     }

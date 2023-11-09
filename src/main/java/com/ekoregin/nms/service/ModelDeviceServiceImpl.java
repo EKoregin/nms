@@ -17,12 +17,14 @@ import java.util.NoSuchElementException;
 public class ModelDeviceServiceImpl implements ModelDeviceService {
 
     private final ModelDeviceRepo modelDeviceRepo;
+    private final TypeTechParameterService ttpService;
 
     @Override
     public ModelDevice create(ModelDeviceDto modelDeviceDto) {
         ModelDevice modelDevice;
         if (modelDeviceDto != null) {
             modelDevice = new ModelDevice(modelDeviceDto);
+            modelDevice.setTypePort(ttpService.findById(modelDeviceDto.getTypePortId()));
             modelDeviceRepo.save(modelDevice);
             log.info("ModelDevice with ID: {} was created", modelDeviceDto.getId());
         } else {
@@ -39,6 +41,7 @@ public class ModelDeviceServiceImpl implements ModelDeviceService {
         modelDevice.setName(modelDeviceDto.getName());
         modelDevice.setManufacturer(modelDeviceDto.getManufacturer());
         modelDevice.setNumberOfPorts(modelDeviceDto.getNumberOfPorts());
+        modelDevice.setTypePort(ttpService.findById(modelDeviceDto.getTypePortId()));
         modelDeviceRepo.save(modelDevice);
     }
 

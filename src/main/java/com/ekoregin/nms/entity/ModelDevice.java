@@ -31,12 +31,18 @@ public class ModelDevice {
     @Column(name = "ports")
     private int numberOfPorts;
 
+    @OneToOne
+    @JoinColumn(name = "type_tech_parameter_id")
+    private TypeTechParameter typePort;
+
     @OneToMany(orphanRemoval = true, mappedBy = "modelDevice", cascade = CascadeType.ALL)
     private List<Check> checks;
 
     @OneToMany
     @JoinColumn(name = "model_id")
     private List<Device> devices;
+
+
 
     public ModelDevice(ModelDeviceDto modelDeviceDto) {
         this.id = modelDeviceDto.getId();
