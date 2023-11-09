@@ -33,8 +33,13 @@
                     <div class="card" style="width: 80%">
                         <h5 class="card-header">Обновление MAC-адресов из DHCP связок на Mikrotik</h5>
                         <div class="card-body">
-                            <h5>Результат сбора данных</h5>
-                            <div th:each="stringResult : ${results}">
+                            <h4>Результат сбора данных</h4>
+                            <div th:each="totalResult : ${results.getTotalResult()}">
+                                <div th:text="${totalResult}"></div>
+                            </div>
+                            <p></p>
+                            <hr>
+                            <div th:each="stringResult : ${results.getDataResult()}">
                                 <div th:text="${stringResult}"></div>
                             </div>
                         </div>

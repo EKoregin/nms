@@ -1,6 +1,7 @@
 package com.ekoregin.nms.service;
 
 import com.ekoregin.nms.entity.Customer;
+import com.ekoregin.nms.entity.GatherResult;
 import com.ekoregin.nms.entity.TechParameter;
 import com.ekoregin.nms.entity.TypeTechParameter;
 import com.ekoregin.nms.repository.TechParameterRepo;
@@ -26,7 +27,7 @@ public class GatherDataService {
     private final TechParameterRepo techParameterRepo;
     private final TypeTechParameterRepo ttpRepo;
 
-    public List<String> getMacByIP(long deviceId, long checkId) {
+    public GatherResult getMacByIP(long deviceId, long checkId) {
         List<Customer> customers = customerService.findAll();
         String resultString = checkService.executeForDevice(checkId, deviceId).getResult();
         JsonElement jsonElement = JsonParser.parseString(resultString);
@@ -107,10 +108,14 @@ public class GatherDataService {
             }
             listForReport.add(stringForReport.toString());
         }
-        log.info("Всего МАC адресов у абонентов: " + allMacCount);
-        log.info("Было найдено МАC адресов в DHCP связках: " + foundMacCount);
-        log.info("Добавлено MAC адресов: " + addedMacCount);
-        log.info("Обновлено MAC адресов: " + updateMacCount);
-        return listForReport;
+        List<String> totalResult = List.of(
+                "Всего МАC адресов у абонентов: " + allMacCount,
+                "Было найдено МАC адресов в DHCP связках: " + foundMacCount,
+                "Добавлено MAC адресов: " + addedMacCount,
+                "Обновлено MAC адресов: " + updateMacCount
+        );
+        totalResult.forEach(log::info);
+
+        return new GatherResult(totalResult, listForReport);
     }
 }

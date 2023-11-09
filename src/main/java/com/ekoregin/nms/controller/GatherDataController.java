@@ -1,6 +1,7 @@
 package com.ekoregin.nms.controller;
 
 import com.ekoregin.nms.dto.DeviceDto;
+import com.ekoregin.nms.entity.GatherResult;
 import com.ekoregin.nms.service.DeviceService;
 import com.ekoregin.nms.service.GatherDataService;
 import lombok.RequiredArgsConstructor;
@@ -40,7 +41,7 @@ public class GatherDataController {
     private String getMacByIp(Model model,
                               @RequestParam("deviceId") long deviceId,
                               @RequestParam("checkId") long checkId) {
-        List<String> result = gatherDataService.getMacByIP(deviceId, checkId);
+        GatherResult result = gatherDataService.getMacByIP(deviceId, checkId);
         model.addAttribute("results", result);
         return "getMacByIpResult";
     }

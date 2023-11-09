@@ -49,9 +49,10 @@
                                         <!--                                dynamic part-->
                                     </div>
                                 </div>
-                                <button type="submit" class="btn btn-primary">Выполнить</button>
-                                <a th:href="@{/devices}" role="button" class="btn btn-primary">Отмена</a>
+                                <button type="submit" class="btn gather btn-primary">Выполнить</button>
+                                <a th:href="@{/gathering/getMacByIpAllCustomers}" role="button" class="btn btn-primary">Отмена</a>
                             </form>
+                            <div id="gatherResult"></div>
                         </div>
                     </div>
                 </div>
@@ -61,6 +62,15 @@
     </div>
 </div>
 <script>
+    function waiting(element) {
+        element.innerHTML = "Ждите...";
+    }
+
+    $('.gather').click(function () {
+        let parent = document.getElementById("gatherResult");
+        waiting(parent);
+    });
+
     $(function () {
         $('#deviceId').change(function () {
             let deviceId = this.value;
