@@ -28,6 +28,9 @@ public class ModelDevice {
     @Column(name = "manufacturer")
     private String manufacturer;
 
+    @Column(name = "ports")
+    private int numberOfPorts;
+
     @OneToMany(orphanRemoval = true, mappedBy = "modelDevice", cascade = CascadeType.ALL)
     private List<Check> checks;
 
@@ -40,5 +43,6 @@ public class ModelDevice {
         this.type = modelDeviceDto.getType();
         this.name = modelDeviceDto.getName();
         this.manufacturer = modelDeviceDto.getManufacturer();
+        this.numberOfPorts = modelDeviceDto.getNumberOfPorts();
     }
 }

@@ -24,7 +24,9 @@ CREATE TABLE IF NOT EXISTS model_device
     type_device  VARCHAR(255) NOT NULL,
     name         VARCHAR(255) NOT NULL unique,
     manufacturer VARCHAR(255) NOT NULL DEFAULT 'Generic',
-    ports        INT                   default 0
+    ports        INT                   default 0,
+    type_tech_parameter_id INT not null default 0
+        REFERENCES type_tech_parameter(id)
 );
 
 CREATE TABLE IF NOT EXISTS device

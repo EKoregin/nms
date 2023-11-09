@@ -41,6 +41,7 @@
                             <th scope="col">Тип</th>
                             <th scope="col">Марка</th>
                             <th scope="col">Производитель</th>
+                            <th scope="col">Кол-во портов</th>
                             <th scope="col">Кол-во устройств</th>
                             <th scope="col"></th>
                         </tr>
@@ -51,6 +52,7 @@
                             <td th:text="${model.type}"></td>
                             <td th:text="${model.name}"></td>
                             <td th:text="${model.manufacturer}"></td>
+                            <td th:text="${model.numberOfPorts}"></td>
                             <td th:text="${model.devices.size()}"></td>
                             <td>
                                 <div class="container">

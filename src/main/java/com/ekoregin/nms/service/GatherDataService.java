@@ -52,6 +52,7 @@ public class GatherDataService {
         long foundMacCount = mapIpMac.size();
         long addedMacCount = 0L;
         long updateMacCount = 0L;
+        long allCustomersCount = customers.size();
         TypeTechParameter ttpMac = ttpRepo.findByName("MAC");
 
         for (Customer customer : customers) {
@@ -109,6 +110,7 @@ public class GatherDataService {
             listForReport.add(stringForReport.toString());
         }
         List<String> totalResult = List.of(
+                "Всего абонентов в базе: " + allCustomersCount,
                 "Всего МАC адресов у абонентов: " + allMacCount,
                 "Было найдено МАC адресов в DHCP связках: " + foundMacCount,
                 "Добавлено MAC адресов: " + addedMacCount,

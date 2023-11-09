@@ -6,10 +6,12 @@ import com.ekoregin.nms.entity.ModelDevice;
 import com.ekoregin.nms.service.CheckService;
 import com.ekoregin.nms.service.ModelDeviceService;
 import com.ekoregin.nms.util.TypeDevice;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
@@ -44,7 +46,10 @@ public class ModelDeviceController {
     }
 
     @PostMapping("/create")
-    public String create(@ModelAttribute ModelDeviceDto modelDeviceDto) {
+    public String create(@Valid @ModelAttribute ModelDeviceDto modelDeviceDto, Errors errors) {
+        if (errors.hasErrors()) {
+            return "addModelDevice";
+        }
         modelDeviceService.create(modelDeviceDto);
         return "redirect:/modelDevices";
     }
@@ -63,7 +68,10 @@ public class ModelDeviceController {
     }
 
     @PutMapping("/update")
-    public String update(@ModelAttribute ModelDeviceDto modelDeviceDto) {
+    public String update(@Valid @ModelAttribute ModelDeviceDto modelDeviceDto, Errors errors) {
+        if (errors.hasErrors()) {
+            return "editModelDevice";
+        }
         modelDeviceService.update(modelDeviceDto);
         return "redirect:/modelDevices";
     }
