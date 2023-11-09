@@ -47,6 +47,10 @@ public class GatherDataService {
         }
 
         long recCounter = 1;
+        long allMacCount = 0L;
+        long foundMacCount = mapIpMac.size();
+        long addedMacCount = 0L;
+        long updateMacCount = 0L;
         TypeTechParameter ttpMac = ttpRepo.findByName("MAC");
 
         for (Customer customer : customers) {
@@ -79,6 +83,7 @@ public class GatherDataService {
                                     .build();
                             stringForReport.append("не определен, New MAC: ").append(newMacAddressValue);
                             techParameterRepo.save(macAddress);
+                            addedMacCount++;
                         } else {
                             stringForReport.append("не найдена DHCP связка!");
                         }
@@ -90,16 +95,22 @@ public class GatherDataService {
                                     .append(" -> MAC ИЗМЕНИЛСЯ!");
                             macAddress.setValue(newMacAddressValue);
                             techParameterRepo.save(macAddress);
+                            updateMacCount++;
                         } else {
                             stringForReport.append(macAddress.getValue())
                                     .append(" , Found MAC: ")
                                     .append(newMacAddressValue);
                         }
+                        allMacCount++;
                     }
                 }
             }
             listForReport.add(stringForReport.toString());
         }
+        log.info("Всего МАC адресов у абонентов: " + allMacCount);
+        log.info("Было найдено МАC адресов в DHCP связках: " + foundMacCount);
+        log.info("Добавлено MAC адресов: " + addedMacCount);
+        log.info("Обновлено MAC адресов: " + updateMacCount);
         return listForReport;
     }
 }
