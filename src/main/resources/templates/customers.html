@@ -48,7 +48,10 @@
                 </div>
                 <p></p>
                 <div class="row">
-                    Всего абонентов:&nbsp; <span th:text="${countCustomers}"></span>
+                    <a th:href="@{/customers/addForm}" class="btn btn-info mr-1" role="button">Добавить</a>
+                </div>
+                <div class="row">
+                    Всего абонентов:&nbsp; <span class="font-weight-bold" th:text="${countCustomers}"></span>
                     <table class="table">
                         <thead>
                         <tr>

@@ -9,118 +9,137 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
           integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link th:href="@{/styles/main.css}" rel="stylesheet"/>
+    <link rel="stylesheet" th:href="@{/font-awesome/css/font-awesome.min.css}">
+    <script type="text/javascript" th:src="@{/js/menu.js}"></script>
     <title>Изменение проверки</title>
 </head>
 <body>
-<div class="container">
-    <div class="row pt3">
-        <div class="card" style="width: 80%">
-            <h5 class="card-header">Изменение проверки</h5>
-            <div class="card-body">
-                <form th:action="@{/checks/update}" th:method="PUT" th:object="${checkDto}">
-                    <input type="hidden" th:field="*{checkId}">
-                    <div class="form-group row">
-                        <label for="checkName" class="col-sm-2 col-form-label">Название</label>
-                        <div class="col-sm-8">
-                            <input type="text" class="form-control" th:field="*{checkName}" id="checkName">
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label for="checkScope" class="col-sm-2 col-form-label">Область выполнения</label>
-                        <div class="col-sm-8">
-                            <select th:field="*{checkScope}" id="checkScope">
-                                <option th:each="scope : ${checkScopes}"
-                                        th:value="${scope}" th:text="${scope}">
-                                </option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label for="checkType" class="col-sm-2 col-form-label">Тип проверки</label>
-                        <div class="col-sm-8">
-                            <select th:field="*{checkType}" id="checkType">
-                                <option th:each="type : ${checkTypes}"
-                                        th:value="${type}" th:text="${type}">
-                                </option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label for="snmpOID" class="col-sm-2 col-form-label">SNMP OID</label>
-                        <div class="col-sm-8">
-                            <input type="text" class="form-control" th:field="*{snmpOID}" id="snmpOID">
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label for="telnetCommands" class="col-sm-2 col-form-label">Команды</label>
-                        <div class="col-sm-8">
+<div class='dashboard'>
+    <div th:replace="~{fragments/menu::menu}"></div>
+    <div class='dashboard-app'>
+        <header class='dashboard-toolbar'>
+            <a href="#!" class="menu-toggle">
+                <i class="fa fa-bars"></i></a>
+            <h1 class="display-4">Проверки</h1>
+        </header>
+        <div class='dashboard-content'>
+            <div class="container">
+                <div class="row pt3">
+                    <div class="card" style="width: 80%">
+                        <h5 class="card-header">Изменение проверки</h5>
+                        <div class="card-body">
+                            <form th:action="@{/checks/update}" th:method="PUT" th:object="${checkDto}">
+                                <input type="hidden" th:field="*{checkId}">
+                                <div class="form-group row">
+                                    <label for="checkName" class="col-sm-2 col-form-label">Название</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" class="form-control" th:field="*{checkName}" id="checkName">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label for="checkScope" class="col-sm-2 col-form-label">Область выполнения</label>
+                                    <div class="col-sm-8">
+                                        <select th:field="*{checkScope}" id="checkScope">
+                                            <option th:each="scope : ${checkScopes}"
+                                                    th:value="${scope}" th:text="${scope}">
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label for="checkType" class="col-sm-2 col-form-label">Тип проверки</label>
+                                    <div class="col-sm-8">
+                                        <select th:field="*{checkType}" id="checkType">
+                                            <option th:each="type : ${checkTypes}"
+                                                    th:value="${type}" th:text="${type}">
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label for="snmpOID" class="col-sm-2 col-form-label">SNMP OID</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" class="form-control" th:field="*{snmpOID}" id="snmpOID">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label for="telnetCommands" class="col-sm-2 col-form-label">Команды</label>
+                                    <div class="col-sm-8">
                             <textarea class="form-control" th:field="*{telnetCommands}" id="telnetCommands" rows="5"
                                       placeholder="Поле для ввода REST запроса или набора TELNET команд. Команды TELNET вводятся в формате интерактивного взаимодействия: Login:==[#LOGIN];
 Первая половина - ответ. Воторая половина - передаваемые данные. Данные могут быть в виде переменных в формате [#IP]."></textarea>
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label for="description" class="col-sm-2 col-form-label">Описание</label>
-                        <div class="col-sm-8">
-                            <textarea class="form-control" th:field="*{description}" id="description" rows="5"></textarea>
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label for="substRules" class="col-sm-2 col-form-label">Правила подстановки</label>
-                        <div class="col-sm-8">
-                            <textarea class="form-control" th:field="*{substRules}" id="substRules" rows="2"
-                                      placeholder="1=UP; 2=DOWN // в результате вместо 1 будет выводится UP, а вместо 2 будет DOWN"></textarea>
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label for="jsonFilter" class="col-sm-2 col-form-label">Фильтр полей</label>
-                        <div class="col-sm-8">
-                            <textarea class="form-control" th:field="*{jsonFilter}" id="jsonFilter" rows="2"
-                                      placeholder="Указать выводимые поля через ;"></textarea>
-                        </div>
-                    </div>
-                    <h3>Технические параметры</h3>
-                    <hr>
-                    <table class="table">
-                        <thead>
-                        <tr>
-                            <th scope="col">ID</th>
-                            <th scope="col">Название</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr th:each="typeTechParam : *{typeTechParams}">
-                            <td th:text="${typeTechParam.id}"></td>
-                            <td th:text="${typeTechParam.name}"></td>
-                            <td>
-                                <div class="container">
-                                    <div class="row">
-                                        <div class="col-2 col-md-5">
-                                            <form th:action="@{'/checks/delTypeParamFromCheck/' + ${checkId} + '/typeParam/' + ${typeTechParam.id}}"
-                                                  th:method="delete">
-                                                <button type="submit" class="btn btn-danger">Delete</button>
-                                            </form>
-                                        </div>
                                     </div>
                                 </div>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
-                    <hr>
-                    <div class="row">
-                        <div class="col-5 col-md-5">
-                            <a th:href="@{'/checks/addTypeParam/{checkId}'(checkId=*{checkId})}"
-                               role="button" class="btn btn-success">Добавить тип параметра</a>
+                                <div class="form-group row">
+                                    <label for="description" class="col-sm-2 col-form-label">Описание</label>
+                                    <div class="col-sm-8">
+                                        <textarea class="form-control" th:field="*{description}" id="description"
+                                                  rows="5"></textarea>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label for="substRules" class="col-sm-2 col-form-label">Правила подстановки</label>
+                                    <div class="col-sm-8">
+                            <textarea class="form-control" th:field="*{substRules}" id="substRules" rows="2"
+                                      placeholder="1=UP; 2=DOWN // в результате вместо 1 будет выводится UP, а вместо 2 будет DOWN"></textarea>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label for="jsonFilter" class="col-sm-2 col-form-label">Фильтр полей</label>
+                                    <div class="col-sm-8">
+                            <textarea class="form-control" th:field="*{jsonFilter}" id="jsonFilter" rows="2"
+                                      placeholder="Указать выводимые поля через ;"></textarea>
+                                    </div>
+                                </div>
+                                <h3>Технические параметры</h3>
+                                <hr>
+                                <table class="table">
+                                    <thead>
+                                    <tr>
+                                        <th scope="col">ID</th>
+                                        <th scope="col">Название</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr th:each="typeTechParam : *{typeTechParams}">
+                                        <td th:text="${typeTechParam.id}"></td>
+                                        <td th:text="${typeTechParam.name}"></td>
+                                        <td>
+                                            <div class="container">
+                                                <div class="row">
+                                                    <div class="col-2 col-md-5">
+                                                        <form th:action="@{'/checks/delTypeParamFromCheck/' + ${checkId} + '/typeParam/' + ${typeTechParam.id}}"
+                                                              th:method="delete">
+                                                            <button type="submit" class="btn btn-danger">Delete</button>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                                <hr>
+                                <div class="row">
+                                    <div class="col-5 col-md-5">
+                                        <a th:href="@{'/checks/addTypeParam/{checkId}'(checkId=*{checkId})}"
+                                           role="button" class="btn btn-success">Добавить тип параметра</a>
+                                    </div>
+                                </div>
+                                <p></p>
+                                <input type="hidden" th:field="*{modelDeviceId}">
+                                <button type="submit" class="btn btn-primary">Сохранить</button>
+                                <a th:href="@{'/modelDevices/editForm/' + *{modelDeviceId}}" role="button"
+                                   class="btn btn-primary">Отмена</a>
+                            </form>
                         </div>
                     </div>
-                    <p></p>
-                    <input type="hidden" th:field="*{modelDeviceId}">
-                    <button type="submit" class="btn btn-primary">Сохранить</button>
-                    <a th:href="@{'/modelDevices/editForm/' + *{modelDeviceId}}" role="button" class="btn btn-primary">Отмена</a>
-                </form>
+                </div>
             </div>
         </div>
+        <div th:replace="~{fragments/footer::footer}">&nbsp;</div>
     </div>
 </div>
 </body>

@@ -9,100 +9,117 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
           integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link th:href="@{/styles/main.css}" rel="stylesheet"/>
+    <link rel="stylesheet" th:href="@{/font-awesome/css/font-awesome.min.css}">
+    <script type="text/javascript" th:src="@{/js/menu.js}"></script>
     <title>Изменение модели оборудования</title>
 </head>
 <body>
-<div class="container">
-    <h2 class="display-4">Модели</h2>
-    <div class="row pt3">
-        <div class="card" style="width: 80%">
-            <h5 class="card-header">Изменение модели</h5>
-            <div class="card-body">
-                <form th:action="@{/modelDevices/update}" th:method="PUT" th:object="${modelDeviceDto}">
-                    <input type="hidden" th:field="*{id}">
-                    <div class="form-group row">
-                        <label for="deviceType" class="col-sm-2 col-form-label">Тип</label>
-                        <div class="col-sm-8">
-                            <select th:field="*{type}" id="deviceType">
-                                <option th:each="deviceType : ${deviceTypes}"
-                                        th:value="${deviceType}" th:text="${deviceType}">
-                                </option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label for="modelDeviceName" class="col-sm-2 col-form-label">Марка</label>
-                        <div class="col-sm-8">
-                            <input type="text" class="form-control" th:field="*{name}" id="modelDeviceName">
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label for="manufacturer" class="col-sm-2 col-form-label">Производитель</label>
-                        <div class="col-sm-8">
-                            <input type="text" class="form-control" th:field="*{manufacturer}" id="manufacturer">
-                        </div>
-                    </div>
-                    <div th:if="*{listDevices.size() > 0}">
-                            <div style="cursor:pointer;color:blue;text-decoration:underline;">
-                                <a onclick="return toggleMe('listOfDevices')">Список устройств данной модели</a>
-                            </div>
-                            <div id="listOfDevices" class="col-sm-8">
+<div class='dashboard'>
+    <div th:replace="~{fragments/menu::menu}"></div>
+    <div class='dashboard-app'>
+        <header class='dashboard-toolbar'>
+            <a href="#!" class="menu-toggle">
+                <i class="fa fa-bars"></i></a>
+            <h1 class="display-4">Модели</h1>
+        </header>
+        <div class='dashboard-content'>
+            <div class="container">
+                <div class="row pt3">
+                    <div class="card" style="width: 80%">
+                        <h5 class="card-header">Изменение модели</h5>
+                        <div class="card-body">
+                            <form th:action="@{/modelDevices/update}" th:method="PUT" th:object="${modelDeviceDto}">
+                                <input type="hidden" th:field="*{id}">
+                                <div class="form-group row">
+                                    <label for="deviceType" class="col-sm-2 col-form-label">Тип</label>
+                                    <div class="col-sm-8">
+                                        <select th:field="*{type}" id="deviceType">
+                                            <option th:each="deviceType : ${deviceTypes}"
+                                                    th:value="${deviceType}" th:text="${deviceType}">
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label for="modelDeviceName" class="col-sm-2 col-form-label">Марка</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" class="form-control" th:field="*{name}" id="modelDeviceName">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label for="manufacturer" class="col-sm-2 col-form-label">Производитель</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" class="form-control" th:field="*{manufacturer}"
+                                               id="manufacturer">
+                                    </div>
+                                </div>
+                                <div th:if="*{listDevices.size() > 0}">
+                                    <div style="cursor:pointer;color:blue;text-decoration:underline;">
+                                        <a onclick="return toggleMe('listOfDevices')">Список устройств данной модели</a>
+                                    </div>
+                                    <div id="listOfDevices" class="col-sm-8">
                                 <span th:each="deviceName : *{listDevices}">
                                     <span th:text="${deviceName}"></span><br>
                                 </span>
-                            </div>
-                    </div>
-                    <p></p>
-                    <h5 class="card-header">Подключенные проверки</h5>
-                    <table class="table">
-                        <thead>
-                        <tr>
-                            <th scope="col">ID</th>
-                            <th scope="col">Тип</th>
-                            <th scope="col">Название</th>
-                            <th scope="col">Область действия</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <form></form>
-                        <tr th:each="check : *{checks}">
-                            <td th:text="${check.checkId}"></td>
-                            <td th:text="${check.checkType}"></td>
-                            <td th:text="${check.checkName}"></td>
-                            <td th:text="${check.checkScope}"></td>
-                            <td>
-                                <div class="container">
-                                    <div class="row">
-                                        <div class="col-2 col-md-5">
-                                            <a th:href="@{'/checks/editForm/{checkId}'(checkId=${check.checkId})}"
-                                               class="btn btn-info mr-3" role="button">Редактировать</a>
-                                        </div>
-                                        <div class="col-2 col-md-5">
-                                            <form th:action="@{'/modelDevices/delCheckFromModel/' + *{id} + '/check/' + ${check.checkId}}"
-                                                  th:method="delete">
-                                                <button type="submit" class="btn btn-danger">Delete</button>
-                                            </form>
-                                        </div>
                                     </div>
                                 </div>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
-                    <hr>
-                    <div class="row">
-                        <div class="col-5 col-md-5">
-                            <a th:href="@{'/checks/addForm/{modelId}'(modelId=*{id})}"
-                               role="button" class="btn btn-success">Добавить проверку</a>
+                                <p></p>
+                                <h5 class="card-header">Подключенные проверки</h5>
+                                <table class="table">
+                                    <thead>
+                                    <tr>
+                                        <th scope="col">ID</th>
+                                        <th scope="col">Тип</th>
+                                        <th scope="col">Название</th>
+                                        <th scope="col">Область действия</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <form></form>
+                                    <tr th:each="check : *{checks}">
+                                        <td th:text="${check.checkId}"></td>
+                                        <td th:text="${check.checkType}"></td>
+                                        <td th:text="${check.checkName}"></td>
+                                        <td th:text="${check.checkScope}"></td>
+                                        <td>
+                                            <div class="container">
+                                                <div class="row">
+                                                    <div class="col-2 col-md-5">
+                                                        <a th:href="@{'/checks/editForm/{checkId}'(checkId=${check.checkId})}"
+                                                           class="btn btn-info mr-3" role="button">Редактировать</a>
+                                                    </div>
+                                                    <div class="col-2 col-md-5">
+                                                        <form th:action="@{'/modelDevices/delCheckFromModel/' + *{id} + '/check/' + ${check.checkId}}"
+                                                              th:method="delete">
+                                                            <button type="submit" class="btn btn-danger">Delete</button>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                                <hr>
+                                <div class="row">
+                                    <div class="col-5 col-md-5">
+                                        <a th:href="@{'/checks/addForm/{modelId}'(modelId=*{id})}"
+                                           role="button" class="btn btn-success">Добавить проверку</a>
+                                    </div>
+                                </div>
+                                <p></p>
+
+                                <button type="submit" class="btn btn-primary">Сохранить</button>
+                                <a th:href="@{/modelDevices}" role="button" class="btn btn-primary">Отмена</a>
+                            </form>
                         </div>
                     </div>
-                    <p></p>
-
-                    <button type="submit" class="btn btn-primary">Сохранить</button>
-                    <a th:href="@{/modelDevices}" role="button" class="btn btn-primary">Отмена</a>
-                </form>
+                </div>
             </div>
         </div>
+        <div th:replace="~{fragments/footer::footer}">&nbsp;</div>
     </div>
 </div>
 </body>
