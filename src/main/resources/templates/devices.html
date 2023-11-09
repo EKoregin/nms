@@ -35,7 +35,10 @@
         <div class='dashboard-content'>
             <div class="container">
                 <div class="row">
-                    Всего устройств:&nbsp<span th:text="${devices.size()}"></span>
+                    <a th:href="@{/devices/addForm}" class="btn btn-info mr-1" role="button">Добавить</a>
+                </div>
+                <div class="row">
+                    Всего устройств:&nbsp<span class="font-weight-bold" th:text="${devices.size()}"></span>
                     <table class="table">
                         <thead>
                         <tr>

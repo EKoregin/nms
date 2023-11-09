@@ -110,7 +110,6 @@ public class CheckExecutorRest implements CheckExecutor {
         log.info("Фильтрация элементов в JSON");
         for (String key : allowKeys) {
             if (jsonElement != null && !jsonElement.getAsJsonObject().isJsonNull()) {
-//                log.info("Key: {}, Value: {}", key, jsonElement.getAsJsonObject().get(key).toString()); // NPE problem
                 filteredJsonElement.getAsJsonObject().add(key, jsonElement.getAsJsonObject().get(key));
             }
         }
