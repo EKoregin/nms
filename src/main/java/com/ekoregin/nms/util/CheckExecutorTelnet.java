@@ -55,7 +55,7 @@ public class CheckExecutorTelnet implements CheckExecutor {
         String commandsWithValues = replacingVariablesWithValues(check.getTelnetCommands(), paramsForCheck);
         log.info("Telnet commands: {}", commandsWithValues);
         CheckResult checkResult = telnetExec(checkDevice, commandsWithValues);
-        String regex = check.getSubstRules();
+        String regex = check.getRegexFilter();
         if (regex != null && !regex.isEmpty()) {
             log.info("Regex: " + regex);
             findRegexInStringAndPutToResult(regex, checkResult);
