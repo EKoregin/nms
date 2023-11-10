@@ -40,6 +40,9 @@ public class Check {
     @Column(name = "json_filter")
     private String jsonFilter;
 
+    @Column(name = "regex_filter")
+    private String regexFilter;
+
     @ManyToOne
     @JoinColumn(name = "model_device_id")
     private ModelDevice modelDevice;
@@ -64,6 +67,7 @@ public class Check {
         this.telnetCommands = checkDto.getTelnetCommands();
         this.substRules = checkDto.getSubstRules();
         this.jsonFilter = checkDto.getJsonFilter();
+        this.regexFilter = checkDto.getRegexFilter();
         this.checkScope = checkDto.getCheckScope();
     }
 }

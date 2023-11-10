@@ -72,6 +72,7 @@ CREATE TABLE IF NOT EXISTS checks
     description     TEXT,
     subst_rules     TEXT,
     json_filter     TEXT,
+    regex_filter    TEXT,
     model_device_id INT          NOT NULL,
     check_scope     VARCHAR(32)  NOT NULL DEFAULT '',
     CONSTRAINT fk_model_device

@@ -33,6 +33,8 @@ public class CheckDto {
 
     private String jsonFilter;
 
+    private String regexFilter;
+
     private List<TypeTechParameter> typeTechParams;
 
     private String checkScope;
@@ -48,6 +50,7 @@ public class CheckDto {
         this.telnetCommands = check.getTelnetCommands();
         this.substRules = check.getSubstRules();
         this.jsonFilter = check.getJsonFilter();
+        this.regexFilter = check.getRegexFilter();
         this.checkScope = check.getCheckScope();
     }
 }

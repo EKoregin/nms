@@ -90,7 +90,14 @@
                                     <label for="jsonFilter" class="col-sm-2 col-form-label">Фильтр полей</label>
                                     <div class="col-sm-8">
                             <textarea class="form-control" th:field="*{jsonFilter}" id="jsonFilter" rows="2"
-                                      placeholder="Указать выводимые поля через ;"></textarea>
+                                      placeholder="Указать выводимые поля через ;. Только для результатов в JSON"></textarea>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label for="regexFilter" class="col-sm-2 col-form-label">Регулярное выражение</label>
+                                    <div class="col-sm-8">
+                            <textarea class="form-control" th:field="*{regexFilter}" id="regexFilter" rows="2"
+                                      placeholder="Указать регулярное выражение в формате regex. В результат попадут только строки соответствующие выражению"></textarea>
                                     </div>
                                 </div>
                                 <h3>Технические параметры</h3>
