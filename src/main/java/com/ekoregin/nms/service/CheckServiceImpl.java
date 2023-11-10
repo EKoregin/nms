@@ -51,6 +51,7 @@ public class CheckServiceImpl implements CheckService{
         check.setSubstRules(checkDto.getSubstRules());
         check.setTelnetCommands(checkDto.getTelnetCommands());
         check.setJsonFilter(checkDto.getJsonFilter());
+        check.setRegexFilter(checkDto.getRegexFilter());
         check.setCheckScope(checkDto.getCheckScope());
         checkRepo.save(check);
     }
