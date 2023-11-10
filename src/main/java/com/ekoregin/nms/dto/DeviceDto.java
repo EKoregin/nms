@@ -2,7 +2,6 @@ package com.ekoregin.nms.dto;
 
 import com.ekoregin.nms.entity.Customer;
 import com.ekoregin.nms.entity.Device;
-import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
@@ -43,8 +42,6 @@ public class DeviceDto {
     private Long modelId;
 
     private List<String> customers;
-
-
 
     public DeviceDto(Device device) {
         this.id = device.getId();

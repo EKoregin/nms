@@ -1,12 +1,11 @@
 package com.ekoregin.nms.controller;
 
 import com.ekoregin.nms.dto.CustomerDto;
-import com.ekoregin.nms.entity.Check;
-import com.ekoregin.nms.entity.CheckScope;
-import com.ekoregin.nms.entity.Customer;
-import com.ekoregin.nms.entity.Device;
+import com.ekoregin.nms.dto.TechParameterDto;
+import com.ekoregin.nms.entity.*;
 import com.ekoregin.nms.service.CustomerService;
 import com.ekoregin.nms.service.DeviceService;
+import com.ekoregin.nms.service.TechParamServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -29,6 +28,7 @@ public class CustomerController {
 
     private final CustomerService customerService;
     private final DeviceService deviceService;
+    private final TechParamServiceImpl techParamService;
 
     @RequestMapping(path = {"", "/search"})
     public String searchCustomers(Model model, String searchKeyword,
@@ -123,9 +123,16 @@ public class CustomerController {
 
     @PostMapping("/addDeviceToCustomer")
     public String addDeviceToCustomer(@RequestParam("customerId") long customerId,
-                                      @RequestParam("deviceId") long deviceId) {
+                                      @RequestParam("deviceId") long deviceId,
+                                      @RequestParam("portNumber") long portNumber) {
         Customer customer = customerService.findById(customerId);
         Device device = deviceService.findById(deviceId);
+        TypeTechParameter typePort = device.getModel().getTypePort();
+        TechParameterDto paramPort = new TechParameterDto();
+        paramPort.setCustomerId(customerId);
+        paramPort.setTypeId(typePort.getId());
+        paramPort.setValue(String.valueOf(portNumber));
+        techParamService.create(paramPort);
         customer.getDevices().add(device);
         customerService.update(customer);
         return "redirect:/customers/editForm/" + customerId;
@@ -137,6 +144,15 @@ public class CustomerController {
         log.info("Delete device with ID {}, from customer ID: {}", deviceId, customerId);
         Customer foundCustomer = customerService.findById(customerId);
         Device foundDevice = deviceService.findById(deviceId);
+
+        //Delete port from customer
+        TypeTechParameter typePort = foundDevice.getModel().getTypePort();
+        TechParameter techPortParam = foundCustomer.getParams()
+                .stream()
+                .filter(techParameter -> techParameter.getType().equals(typePort))
+                .findFirst().orElse(null);
+        log.info("Remove port {} from customer", techPortParam);
+        foundCustomer.getParams().remove(techPortParam);
         foundCustomer.getDevices().remove(foundDevice);
         customerService.update(foundCustomer);
         return "redirect:/customers/editForm/" + customerId;

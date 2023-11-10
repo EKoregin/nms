@@ -90,9 +90,16 @@ public class DeviceController {
     }
 
     @ResponseBody
-    @GetMapping("/{deviceId}")
+    @GetMapping("/checks/{deviceId}")
     public List<CheckDto> findAllChecksByDeviceId(@PathVariable long deviceId) {
         log.info("Request for checks for deviceId: {}", deviceId);
         return deviceService.findAllChecksByDeviceId(deviceId);
+    }
+
+    @ResponseBody
+    @GetMapping("/customers/{deviceId}")
+    public List<Integer> findFreePortsByDeviceId(@PathVariable long deviceId) {
+        log.info("Request for busy ports for deviceId: {}", deviceId);
+        return deviceService.findFreePortsByDeviceId(deviceId);
     }
 }

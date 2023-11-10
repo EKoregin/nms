@@ -2,8 +2,7 @@ package com.ekoregin.nms.service;
 
 import com.ekoregin.nms.dto.CheckDto;
 import com.ekoregin.nms.dto.DeviceDto;
-import com.ekoregin.nms.entity.Device;
-import com.ekoregin.nms.entity.ModelDevice;
+import com.ekoregin.nms.entity.*;
 import com.ekoregin.nms.repository.DeviceRepo;
 import io.hypersistence.utils.hibernate.type.basic.Inet;
 import jakarta.validation.ConstraintViolationException;
@@ -13,8 +12,11 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.stream.IntStream;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -102,5 +104,28 @@ public class DeviceServiceImpl implements DeviceService {
                 .toList();
         checkDtos.stream().map(CheckDto::getCheckName).forEach(System.out::println);
         return checkDtos;
+    }
+
+    @Override
+    public List<Integer> findFreePortsByDeviceId(long deviceId) {
+        Device device = deviceRepo.findById(deviceId).orElse(null);
+        if (device == null)
+            throw new RuntimeException("Device is null for deviceId " + deviceId);
+
+        TypeTechParameter typePort = device.getModel().getTypePort();
+
+        int numberOfPorts = device.getModel().getNumberOfPorts();
+        List<Integer> freePorts = new ArrayList<>(IntStream.rangeClosed(1, numberOfPorts).boxed().toList());
+        List<Customer> customers = device.getCustomers();
+        List<Integer> busyPorts = customers.stream()
+                .map(Customer::getParams)
+                .flatMap(Collection::stream)
+                .filter(techParameter -> techParameter.getType().equals(typePort))
+                .map(TechParameter::getValue)
+                .map(Integer::parseInt).toList();
+        for (Integer busyPort : busyPorts) {
+            freePorts.remove(busyPort);
+        }
+        return freePorts;
     }
 }

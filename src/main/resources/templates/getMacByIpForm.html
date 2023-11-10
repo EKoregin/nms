@@ -78,7 +78,7 @@
             checkSelectElement.innerHTML = "";
             if (deviceId) {
                 $.get({
-                    url: '/devices/' + deviceId,
+                    url: '/devices/checks/' + deviceId,
                     success: (checks) => {
 
                         let label = document.createElement('label');
