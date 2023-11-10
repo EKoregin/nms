@@ -21,5 +21,5 @@ public interface DeviceService {
 
     List<CheckDto> findAllChecksByDeviceId(long deviceId);
 
-    List<Integer> findFreePortsByDeviceId(long deviceId);
+    DeviceDto findFreePortsByDeviceId(long deviceId);
 }

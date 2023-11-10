@@ -12,10 +12,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.NoSuchElementException;
+import java.util.*;
 import java.util.stream.IntStream;
 
 @Slf4j
@@ -107,7 +104,7 @@ public class DeviceServiceImpl implements DeviceService {
     }
 
     @Override
-    public List<Integer> findFreePortsByDeviceId(long deviceId) {
+    public DeviceDto findFreePortsByDeviceId(long deviceId) {
         Device device = deviceRepo.findById(deviceId).orElse(null);
         if (device == null)
             throw new RuntimeException("Device is null for deviceId " + deviceId);
@@ -126,6 +123,9 @@ public class DeviceServiceImpl implements DeviceService {
         for (Integer busyPort : busyPorts) {
             freePorts.remove(busyPort);
         }
-        return freePorts;
+        DeviceDto deviceDto = new DeviceDto(device);
+        deviceDto.setCustomers(new ArrayList<>());
+        deviceDto.setFreePorts(freePorts);
+        return deviceDto;
     }
 }

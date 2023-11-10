@@ -112,6 +112,7 @@ public class CustomerController {
     public String formAddDeviceToCustomer(@PathVariable long customerId, Model model) {
         Customer foundCustomer = customerService.findById(customerId);
         if (foundCustomer != null) {
+            model.addAttribute("customer", new CustomerDto(foundCustomer));
             model.addAttribute("customerId", customerId);
             model.addAttribute("allDevices", deviceService.findAll("id"));
         } else {

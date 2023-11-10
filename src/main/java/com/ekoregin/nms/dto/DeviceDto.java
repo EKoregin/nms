@@ -9,6 +9,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -42,7 +43,8 @@ public class DeviceDto {
     private Long modelId;
 
     private List<Customer> customers;
-//    private List<String> customers;
+
+    private List<Integer> freePorts = new ArrayList<>();
 
     public DeviceDto(Device device) {
         this.id = device.getId();
@@ -54,10 +56,6 @@ public class DeviceDto {
         this.password = device.getPassword();
         this.modelId = device.getModel().getId();
         this.mac = device.getMac();
-//        this.customers = device.getCustomers()
-//                .stream()
-//                .map(Customer::getName)
-//                .toList();
         this.customers = device.getCustomers();
     }
 }

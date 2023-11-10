@@ -98,7 +98,7 @@ public class DeviceController {
 
     @ResponseBody
     @GetMapping("/customers/{deviceId}")
-    public List<Integer> findFreePortsByDeviceId(@PathVariable long deviceId) {
+    public DeviceDto findFreePortsByDeviceId(@PathVariable long deviceId) {
         log.info("Request for busy ports for deviceId: {}", deviceId);
         return deviceService.findFreePortsByDeviceId(deviceId);
     }

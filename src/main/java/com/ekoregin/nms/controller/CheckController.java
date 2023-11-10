@@ -6,6 +6,7 @@ import com.ekoregin.nms.entity.CheckResult;
 import com.ekoregin.nms.entity.CheckScope;
 import com.ekoregin.nms.entity.TypeTechParameter;
 import com.ekoregin.nms.service.CheckService;
+import com.ekoregin.nms.service.ModelDeviceService;
 import com.ekoregin.nms.service.TypeTechParameterService;
 import com.ekoregin.nms.util.CheckType;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +27,7 @@ public class CheckController {
 
     private final CheckService checkService;
     private final TypeTechParameterService typeTechParameterService;
+    private final ModelDeviceService modelDeviceService;
 
     @GetMapping String allChecks(Model model) {
         model.addAttribute("checks", checkService.findAll());
@@ -42,8 +44,10 @@ public class CheckController {
 
     @GetMapping("/addForm/{modelDeviceId}")
     public String formCreateCheck(@PathVariable long modelDeviceId, Model model) {
+        String modelDeviceName = modelDeviceService.findById(modelDeviceId).getName();
         CheckDto checkDto = new CheckDto();
         checkDto.setModelDeviceId(modelDeviceId);
+        model.addAttribute("modelDeviceName", modelDeviceName);
         model.addAttribute("checkDto", checkDto);
         return "addCheck";
     }
