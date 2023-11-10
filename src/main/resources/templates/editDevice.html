@@ -101,8 +101,11 @@
                                         <a onclick="return toggleMe('listOfCustomers')">Подключенные абоненты</a>
                                     </div>
                                     <div id="listOfCustomers" class="col-sm-8">
-                                <span th:each="name : *{customers}">
-                                    <span th:text="${name}"></span><br>
+                                <span th:each="customer : *{customers}">
+                                    <span th:text="${customer.name}"></span>
+                                    Порт:<span th:each="techParam : ${customer.getParams()}">
+                                            <span th:if="${techParam.type.name.equals('PORT')}" th:text="${techParam.value}" class="font-weight-bold"></span>
+                                            </span><br>
                                 </span>
                                     </div>
                                 </div>
