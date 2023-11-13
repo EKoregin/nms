@@ -4,6 +4,7 @@ import com.ekoregin.nms.dto.ModelDeviceDto;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -31,6 +32,14 @@ public class ModelDevice {
     @Column(name = "ports")
     private int numberOfPorts;
 
+    @ManyToMany
+    @JoinTable(
+            name = "model_check_type",
+            joinColumns = @JoinColumn(name = "model_device_id"),
+            inverseJoinColumns = @JoinColumn(name = "check_type_id")
+    )
+    private List<CheckTypeEntity> controlMethods = new ArrayList<>();
+
     @OneToOne
     @JoinColumn(name = "type_tech_parameter_id")
     private TypeTechParameter typePort;
@@ -50,5 +59,6 @@ public class ModelDevice {
         this.name = modelDeviceDto.getName();
         this.manufacturer = modelDeviceDto.getManufacturer();
         this.numberOfPorts = modelDeviceDto.getNumberOfPorts();
+        this.controlMethods = modelDeviceDto.getControlMethods();
     }
 }

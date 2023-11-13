@@ -58,7 +58,8 @@
                                 <div class="form-group row">
                                     <label for="numberOfPorts" class="col-sm-2 col-form-label">Кол-во портов</label>
                                     <div class="col-sm-8">
-                                        <input type="text" class="form-control" th:field="*{numberOfPorts}" id="numberOfPorts">
+                                        <input type="text" class="form-control" th:field="*{numberOfPorts}"
+                                               id="numberOfPorts">
                                         <p class="text-danger" th:if="${#fields.hasErrors('numberOfPorts')}"
                                            th:errorclass="error" th:errors="*{numberOfPorts}"></p>
                                     </div>
@@ -73,6 +74,16 @@
                                         </select>
                                     </div>
                                 </div>
+                                <p><u>Методы управления</u></p>
+                                <div class="form-group row">
+                                    <div class="col-sm-8" th:each="method : ${checkTypes}" id="controlMethods">
+                                        <label>
+                                            <input th:field="*{controlMethods}" type="checkbox" th:value="${method.id}">
+                                        </label>
+                                        <span th:text="${method.checkType}">CONTROL METHOD</span>
+                                    </div>
+                                </div>
+                                <hr>
                                 <div th:if="*{listDevices != null && listDevices.size() > 0}">
                                     <div style="cursor:pointer;color:blue;text-decoration:underline;">
                                         <a onclick="return toggleMe('listOfDevices')">Список устройств данной модели</a>
@@ -84,6 +95,7 @@
                                     </div>
                                 </div>
                                 <p></p>
+                                <div th:if="*{controlMethods != null && controlMethods.size() > 0}">
                                 <h5 class="card-header">Подключенные проверки</h5>
                                 <table class="table">
                                     <thead>
@@ -128,7 +140,7 @@
                                     </div>
                                 </div>
                                 <p></p>
-
+                                </div>
                                 <button type="submit" class="btn btn-primary">Сохранить</button>
                                 <a th:href="@{/modelDevices}" role="button" class="btn btn-primary">Отмена</a>
                             </form>

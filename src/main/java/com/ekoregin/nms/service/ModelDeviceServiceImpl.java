@@ -42,6 +42,7 @@ public class ModelDeviceServiceImpl implements ModelDeviceService {
         modelDevice.setManufacturer(modelDeviceDto.getManufacturer());
         modelDevice.setNumberOfPorts(modelDeviceDto.getNumberOfPorts());
         modelDevice.setTypePort(ttpService.findById(modelDeviceDto.getTypePortId()));
+        modelDevice.setControlMethods(modelDeviceDto.getControlMethods());
         modelDeviceRepo.save(modelDevice);
     }
 

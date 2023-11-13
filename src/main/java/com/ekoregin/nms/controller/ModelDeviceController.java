@@ -2,8 +2,10 @@ package com.ekoregin.nms.controller;
 
 import com.ekoregin.nms.dto.ModelDeviceDto;
 import com.ekoregin.nms.entity.Check;
+import com.ekoregin.nms.entity.CheckTypeEntity;
 import com.ekoregin.nms.entity.ModelDevice;
 import com.ekoregin.nms.entity.TypeTechParameter;
+import com.ekoregin.nms.repository.CheckTypeRepo;
 import com.ekoregin.nms.service.CheckService;
 import com.ekoregin.nms.service.ModelDeviceService;
 import com.ekoregin.nms.service.TypeTechParameterService;
@@ -29,6 +31,13 @@ public class ModelDeviceController {
     public final ModelDeviceService modelDeviceService;
     private final CheckService checkService;
     private final TypeTechParameterService ttpService;
+    private final CheckTypeRepo checkTypeRepo;
+
+    @ModelAttribute
+    public void addControlMethods(Model model) {
+        List<CheckTypeEntity> checkTypes = checkTypeRepo.findAll();
+        model.addAttribute("checkTypes", checkTypes);
+    }
 
     @ModelAttribute
     public void addDeviceType(Model model) {
