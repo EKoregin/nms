@@ -30,11 +30,13 @@ public class Device {
     @Type(PostgreSQLInetType.class)
     @Column(
             name = "ip",
-            columnDefinition = "inet"
+            columnDefinition = "inet",
+            nullable = false,
+            unique = true
     )
     private Inet ip;
 
-    @Column(name = "mac")
+    @Column(name = "mac", unique = true)
     private String mac;
 
     @Column(name = "login")
@@ -78,7 +80,6 @@ public class Device {
         this.snmpPort = 161;
         this.protocol = "telnet";
         this.port = deviceDto.getManagePort();
-        this.model = deviceDto.getModel();
         this.mac = deviceDto.getMac();
     }
 }

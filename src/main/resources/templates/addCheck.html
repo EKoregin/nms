@@ -29,7 +29,7 @@
             <div class="container">
                 <div class="row pt3">
                     <div class="card" style="width: 80%">
-                        <h5 class="card-header" th:text="'Новая проверка для - ' + ${modelDeviceName}"></h5>
+                        <h5 class="card-header" th:text="'Новая проверка для - ' + ${modelDevice.name}"></h5>
                         <div class="card-body">
                             <form th:action="@{/checks/create}" method="POST" th:object="${checkDto}">
                                 <div class="form-group row">
@@ -52,8 +52,8 @@
                                     <label for="checkType" class="col-sm-2 col-form-label">Тип проверки</label>
                                     <div class="col-sm-8">
                                         <select th:field="*{checkType}" id="checkType">
-                                            <option th:each="type : ${checkTypes}"
-                                                    th:value="${type}" th:text="${type}">
+                                            <option th:each="type : ${modelDevice.getControlMethods()}"
+                                                    th:value="${type.checkType}" th:text="${type.checkType}">
                                             </option>
                                         </select>
                                     </div>
@@ -93,9 +93,9 @@
                                       placeholder="Указать выводимые поля через ;"></textarea>
                                     </div>
                                 </div>
-                                <input type="hidden" th:field="*{modelDeviceId}">
+                                <input type="hidden" name="modelDeviceId" id="modelDeviceId" th:value="${modelDevice.id}">
                                 <button type="submit" class="btn btn-primary">Сохранить</button>
-                                <a th:href="@{'/modelDevices/editForm/' + *{modelDeviceId}}" role="button"
+                                <a th:href="@{'/modelDevices/editForm/' + ${modelDevice.id}}" role="button"
                                    class="btn btn-primary">Отмена</a>
                             </form>
                         </div>

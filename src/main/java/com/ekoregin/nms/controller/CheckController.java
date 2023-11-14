@@ -1,10 +1,8 @@
 package com.ekoregin.nms.controller;
 
 import com.ekoregin.nms.dto.CheckDto;
-import com.ekoregin.nms.entity.Check;
-import com.ekoregin.nms.entity.CheckResult;
-import com.ekoregin.nms.entity.CheckScope;
-import com.ekoregin.nms.entity.TypeTechParameter;
+import com.ekoregin.nms.dto.ModelDeviceDto;
+import com.ekoregin.nms.entity.*;
 import com.ekoregin.nms.service.CheckService;
 import com.ekoregin.nms.service.ModelDeviceService;
 import com.ekoregin.nms.service.TypeTechParameterService;
@@ -44,10 +42,9 @@ public class CheckController {
 
     @GetMapping("/addForm/{modelDeviceId}")
     public String formCreateCheck(@PathVariable long modelDeviceId, Model model) {
-        String modelDeviceName = modelDeviceService.findById(modelDeviceId).getName();
+        ModelDeviceDto modelDeviceDto = new ModelDeviceDto(modelDeviceService.findById(modelDeviceId));
         CheckDto checkDto = new CheckDto();
-        checkDto.setModelDeviceId(modelDeviceId);
-        model.addAttribute("modelDeviceName", modelDeviceName);
+        model.addAttribute("modelDevice", modelDeviceDto);
         model.addAttribute("checkDto", checkDto);
         return "addCheck";
     }
@@ -62,8 +59,10 @@ public class CheckController {
     public String formEditCheck(@PathVariable long checkId, Model model) {
         Check foundCheck = checkService.findById(checkId);
         if (foundCheck != null) {
+            ModelDeviceDto modelDeviceDto = new ModelDeviceDto(foundCheck.getModelDevice());
             CheckDto checkDto = new CheckDto(foundCheck);
             model.addAttribute("checkDto", checkDto);
+            model.addAttribute("modelDevice", modelDeviceDto);
         } else {
             log.info("Check with ID: {} not found", checkId);
             throw new NoSuchElementException("Check with ID: " + checkId + " not found");

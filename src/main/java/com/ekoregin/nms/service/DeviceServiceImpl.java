@@ -7,11 +7,17 @@ import com.ekoregin.nms.repository.DeviceRepo;
 import io.hypersistence.utils.hibernate.type.basic.Inet;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.stream.IntStream;
 
 @Slf4j
@@ -21,13 +27,23 @@ import java.util.stream.IntStream;
 public class DeviceServiceImpl implements DeviceService {
 
     private final DeviceRepo deviceRepo;
+    private final ModelDeviceService modelDeviceService;
 
     @Override
     public Device create(DeviceDto deviceDto) {
         Device device;
         if (deviceDto != null) {
+            log.info("Try to create Device with name: {}, IP: {}, MAC: {}", deviceDto.getName(), deviceDto.getIp(), deviceDto.getMac());
             device = new Device(deviceDto);
-            deviceRepo.save(device);
+            ModelDevice modelDevice = modelDeviceService.findById(deviceDto.getModelId());
+            device.setModel(modelDevice);
+            try {
+                deviceRepo.save(device);
+                log.info("Device {} with id: {} was created", device.getName(), device.getId());
+            } catch (DataAccessException e) {
+                log.error("Device {} was not created", device.getName());
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMostSpecificCause().getLocalizedMessage(), e);
+            }
         } else {
             log.warn("DeviceDto is null");
             throw new NoSuchElementException("DeviceDto is null");
@@ -37,6 +53,7 @@ public class DeviceServiceImpl implements DeviceService {
 
     @Override
     public void update(DeviceDto deviceDto) {
+        log.info("Try to update Device with name: {}, IP: {}, MAC: {}", deviceDto.getName(), deviceDto.getIp(), deviceDto.getMac());
         Device device = findById(deviceDto.getId());
         device.setName(deviceDto.getName());
         device.setDescription(deviceDto.getDescription());
@@ -45,12 +62,14 @@ public class DeviceServiceImpl implements DeviceService {
         device.setPort(deviceDto.getManagePort());
         device.setLogin(deviceDto.getLogin());
         device.setPassword(deviceDto.getPassword());
-        device.setModel(deviceDto.getModel());
+        ModelDevice modelDevice = modelDeviceService.findById(deviceDto.getModelId());
+        device.setModel(modelDevice);
         try {
-            deviceRepo.save(device);
-        } catch (Exception e) {
-            log.error("Ошибка обновления оборудования с ID: {}", deviceDto.getId());
-            throw new RuntimeException();
+            deviceRepo.saveAndFlush(device);
+            log.info("Device {} with id: {} was updated", device.getName(), device.getId());
+        } catch (DataAccessException e) {
+            log.error("Update device {} error", device.getName());
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMostSpecificCause().getLocalizedMessage(), e);
         }
     }
 
@@ -99,16 +118,17 @@ public class DeviceServiceImpl implements DeviceService {
             throw new RuntimeException("Device is null for deviceId " + deviceId);
 
         TypeTechParameter typePort = device.getModel().getTypePort();
-
         int numberOfPorts = device.getModel().getNumberOfPorts();
         List<Integer> freePorts = new ArrayList<>(IntStream.rangeClosed(1, numberOfPorts).boxed().toList());
         List<Customer> customers = device.getCustomers();
+
         List<Integer> busyPorts = customers.stream()
                 .map(Customer::getParams)
                 .flatMap(Collection::stream)
                 .filter(techParameter -> techParameter.getType().equals(typePort))
                 .map(TechParameter::getValue)
                 .map(Integer::parseInt).toList();
+
         for (Integer busyPort : busyPorts) {
             freePorts.remove(busyPort);
         }

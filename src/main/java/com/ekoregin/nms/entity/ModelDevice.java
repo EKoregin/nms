@@ -23,7 +23,7 @@ public class ModelDevice {
     @Column(name = "type_device")
     private String type;
 
-    @Column(name = "name")
+    @Column(name = "name", nullable = false, unique = true)
     private String name;
 
     @Column(name = "manufacturer")

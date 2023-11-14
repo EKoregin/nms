@@ -5,8 +5,11 @@ import com.ekoregin.nms.entity.ModelDevice;
 import com.ekoregin.nms.repository.ModelDeviceRepo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -22,9 +25,16 @@ public class ModelDeviceServiceImpl implements ModelDeviceService {
     public ModelDevice create(ModelDeviceDto modelDeviceDto) {
         ModelDevice modelDevice;
         if (modelDeviceDto != null) {
+            log.info("Try to create ModelDevice with name: {}", modelDeviceDto.getName());
             modelDevice = new ModelDevice(modelDeviceDto);
-            modelDeviceRepo.save(modelDevice);
-            log.info("ModelDevice with ID: {} was created", modelDeviceDto.getId());
+            try {
+                modelDeviceRepo.save(modelDevice);
+                log.info("ModelDevice with ID: {} was created", modelDeviceDto.getId());
+            } catch (DataAccessException e) {
+                log.error("ModelDevice {} was not created", modelDevice.getName());
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMostSpecificCause().getLocalizedMessage(), e);
+            }
+
         } else {
             log.warn("ModelDeviceDto is null");
             throw new NoSuchElementException("ModelDeviceDto is null");
@@ -34,6 +44,7 @@ public class ModelDeviceServiceImpl implements ModelDeviceService {
 
     @Override
     public void update(ModelDeviceDto modelDeviceDto) {
+        log.info("Try to update ModelDevice with name: {}", modelDeviceDto.getName());
         ModelDevice modelDevice = findById(modelDeviceDto.getId());
         modelDevice.setType(modelDeviceDto.getType());
         modelDevice.setName(modelDeviceDto.getName());
@@ -41,7 +52,13 @@ public class ModelDeviceServiceImpl implements ModelDeviceService {
         modelDevice.setNumberOfPorts(modelDeviceDto.getNumberOfPorts());
         modelDevice.setTypePort(modelDeviceDto.getTypePort());
         modelDevice.setControlMethods(modelDeviceDto.getControlMethods());
-        modelDeviceRepo.save(modelDevice);
+        try {
+            modelDeviceRepo.saveAndFlush(modelDevice);
+            log.info("ModelDevice {} with id: {} was updated", modelDevice.getName(), modelDevice.getId());
+        } catch (DataAccessException e) {
+            log.error("Update ModelDevice {} error", modelDevice.getName());
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMostSpecificCause().getLocalizedMessage(), e);
+        }
     }
 
     @Override
