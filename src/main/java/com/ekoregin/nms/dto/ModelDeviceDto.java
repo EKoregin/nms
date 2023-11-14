@@ -33,7 +33,7 @@ public class ModelDeviceDto {
 
     private List<CheckTypeEntity> controlMethods = new ArrayList<>();
 
-    private long typePortId;
+    private TypeTechParameter typePort;
 
     private List<Check> checks;
 
@@ -47,7 +47,7 @@ public class ModelDeviceDto {
         this.name = modelDevice.getName();
         this.manufacturer = modelDevice.getManufacturer();
         this.numberOfPorts = modelDevice.getNumberOfPorts();
-        this.typePortId = modelDevice.getTypePort().getId();
+        this.typePort = modelDevice.getTypePort();
         this.checks = modelDevice.getChecks();
         this.listDevices = modelDevice.getDevices().stream().map(Device::getName).toList();
         this.controlMethods = modelDevice.getControlMethods();

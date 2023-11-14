@@ -67,7 +67,7 @@
                                 <div class="form-group row">
                                     <label for="typePort" class="col-sm-2 col-form-label">Тип порта</label>
                                     <div class="col-sm-8">
-                                        <select th:field="*{typePortId}" id="typePort">
+                                        <select th:field="*{typePort}" id="typePort">
                                             <option th:each="typeParam : ${typeParams}"
                                                     th:value="${typeParam.id}" th:text="${typeParam.name}">
                                             </option>

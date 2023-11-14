@@ -60,5 +60,6 @@ public class ModelDevice {
         this.manufacturer = modelDeviceDto.getManufacturer();
         this.numberOfPorts = modelDeviceDto.getNumberOfPorts();
         this.controlMethods = modelDeviceDto.getControlMethods();
+        this.typePort = modelDeviceDto.getTypePort();
     }
 }
