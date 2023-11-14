@@ -78,6 +78,7 @@ public class Device {
         this.snmpPort = 161;
         this.protocol = "telnet";
         this.port = deviceDto.getManagePort();
+        this.model = deviceDto.getModel();
         this.mac = deviceDto.getMac();
     }
 }

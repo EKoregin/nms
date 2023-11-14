@@ -37,7 +37,7 @@
                                 <div class="form-group row">
                                     <label for="modelId" class="col-sm-2 col-form-label">Модель</label>
                                     <div class="col-sm-8">
-                                        <select th:field="*{modelId}" id="modelId">
+                                        <select th:field="*{model}" id="modelId">
                                             <option value="" selected>Выбрать модель</option>
                                             <option th:each="model : ${models}"
                                                     th:value="${model.id}" th:text="${model.name}">
@@ -192,7 +192,7 @@
 
 <script type="text/javascript">
     function toggleMe(a) {
-        var e = document.getElementById(a);
+        let e = document.getElementById(a);
         if (!e) return true;
 
         if (e.style.display === "none") {
@@ -202,6 +202,5 @@
         }
         return true;
     }
-
     toggleMe('listOfCustomers');
 </script>
