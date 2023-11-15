@@ -130,7 +130,15 @@ public class CustomerController {
 
         for (Long typeId : parameters.keySet()) {
             TypeTechParameter type = ttpService.findById(typeId);
+
             TechParameter techParameter = new TechParameter();
+            //find techParameter with type in Customer parameters
+            for (TechParameter customerTechParam : customer.getParams()) {
+                if (customerTechParam.getType().equals(type)) {
+                    techParameter = customerTechParam;
+                }
+            }
+
             techParameter.setType(type);
             techParameter.setValue(parameters.get(typeId));
             techParameter.setCustomer(customer);
@@ -162,8 +170,15 @@ public class CustomerController {
             TechParameter removeParameter = foundDevice.getParameters().stream()
                     .filter(parameter -> parameter.getParamId().equals(paramId))
                     .findFirst().orElse(null);
+
+            int devicesWithParameter = 0;
+            if (removeParameter != null)
+                   devicesWithParameter = removeParameter.getDevices().size();
+
             foundDevice.getParameters().remove(removeParameter);
-            foundCustomer.getParams().remove(removeParameter);
+
+            if (devicesWithParameter == 1)
+                foundCustomer.getParams().remove(removeParameter);
         }
 
         foundCustomer.getDevices().remove(foundDevice);

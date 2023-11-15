@@ -3,6 +3,9 @@ package com.ekoregin.nms.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -30,5 +33,13 @@ public class TechParameter {
     @ManyToOne
     @JoinColumn(name = "customer_id")
     private Customer customer;
+
+    @ManyToMany
+    @JoinTable(
+            name = "tech_parameter_device",
+            joinColumns = @JoinColumn(name = "tech_parameter_id"),
+            inverseJoinColumns = @JoinColumn(name = "device_id")
+    )
+    private List<Device> devices = new ArrayList<>();
 }
 
