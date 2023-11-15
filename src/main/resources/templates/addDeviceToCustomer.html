@@ -30,14 +30,14 @@
             <div class="container">
                 <div class="row pt3">
                     <div class="card" style="width: 80%">
-                        <h5 class="card-header" th:text="'Подключение абонента - ' + ${customer.name} + ' - к оборудованию'"></h5>
+                        <h5 class="card-header" th:text="'Подключение абонента - ' + ${parametersForm.customer.name} + ' - к оборудованию'"></h5>
                         <div class="card-body">
-                            <form th:action="@{/customers/addDeviceToCustomer}" method="POST">
-                                <input type="hidden" th:name="customerId" th:value="${customerId}">
+                            <form th:action="@{/customers/addDeviceToCustomer}" method="POST" th:object="${parametersForm}">
+                                <input type="hidden" th:field="*{customer.customerId}" id="customerId">
                                 <div class="form-group row">
                                     <label for="deviceId" class="col-sm-2 col-form-label">Устройство</label>
                                     <div class="col-sm-8">
-                                        <select name="deviceId" id="deviceId">
+                                        <select th:field="${parametersForm.deviceId}" id="deviceId">
                                             <option value="" selected>Выбрать устройство</option>
                                             <option th:each="device : ${allDevices}"
                                                     th:value="${device.id}" th:text="${device.name}">
@@ -45,6 +45,14 @@
                                         </select>
                                     </div>
                                 </div>
+
+<!--                                <div id="modelParametersTest">-->
+<!--                                    <div class="form-group row" th:each="parameter : ${parametersForm.parameters.entrySet()}">-->
+<!--                                        <label th:for="*{parameters['__${parameter.key}__']}" th:text="${parameter.value}">Parameter</label>-->
+<!--                                        <input type="text" class="form-control" th:field="*{parameters['__${parameter.key}__']}" />-->
+<!--                                    </div>-->
+<!--                                </div>-->
+
                                 <div class="form-group row" th:id="deviceInfoBlock">
                                     <div th:id="deviceInfo" class="col-sm-8">
                                         <!--                                dynamic part-->
@@ -55,8 +63,11 @@
                                         <!--                                dynamic part-->
                                     </div>
                                 </div>
+                                <div id="modelParameters">
+                                    <!--                                dynamic part-->
+                                </div>
                                 <button type="submit" class="btn btn-primary">Сохранить</button>
-                                <a th:href="@{'/customers/editForm/{customerId}'(customerId=${customerId})}"
+                                <a th:href="@{'/customers/editForm/{customerId}'(customerId=*{customer.customerId})}"
                                    role="button" class="btn btn-primary">Отмена</a>
                             </form>
                         </div>
@@ -67,7 +78,46 @@
         <div th:replace="~{fragments/footer::footer}">&nbsp;</div>
     </div>
 </div>
-<script>
+<script th:inline="javascript">
+    function getModelDevice(modelDeviceId) {
+        //get model by modelId
+        $.get({
+            url: '/modelDevices/' + modelDeviceId,
+            success: (modelDevice) => {
+                let modelParameters = document.getElementById('modelParameters');
+
+                for (let typeParam of modelDevice.typeTechParameters) {
+                    let divParam = document.createElement('div')
+                    divParam.className = "form-group row";
+
+                    let paramLabel = document.createElement('label');
+                    paramLabel.id = typeParam.id;
+                    paramLabel.innerText = typeParam.name;
+                    paramLabel.htmlFor = typeParam.id;
+                    paramLabel.className = "col-sm-2 col-form-label";
+
+
+                    let divParamInput = document.createElement('div');
+                    divParamInput.className = "col-sm-8";
+
+                    let inputParam = document.createElement('input');
+                    inputParam.id = "parameters'" + typeParam.id + "'";
+                    inputParam.name = "parameters['" + typeParam.id + "']";
+
+                    divParam.appendChild(paramLabel);
+                    divParamInput.appendChild(inputParam);
+                    divParam.appendChild(divParamInput)
+                    modelParameters.appendChild(divParam);
+                }
+
+            },
+            error: (err) => {
+                alert("Error");
+                alert(err);
+            }
+        });
+    }
+
     $(function () {
         $('#deviceId').change(function () {
             let deviceId = this.value;
@@ -83,11 +133,11 @@
             }
             deviceInfoElement.innerHTML = "";
             checkSelectElement.innerHTML = "";
+
             if (deviceId) {
                 $.get({
                     url: '/devices/customers/' + deviceId,
                     success: (device) => {
-
                         let label1 = document.createElement('label');
                         label1.id = "labelDeviceInfo";
                         label1.innerText = "IP: ";
@@ -100,27 +150,21 @@
 
                         let label = document.createElement('label');
                         label.id = "labelPorts";
-                        label.innerText = "Порты";
+                        label.innerText = "Свободные порты";
                         label.htmlFor = "portNumber";
                         label.className = "col-sm-2 col-form-label";
                         checkSelectElement.before(label);
 
-                        let select = document.createElement('select');
-                        select.name = "portNumber";
-
-                        let startOption = document.createElement('option');
-                        startOption.value = "";
-                        startOption.innerHTML = "Выбрать порт";
-                        select.appendChild(startOption);
-
+                        let freePortsList = document.createElement('p');
+                        freePortsList.name = "portNumber";
                         for (let port of device.freePorts) {
-                            let option = document.createElement('option');
-                            option.value = port;
-                            option.innerHTML = port;
-                            select.appendChild(option);
+                            freePortsList.innerText += port + ", "
                         }
-                        checkSelectElement.appendChild(select);
+                        checkSelectElement.appendChild(freePortsList);
+
                         $('#checkSelect').append(checkSelectElement);
+
+                        getModelDevice(device.modelId);
                     },
                     error: (err) => {
                         alert("Error");

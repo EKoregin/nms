@@ -1,11 +1,9 @@
 package com.ekoregin.nms.controller;
 
 import com.ekoregin.nms.dto.CustomerDto;
-import com.ekoregin.nms.dto.TechParameterDto;
 import com.ekoregin.nms.entity.*;
-import com.ekoregin.nms.service.CustomerService;
-import com.ekoregin.nms.service.DeviceService;
-import com.ekoregin.nms.service.TechParamServiceImpl;
+import com.ekoregin.nms.service.*;
+import com.ekoregin.nms.util.CustomerToDeviceForm;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -14,9 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -28,7 +24,7 @@ public class CustomerController {
 
     private final CustomerService customerService;
     private final DeviceService deviceService;
-    private final TechParamServiceImpl techParamService;
+    private final TypeTechParameterService ttpService;
 
     @RequestMapping(path = {"", "/search"})
     public String searchCustomers(Model model, String searchKeyword,
@@ -110,10 +106,12 @@ public class CustomerController {
 
     @GetMapping("/addDevice/{customerId}")
     public String formAddDeviceToCustomer(@PathVariable long customerId, Model model) {
+        CustomerToDeviceForm customerToDeviceForm = new CustomerToDeviceForm();
+
         Customer foundCustomer = customerService.findById(customerId);
         if (foundCustomer != null) {
-            model.addAttribute("customer", new CustomerDto(foundCustomer));
-            model.addAttribute("customerId", customerId);
+            customerToDeviceForm.setCustomer(new CustomerDto(foundCustomer));
+            model.addAttribute("parametersForm", customerToDeviceForm);
             model.addAttribute("allDevices", deviceService.findAll("id"));
         } else {
             log.info("Customer with ID: {} not found", customerId);
@@ -123,17 +121,23 @@ public class CustomerController {
     }
 
     @PostMapping("/addDeviceToCustomer")
-    public String addDeviceToCustomer(@RequestParam("customerId") long customerId,
-                                      @RequestParam("deviceId") long deviceId,
-                                      @RequestParam("portNumber") long portNumber) {
+    public String addDeviceToCustomer(@ModelAttribute CustomerToDeviceForm parametersForm) {
+        log.info("Parameters: {}", parametersForm.getParameters().toString());
+        long customerId = parametersForm.getCustomer().getCustomerId();
+        Map<Long, String> parameters = parametersForm.getParameters();
         Customer customer = customerService.findById(customerId);
-        Device device = deviceService.findById(deviceId);
-        TypeTechParameter typePort = device.getModel().getTypePort();
-        TechParameterDto paramPort = new TechParameterDto();
-        paramPort.setCustomerId(customerId);
-        paramPort.setTypeId(typePort.getId());
-        paramPort.setValue(String.valueOf(portNumber));
-        techParamService.create(paramPort);
+        Device device = deviceService.findById(parametersForm.getDeviceId());
+
+        for (Long typeId : parameters.keySet()) {
+            TypeTechParameter type = ttpService.findById(typeId);
+            TechParameter techParameter = new TechParameter();
+            techParameter.setType(type);
+            techParameter.setValue(parameters.get(typeId));
+            techParameter.setCustomer(customer);
+
+            device.getParameters().add(techParameter);
+        }
+
         customer.getDevices().add(device);
         customerService.update(customer);
         return "redirect:/customers/editForm/" + customerId;
@@ -146,17 +150,25 @@ public class CustomerController {
         Customer foundCustomer = customerService.findById(customerId);
         Device foundDevice = deviceService.findById(deviceId);
 
-        //Delete port from customer
-        TypeTechParameter typePort = foundDevice.getModel().getTypePort();
-        TechParameter techPortParam = foundCustomer.getParams()
-                .stream()
-                .filter(techParameter -> techParameter.getType().equals(typePort))
-                .findFirst().orElse(null);
-        log.info("Remove port {} from customer", techPortParam);
-        foundCustomer.getParams().remove(techPortParam);
+        List<Long> deviceParameterIds = foundDevice.getParameters().stream().map(TechParameter::getParamId).toList();
+        List<Long> customerParameterIds = foundCustomer.getParams().stream().map(TechParameter::getParamId).toList();
+        List<Long> removeParameters = new ArrayList<>();
+        for(Long paramId : customerParameterIds) {
+            if (deviceParameterIds.contains(paramId))
+                removeParameters.add(paramId);
+        }
+
+        for (Long paramId : removeParameters) {
+            TechParameter removeParameter = foundDevice.getParameters().stream()
+                    .filter(parameter -> parameter.getParamId().equals(paramId))
+                    .findFirst().orElse(null);
+            foundDevice.getParameters().remove(removeParameter);
+            foundCustomer.getParams().remove(removeParameter);
+        }
+
         foundCustomer.getDevices().remove(foundDevice);
+
         customerService.update(foundCustomer);
         return "redirect:/customers/editForm/" + customerId;
     }
-
 }

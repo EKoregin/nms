@@ -74,6 +74,15 @@
                                         </select>
                                     </div>
                                 </div>
+                                <p><u>Типы параметров(влияют на подключение абонента)</u></p>
+                                <div class="form-group row">
+                                    <div class="col-sm-8" th:each="typeParam : ${typeParams}" id="typeTechParameters">
+                                        <label>
+                                            <input th:field="*{typeTechParameters}" type="checkbox" th:value="${typeParam.id}">
+                                        </label>
+                                        <span th:text="${typeParam.name}">TYPE PARAMETERS</span>
+                                    </div>
+                                </div>
                                 <p><u>Методы управления</u></p>
                                 <div class="form-group row">
                                     <div class="col-sm-8" th:each="method : ${checkTypes}" id="controlMethods">

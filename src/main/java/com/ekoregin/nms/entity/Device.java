@@ -7,6 +7,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.Type;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -68,6 +69,14 @@ public class Device {
             inverseJoinColumns = @JoinColumn(name = "customer_id")
     )
     private List<Customer> customers;
+
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "tech_parameter_device",
+            joinColumns = @JoinColumn(name = "device_id"),
+            inverseJoinColumns = @JoinColumn(name = "tech_parameter_id")
+    )
+    private List<TechParameter> parameters = new ArrayList<>();
 
     public Device(DeviceDto deviceDto) {
         this.id = deviceDto.getId();

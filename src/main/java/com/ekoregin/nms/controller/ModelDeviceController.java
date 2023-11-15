@@ -57,6 +57,16 @@ public class ModelDeviceController {
         return "modelDevices";
     }
 
+    @ResponseBody
+    @GetMapping("{modelId}")
+    public ModelDeviceDto findModelDeviceByIdForOnlyTypeTechParameters(@PathVariable long modelId) {
+        log.info("Request for ModelDevice with ID: {}", modelId);
+        ModelDevice modelDevice = modelDeviceService.findById(modelId);
+        ModelDeviceDto modelDeviceDto = new ModelDeviceDto();
+        modelDeviceDto.setTypeTechParameters(modelDevice.getTypeTechParameters());
+        return modelDeviceDto;
+    }
+
     @GetMapping("/addForm")
     public String formCreateModelDevice(Model model) {
         model.addAttribute("modelDeviceDto", new ModelDeviceDto());

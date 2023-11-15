@@ -52,6 +52,7 @@ public class ModelDeviceServiceImpl implements ModelDeviceService {
         modelDevice.setNumberOfPorts(modelDeviceDto.getNumberOfPorts());
         modelDevice.setTypePort(modelDeviceDto.getTypePort());
         modelDevice.setControlMethods(modelDeviceDto.getControlMethods());
+        modelDevice.setTypeTechParameters(modelDeviceDto.getTypeTechParameters());
         try {
             modelDeviceRepo.saveAndFlush(modelDevice);
             log.info("ModelDevice {} with id: {} was updated", modelDevice.getName(), modelDevice.getId());

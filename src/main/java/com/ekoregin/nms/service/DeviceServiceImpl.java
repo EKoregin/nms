@@ -132,6 +132,7 @@ public class DeviceServiceImpl implements DeviceService {
         for (Integer busyPort : busyPorts) {
             freePorts.remove(busyPort);
         }
+
         DeviceDto deviceDto = new DeviceDto(device);
         deviceDto.setCustomers(new ArrayList<>());
         deviceDto.setFreePorts(freePorts);

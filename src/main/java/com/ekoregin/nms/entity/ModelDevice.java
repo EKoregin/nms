@@ -44,14 +44,20 @@ public class ModelDevice {
     @JoinColumn(name = "type_tech_parameter_id")
     private TypeTechParameter typePort;
 
+    @ManyToMany
+    @JoinTable(
+            name = "model_device_ttp",
+            joinColumns = @JoinColumn(name = "model_device_id"),
+            inverseJoinColumns = @JoinColumn(name = "type_tech_parameter_id")
+    )
+    private List<TypeTechParameter> typeTechParameters = new ArrayList<>();
+
     @OneToMany(orphanRemoval = true, mappedBy = "modelDevice", cascade = CascadeType.ALL)
     private List<Check> checks;
 
     @OneToMany
     @JoinColumn(name = "model_id")
     private List<Device> devices;
-
-
 
     public ModelDevice(ModelDeviceDto modelDeviceDto) {
         this.id = modelDeviceDto.getId();
@@ -61,5 +67,6 @@ public class ModelDevice {
         this.numberOfPorts = modelDeviceDto.getNumberOfPorts();
         this.controlMethods = modelDeviceDto.getControlMethods();
         this.typePort = modelDeviceDto.getTypePort();
+        this.typeTechParameters = modelDeviceDto.getTypeTechParameters();
     }
 }
