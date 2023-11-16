@@ -21,6 +21,8 @@ public class CheckDto {
 
     private String checkType;
 
+    private boolean isCreator;
+
     private String snmpOID;
 
     private String telnetCommands;
@@ -43,6 +45,7 @@ public class CheckDto {
         this.checkId = check.getCheckId();
         this.checkName = check.getCheckName();
         this.checkType = check.getCheckType();
+        this.isCreator = check.isCreator();
         this.snmpOID = check.getSnmpOID();
         this.typeTechParams = check.getTypeTechParams();
         this.modelDeviceId = check.getModelDevice().getId();

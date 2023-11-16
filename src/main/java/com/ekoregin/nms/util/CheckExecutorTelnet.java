@@ -9,7 +9,9 @@ import lombok.extern.slf4j.Slf4j;
 import net.sf.expectit.Expect;
 import net.sf.expectit.ExpectBuilder;
 import net.sf.expectit.Result;
+import org.apache.commons.net.telnet.InvalidTelnetOptionException;
 import org.apache.commons.net.telnet.TelnetClient;
+import org.apache.commons.net.telnet.WindowSizeOptionHandler;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -67,7 +69,9 @@ public class CheckExecutorTelnet implements CheckExecutor {
         CheckResult checkResult = new CheckResult();
 
         TelnetClient telnet = new TelnetClient();
+        WindowSizeOptionHandler windowSizeOptionHandler = new WindowSizeOptionHandler(80, 200);
         try {
+            telnet.addOptionHandler(windowSizeOptionHandler);
             telnet.connect(device.getIp().getAddress(), device.getPort());
             StringBuilder bufferIn = new StringBuilder();
             StringBuilder bufferOut = new StringBuilder();
@@ -103,6 +107,8 @@ public class CheckExecutorTelnet implements CheckExecutor {
         } catch (IOException e) {
             checkResult.setStatus(CheckResultStatus.ERROR);
             checkResult.setResult(e.getMessage());
+        } catch (InvalidTelnetOptionException e) {
+            throw new RuntimeException(e);
         }
         return checkResult;
     }

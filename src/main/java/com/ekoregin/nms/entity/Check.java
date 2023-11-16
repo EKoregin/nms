@@ -25,6 +25,9 @@ public class Check {
     @Column(name = "check_type")
     private String checkType;
 
+    @Column(name = "is_creator")
+    private boolean isCreator = false;
+
     @Column(name = "snmp_oid")
     private String snmpOID;
 
@@ -62,6 +65,7 @@ public class Check {
         this.checkId = checkDto.getCheckId();
         this.checkName = checkDto.getCheckName();
         this.checkType = checkDto.getCheckType();
+        this.isCreator = checkDto.isCreator();
         this.snmpOID = checkDto.getSnmpOID();
         this.description = checkDto.getDescription();
         this.telnetCommands = checkDto.getTelnetCommands();
