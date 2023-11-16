@@ -69,7 +69,7 @@ public class CheckExecutorTelnet implements CheckExecutor {
         CheckResult checkResult = new CheckResult();
 
         TelnetClient telnet = new TelnetClient();
-        WindowSizeOptionHandler windowSizeOptionHandler = new WindowSizeOptionHandler(80, 200);
+        WindowSizeOptionHandler windowSizeOptionHandler = new WindowSizeOptionHandler(100, 100);
         try {
             telnet.addOptionHandler(windowSizeOptionHandler);
             telnet.connect(device.getIp().getAddress(), device.getPort());
