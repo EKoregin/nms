@@ -11,6 +11,7 @@ import net.sf.expectit.ExpectBuilder;
 import net.sf.expectit.Result;
 import org.apache.commons.net.telnet.InvalidTelnetOptionException;
 import org.apache.commons.net.telnet.TelnetClient;
+import org.apache.commons.net.telnet.TerminalTypeOptionHandler;
 import org.apache.commons.net.telnet.WindowSizeOptionHandler;
 import org.springframework.stereotype.Component;
 
@@ -70,7 +71,9 @@ public class CheckExecutorTelnet implements CheckExecutor {
 
         TelnetClient telnet = new TelnetClient();
         WindowSizeOptionHandler windowSizeOptionHandler = new WindowSizeOptionHandler(100, 100, false, false, true, false);
+        TerminalTypeOptionHandler terminalTypeOptionHandler = new TerminalTypeOptionHandler("VT100", false, false, true, false);
         try {
+            telnet.addOptionHandler(terminalTypeOptionHandler);
             telnet.addOptionHandler(windowSizeOptionHandler);
             telnet.connect(device.getIp().getAddress(), device.getPort());
             StringBuilder bufferIn = new StringBuilder();
