@@ -144,7 +144,7 @@
                                         <td th:text="${check.checkId}"></td>
                                         <td th:text="${check.checkName}"></td>
                                         <td th:text="${check.getModelDevice().name}"></td>
-                                        <td th:text="${check.checkType}"></td>
+                                        <td th:text="${check.isCreator()} ? ${check.checkType} + '- изменяет' : ${check.checkType}"></td>
                                         <td th:text="${check.typeTechParams.isEmpty()} ? 'НЕТ' : ${check.typeTechParams}"></td>
                                         <td th:id="checkResult + ${check.checkId}"></td>
                                         <td>
@@ -152,9 +152,10 @@
                                                 <div class="row">
                                                     <div class="col-2 col-md-5">
                                                         <button id="checkButton" type="button"
-                                                                class="checks btn btn-info"
+                                                                th:class="${check.isCreator()} ? 'checks btn btn-warning' : 'checks btn btn-info'"
                                                                 th:data-info="*{customerId}"
-                                                                th:data-target="${check.checkId}">Проверить
+                                                                th:data-target="${check.checkId}"
+                                                                th:text="${check.isCreator()} ? 'Выполнить' : 'Проверить'">Проверить
                                                         </button>
                                                     </div>
                                                 </div>

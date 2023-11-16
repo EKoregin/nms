@@ -65,7 +65,7 @@ public class Check {
         this.checkId = checkDto.getCheckId();
         this.checkName = checkDto.getCheckName();
         this.checkType = checkDto.getCheckType();
-        this.isCreator = checkDto.isCreator();
+        this.isCreator = checkDto.getIsCreator();
         this.snmpOID = checkDto.getSnmpOID();
         this.description = checkDto.getDescription();
         this.telnetCommands = checkDto.getTelnetCommands();

@@ -45,14 +45,6 @@
                                         </select>
                                     </div>
                                 </div>
-
-<!--                                <div id="modelParametersTest">-->
-<!--                                    <div class="form-group row" th:each="parameter : ${parametersForm.parameters.entrySet()}">-->
-<!--                                        <label th:for="*{parameters['__${parameter.key}__']}" th:text="${parameter.value}">Parameter</label>-->
-<!--                                        <input type="text" class="form-control" th:field="*{parameters['__${parameter.key}__']}" />-->
-<!--                                    </div>-->
-<!--                                </div>-->
-
                                 <div class="form-group row" th:id="deviceInfoBlock">
                                     <div th:id="deviceInfo" class="col-sm-8">
                                         <!--                                dynamic part-->
@@ -64,6 +56,9 @@
                                     </div>
                                 </div>
                                 <div id="modelParameters">
+                                    <!--                                dynamic part-->
+                                </div>
+                                <div id="chooseCreator">
                                     <!--                                dynamic part-->
                                 </div>
                                 <button type="submit" class="btn btn-primary">Сохранить</button>
@@ -109,7 +104,25 @@
                     divParam.appendChild(divParamInput)
                     modelParameters.appendChild(divParam);
                 }
+                /* Choose check for set customer on device
+                let chooseCreatorDiv = document.getElementById('chooseCreator');
 
+                let select = document.createElement('select');
+                select.name = "creator";
+
+                let startOption = document.createElement('option');
+                startOption.value = "";
+                startOption.innerHTML = "Выбрать создатель";
+                select.appendChild(startOption);
+
+                for (let creator of modelDevice.checks) {
+                    let option = document.createElement('option');
+                    option.value = creator;
+                    option.innerHTML = creator.checkName;
+                    select.appendChild(option);
+                }
+                chooseCreatorDiv.appendChild(select);
+                 */
             },
             error: (err) => {
                 alert("Error");

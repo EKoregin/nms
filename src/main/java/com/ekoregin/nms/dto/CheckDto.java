@@ -21,7 +21,7 @@ public class CheckDto {
 
     private String checkType;
 
-    private boolean isCreator;
+    private Boolean isCreator;
 
     private String snmpOID;
 
