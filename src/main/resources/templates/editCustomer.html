@@ -127,7 +127,7 @@
                                     </div>
                                 </div>
                                 <p></p>
-                                <h5 class="card-header">Доступные проверки</h5>
+                                <h5 class="card-header">Проверки</h5>
                                 <table class="table">
                                     <thead>
                                     <tr>
@@ -141,10 +141,11 @@
                                     </thead>
                                     <tbody>
                                     <tr th:each="check : ${checks}">
+                                        <span th:if="${!check.isCreator()}">
                                         <td th:text="${check.checkId}"></td>
                                         <td th:text="${check.checkName}"></td>
                                         <td th:text="${check.getModelDevice().name}"></td>
-                                        <td th:text="${check.isCreator()} ? ${check.checkType} + '- изменяет' : ${check.checkType}"></td>
+                                        <td th:text="${check.isCreator()} ? ${check.checkType} + '- создатель' : ${check.checkType}"></td>
                                         <td th:text="${check.typeTechParams.isEmpty()} ? 'НЕТ' : ${check.typeTechParams}"></td>
                                         <td th:id="checkResult + ${check.checkId}"></td>
                                         <td>
@@ -154,17 +155,55 @@
                                                         <button id="checkButton" type="button"
                                                                 th:class="${check.isCreator()} ? 'checks btn btn-warning' : 'checks btn btn-info'"
                                                                 th:data-info="*{customerId}"
-                                                                th:data-target="${check.checkId}"
-                                                                th:text="${check.isCreator()} ? 'Выполнить' : 'Проверить'">Проверить
+                                                                th:data-target="${check.checkId}">Проверить
                                                         </button>
                                                     </div>
                                                 </div>
                                             </div>
                                         </td>
+                                        </span>
                                     </tr>
                                     </tbody>
                                 </table>
                                 <p></p>
+                                <h5 class="card-header">Создатели</h5>
+                                <table class="table">
+                                    <thead>
+                                    <tr>
+                                        <th scope="col">ID</th>
+                                        <th scope="col">Название</th>
+                                        <th scope="col">Оборудование</th>
+                                        <th scope="col">Тип</th>
+                                        <th scope="col">Параметры</th>
+                                        <th scope="col">Результат</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr th:each="check : ${checks}">
+                                        <span th:if="${check.isCreator()}">
+                                        <td th:text="${check.checkId}"></td>
+                                        <td th:text="${check.checkName}"></td>
+                                        <td th:text="${check.getModelDevice().name}"></td>
+                                        <td th:text="${check.checkType}"></td>
+                                        <td th:text="${check.typeTechParams.isEmpty()} ? 'НЕТ' : ${check.typeTechParams}"></td>
+                                        <td th:id="checkResult + ${check.checkId}"></td>
+                                        <td>
+                                            <div class="container">
+                                                <div class="row">
+                                                    <div class="col-2 col-md-5">
+                                                        <button id="checkButton2" type="button"
+                                                                th:class="${check.isCreator()} ? 'checks btn btn-warning' : 'checks btn btn-info'"
+                                                                th:data-info="*{customerId}"
+                                                                th:data-target="${check.checkId}">Выполнить
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        </span>
+                                    </tr>
+                                    </tbody>
+                                </table>
                                 <button type="submit" class="btn btn-primary">Сохранить</button>
                                 <a th:href="@{/customers}" role="button" class="btn btn-primary">Отмена</a>
                             </form>
