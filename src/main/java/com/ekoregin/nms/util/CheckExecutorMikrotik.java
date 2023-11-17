@@ -30,11 +30,14 @@ public class CheckExecutorMikrotik implements CheckExecutor {
         String login = device.getLogin();
         String password = device.getPassword();
         int managePort = device.getPort();
+        String command = check.getTelnetCommands();
 
         try (ApiConnection connection = ApiConnection.connect(SocketFactory.getDefault(), ipAddress.getAddress(), managePort, 20000)){
             log.info("Starting check execute with Microtik API");
+            log.info("Login to device IP: {}", ipAddress);
             connection.login(login, password);
-            List<Map<String, String>> resultMap =  connection.execute("/system/resource/print");
+            log.info("Execute command \" {} \" on device {}", command, device.getName());
+            List<Map<String, String>> resultMap =  connection.execute(command);
             for (Map<String, String> result : resultMap) {
                 System.out.println(result);
             }

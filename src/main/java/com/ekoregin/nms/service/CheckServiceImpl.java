@@ -88,10 +88,12 @@ public class CheckServiceImpl implements CheckService{
         Check foundCheck = findById(checkId);
         Customer foundCustomer = customerService.findById(customerId);
         CheckResult checkResult;
+        log.info("Type of check {} for customer {}", foundCheck.getCheckType(), foundCustomer.getName());
         switch (foundCheck.getCheckType()) {
             case "SNMP" -> checkResult = checkExecutorSnmp.checkExecute(foundCheck, foundCustomer, null);
             case "TELNET" -> checkResult = checkExecutorTelnet.checkExecute(foundCheck, foundCustomer, null);
             case "REST_API" -> checkResult = checkExecutorRest.checkExecute(foundCheck, foundCustomer, null);
+            case "MIKROTIK_API" -> checkResult = checkExecutorMikrotik.checkExecute(foundCheck, foundCustomer, null);
             default -> throw new IllegalArgumentException("That method not support!");
         }
         return checkResult;
@@ -102,6 +104,7 @@ public class CheckServiceImpl implements CheckService{
         Check foundCheck = findById(checkId);
         Device foundDevice = deviceService.findById(deviceId);
         CheckResult checkResult;
+        log.info("Type of check {} for device {}", foundCheck.getCheckType(), foundDevice.getName());
         switch (foundCheck.getCheckType()) {
             case "SNMP" -> checkResult = checkExecutorSnmp.checkExecute(foundCheck, null, foundDevice);
             case "TELNET" -> checkResult = checkExecutorTelnet.checkExecute(foundCheck, null, foundDevice);
