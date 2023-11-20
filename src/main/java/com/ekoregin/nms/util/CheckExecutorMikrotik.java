@@ -1,10 +1,7 @@
 package com.ekoregin.nms.util;
 
-import com.ekoregin.nms.entity.Check;
-import com.ekoregin.nms.entity.CheckResult;
-import com.ekoregin.nms.entity.Customer;
-import com.ekoregin.nms.entity.Device;
-import io.hypersistence.utils.hibernate.type.basic.Inet;
+import com.ekoregin.nms.entity.*;
+import com.ekoregin.nms.service.ModelDeviceService;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -14,6 +11,8 @@ import me.legrange.mikrotik.MikrotikApiException;
 import org.springframework.stereotype.Component;
 
 import javax.net.SocketFactory;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -23,28 +22,81 @@ import java.util.Map;
 @RequiredArgsConstructor
 @Component
 public class CheckExecutorMikrotik implements CheckExecutor {
+
+    private final StringBuilder doneCommand = new StringBuilder();
+
+    private final ModelDeviceService modelDeviceService;
+
     @Override
     public CheckResult checkExecute(Check check, Customer customer, Device device) {
 
-        Inet ipAddress = device.getIp();
-        String login = device.getLogin();
-        String password = device.getPassword();
-        int managePort = device.getPort();
-        String command = check.getTelnetCommands();
+        Device checkDevice = null;
+        Map<String, String> paramsForCheck = new HashMap<>();
+        String checkScope = check.getCheckScope();
+        if (checkScope.equals(CheckScope.CUSTOMER.name())) {
+            log.info("Starting check execute with REST API for customer");
+            checkDevice = getDeviceForCheck(modelDeviceService, check, customer);
+            paramsForCheck = getParamsForCheck(check, customer);
+        } else if (checkScope.equals(CheckScope.DEVICE.name())) {
+            log.info("Starting check execute with REST API for device");
+            checkDevice = device;
+        }
+        if (checkDevice == null)
+            throw new RuntimeException("Check device cannot be null!");
 
-        try (ApiConnection connection = ApiConnection.connect(SocketFactory.getDefault(), ipAddress.getAddress(), managePort, 20000)){
-            log.info("Starting check execute with Microtik API");
-            log.info("Login to device IP: {}", ipAddress);
+        String commandsWithValues =
+                replacingVariablesWithValues(check.getTelnetCommands(), paramsForCheck, customer);
+
+        String ipAddress = checkDevice.getIp().getAddress();
+        String login = checkDevice.getLogin();
+        String password = checkDevice.getPassword();
+        int managePort = checkDevice.getPort();
+        String commands = commandsWithValues;
+        //https://github.com/GideonLeGrange/mikrotik-java/tree/master
+        try (ApiConnection connection = ApiConnection.connect(SocketFactory.getDefault(), ipAddress, managePort, 10000)) {
+            connection.setTimeout(3000);
+            log.info("Starting check execute: {} with Mikrotik API", check.getCheckName());
+            log.info("Login to device IP: {} and port {}", ipAddress, managePort);
             connection.login(login, password);
-            log.info("Execute command \" {} \" on device {}", command, device.getName());
-            List<Map<String, String>> resultMap =  connection.execute(command);
-            for (Map<String, String> result : resultMap) {
-                System.out.println(result);
+            List<String> commandList = Arrays.stream(commands.split(";")).toList();
+
+            doneCommand.append("Выполненные команды").append("\n");
+            for (String command : commandList) {
+                log.info("Execute command \"{}\" on device {}", command, checkDevice.getName());
+                execCommand(connection, command);
             }
         } catch (MikrotikApiException e) {
-            throw new RuntimeException(e);
+            log.warn(e.getLocalizedMessage());
         }
+        CheckResult checkResult = new CheckResult();
+        checkResult.setResult(doneCommand.toString());
+        return checkResult;
+    }
 
-        return null;
+    private synchronized void execCommand(ApiConnection connection,  String command) {
+        try {
+            if (command.trim().matches("/ip/address/remove \\.id=\\b(?:(?:2(?:[0-4][0-9]|5[0-5])|[0-1]?[0-9]?[0-9])\\.){3}(?:(?:2([0-4][0-9]|5[0-5])|[0-1]?[0-9]?[0-9]))\\b")) {
+                doneCommand.append(getIdAnThenRemoveByNetworkIp(connection, command.split("=")[1]));
+            } else {
+                connection.execute(command);
+                doneCommand.append(command);
+            }
+        } catch (MikrotikApiException e) {
+            log.warn(e.getLocalizedMessage());
+        }
+    }
+
+    private String getIdAnThenRemoveByNetworkIp(ApiConnection connection, String ip) throws MikrotikApiException {
+        log.info("Remove IP for network: {}", ip);
+        StringBuilder doneCommand = new StringBuilder();
+        List<Map<String, String>> resultMap = connection.execute("/ip/address/print where network=" + ip);
+        List<String> idIpList = resultMap.stream().map(result -> result.get(".id")).toList();
+        for (String idIp : idIpList) {
+            String command = "/ip/address/remove .id=" + idIp;
+            log.info("Remove IP command: " + command);
+            connection.execute(command);
+            doneCommand.append("\n").append(command);
+        }
+        return doneCommand.toString();
     }
 }

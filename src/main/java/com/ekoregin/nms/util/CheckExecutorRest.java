@@ -42,7 +42,7 @@ public class CheckExecutorRest implements CheckExecutor {
         if (checkDevice == null)
             throw new RuntimeException("Check device cannot be null!");
 
-        String requestWithValues = replacingVariablesWithValues(check.getTelnetCommands(), paramsForCheck);
+        String requestWithValues = replacingVariablesWithValues(check.getTelnetCommands(), paramsForCheck, customer);
         List<String> filter = Collections.emptyList();
         if (check.getJsonFilter() != null && !check.getJsonFilter().isEmpty()) {
             filter = List.of(check.getJsonFilter().split(";"));

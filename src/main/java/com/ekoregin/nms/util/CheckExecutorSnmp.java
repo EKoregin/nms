@@ -37,7 +37,7 @@ public class CheckExecutorSnmp implements CheckExecutor {
         if (checkDevice == null)
             throw new RuntimeException("Check device cannot be null!");
 
-        String snmpOID = replacingVariablesWithValues(check.getSnmpOID(), paramsForCheck);
+        String snmpOID = replacingVariablesWithValues(check.getSnmpOID(), paramsForCheck, customer);
         String community = checkDevice.getSnmpCommunity();
         snmpClient.setIpAddress(checkDevice.getIp().getAddress());
         snmpClient.setPort(String.valueOf(checkDevice.getSnmpPort()));
