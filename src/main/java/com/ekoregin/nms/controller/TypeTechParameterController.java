@@ -1,15 +1,13 @@
 package com.ekoregin.nms.controller;
 
+import com.ekoregin.nms.dto.TypeTechParameterDto;
 import com.ekoregin.nms.entity.TypeTechParameter;
 import com.ekoregin.nms.service.TypeTechParameterService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -33,9 +31,24 @@ public class TypeTechParameterController {
       return "addTypeTechParam";
    }
 
+   @GetMapping("/editForm/{typeTechParamId}")
+   public String formEditTechParam(@PathVariable long typeTechParamId, Model model) {
+      TypeTechParameter typeTechParameter = service.findById(typeTechParamId);
+      TypeTechParameterDto typeTechParameterDto = new TypeTechParameterDto(typeTechParameter);
+      model.addAttribute("typeTechParameterDto", typeTechParameterDto);
+      return "editTypeTechParam";
+   }
+
    @PostMapping("/create")
    public String create(@ModelAttribute TypeTechParameter typeTechParam) {
       service.create(typeTechParam);
+      return "redirect:/typeTechParams";
+   }
+
+   @PutMapping("/update")
+   public String update(@ModelAttribute TypeTechParameterDto typeTechParameterDto) {
+      log.info("TypeTechParamDto for update: {}", typeTechParameterDto);
+      service.update(new TypeTechParameter(typeTechParameterDto));
       return "redirect:/typeTechParams";
    }
 }

@@ -130,22 +130,32 @@ public class CustomerController {
 
         for (Long typeId : parameters.keySet()) {
             TypeTechParameter type = ttpService.findById(typeId);
-
+            System.out.println("Type: " + type.getName());
             TechParameter techParameter = new TechParameter();
             //find techParameter with type in Customer parameters
             for (TechParameter customerTechParam : customer.getParams()) {
-                if (customerTechParam.getType().equals(type)) {
+                System.out.println("CustomerTechParam: " + customerTechParam);
+                System.out.println("Type id:" + type.getId());
+                if (customerTechParam.getType().getName().equals(type.getName())) {
                     techParameter = customerTechParam;
+                    break;
                 }
             }
-
+            //check regex rule for tech parameter value
+            String regexRule = type.getRegexRule();
+            if (!regexRule.isEmpty()) {
+                log.info("Regex rule: " + regexRule);
+                if(!parameters.get(typeId).matches(regexRule)) {
+                    log.warn("TTP: {} with value: {} not pass verify", type.getName(), parameters.get(typeId));
+                    throw new IllegalArgumentException("Wrong parameter format: " + type.getName());
+                }
+                log.info("TTP: {} with value: {} pass verify", type.getName(), parameters.get(typeId));
+            }
             techParameter.setType(type);
             techParameter.setValue(parameters.get(typeId));
             techParameter.setCustomer(customer);
-
             device.getParameters().add(techParameter);
         }
-
         customer.getDevices().add(device);
         customerService.update(customer);
         return "redirect:/customers/editForm/" + customerId;
