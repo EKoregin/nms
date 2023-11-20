@@ -23,8 +23,6 @@ import java.util.Map;
 @Component
 public class CheckExecutorMikrotik implements CheckExecutor {
 
-    private final StringBuilder doneCommand = new StringBuilder();
-
     private final ModelDeviceService modelDeviceService;
 
     @Override
@@ -53,33 +51,32 @@ public class CheckExecutorMikrotik implements CheckExecutor {
         int managePort = checkDevice.getPort();
         String commands = commandsWithValues;
         //https://github.com/GideonLeGrange/mikrotik-java/tree/master
+        StringBuilder reportCommand = new StringBuilder().append("Выполненные команды").append("\n");
         try (ApiConnection connection = ApiConnection.connect(SocketFactory.getDefault(), ipAddress, managePort, 10000)) {
             connection.setTimeout(3000);
             log.info("Starting check execute: {} with Mikrotik API", check.getCheckName());
             log.info("Login to device IP: {} and port {}", ipAddress, managePort);
             connection.login(login, password);
             List<String> commandList = Arrays.stream(commands.split(";")).toList();
-
-            doneCommand.append("Выполненные команды").append("\n");
             for (String command : commandList) {
                 log.info("Execute command \"{}\" on device {}", command, checkDevice.getName());
-                execCommand(connection, command);
+                execCommand(connection, command, reportCommand);
             }
         } catch (MikrotikApiException e) {
             log.warn(e.getLocalizedMessage());
         }
         CheckResult checkResult = new CheckResult();
-        checkResult.setResult(doneCommand.toString());
+        checkResult.setResult(reportCommand.toString());
         return checkResult;
     }
 
-    private synchronized void execCommand(ApiConnection connection,  String command) {
+    private synchronized void execCommand(ApiConnection connection,  String command, StringBuilder reportCommand) {
         try {
             if (command.trim().matches("/ip/address/remove \\.id=\\b(?:(?:2(?:[0-4][0-9]|5[0-5])|[0-1]?[0-9]?[0-9])\\.){3}(?:(?:2([0-4][0-9]|5[0-5])|[0-1]?[0-9]?[0-9]))\\b")) {
-                doneCommand.append(getIdAnThenRemoveByNetworkIp(connection, command.split("=")[1]));
+                reportCommand.append(getIdAnThenRemoveByNetworkIp(connection, command.split("=")[1]));
             } else {
                 connection.execute(command);
-                doneCommand.append(command);
+                reportCommand.append(command);
             }
         } catch (MikrotikApiException e) {
             log.warn(e.getLocalizedMessage());
