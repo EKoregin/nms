@@ -5,6 +5,7 @@ import com.ekoregin.nms.entity.Customer;
 import com.ekoregin.nms.entity.TechParameter;
 import com.ekoregin.nms.entity.TypeTechParameter;
 import com.ekoregin.nms.repository.TechParameterRepo;
+import com.ekoregin.nms.util.Validation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -33,6 +34,9 @@ public class TechParamServiceImpl implements TechParamService {
             log.error("TypeTechParam with ID: {} was not found", typeId);
             throw new NoSuchElementException("TypeTechParam with ID: " + typeId + " was not found");
         }
+
+        Validation.verifyParameterForValidity(typeTechParameter, techParameterDto.getValue());
+
         TechParameter techParameter = TechParameter.builder()
                 .value(techParameterDto.getValue().toUpperCase())
                 .type(typeTechParameter)
@@ -48,6 +52,10 @@ public class TechParamServiceImpl implements TechParamService {
         long paramId = techParameter != null ? techParameter.getParamId() : 0;
         TechParameter techParameterFound = repo.findById(paramId).orElse(null);
         if (techParameterFound != null && techParameter != null) {
+
+            TypeTechParameter typeTechParameter = techParameterFound.getType();
+            Validation.verifyParameterForValidity(typeTechParameter, techParameterFound.getValue());
+
             repo.save(techParameter);
             log.info("TechParam was updated: {}", techParameter);
         } else {

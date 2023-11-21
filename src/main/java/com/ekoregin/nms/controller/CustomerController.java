@@ -4,6 +4,7 @@ import com.ekoregin.nms.dto.CustomerDto;
 import com.ekoregin.nms.entity.*;
 import com.ekoregin.nms.service.*;
 import com.ekoregin.nms.util.CustomerToDeviceForm;
+import com.ekoregin.nms.util.Validation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -141,16 +142,9 @@ public class CustomerController {
                     break;
                 }
             }
-            //check regex rule for tech parameter value
-            String regexRule = type.getRegexRule();
-            if (!regexRule.isEmpty()) {
-                log.info("Regex rule: " + regexRule);
-                if(!parameters.get(typeId).matches(regexRule)) {
-                    log.warn("TTP: {} with value: {} not pass verify", type.getName(), parameters.get(typeId));
-                    throw new IllegalArgumentException("Wrong parameter format: " + type.getName());
-                }
-                log.info("TTP: {} with value: {} pass verify", type.getName(), parameters.get(typeId));
-            }
+
+            Validation.verifyParameterForValidity(type, parameters.get(typeId));
+
             techParameter.setType(type);
             techParameter.setValue(parameters.get(typeId));
             techParameter.setCustomer(customer);
