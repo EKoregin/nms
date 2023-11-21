@@ -54,6 +54,9 @@ public class CheckServiceImpl implements CheckService{
         check.setJsonFilter(checkDto.getJsonFilter());
         check.setRegexFilter(checkDto.getRegexFilter());
         check.setCheckScope(checkDto.getCheckScope());
+        check.setCreator(checkDto.getIsCreator());
+        check.setForConnecting(checkDto.isForConnecting());
+        check.setForDisconnecting(checkDto.isForDisconnecting());
         checkRepo.save(check);
     }
 
@@ -76,6 +79,16 @@ public class CheckServiceImpl implements CheckService{
             throw new NoSuchElementException("Check with ID: " + checkId + " not found!");
         }
         return check;
+    }
+
+    @Override
+    public Check findByModelDeviceAndForConnecting(ModelDevice modelDevice) {
+        return checkRepo.findByModelDeviceAndForConnectingIs(modelDevice, true);
+    }
+
+    @Override
+    public Check findByModelDeviceAndForDisconnecting(ModelDevice modelDevice) {
+        return checkRepo.findByModelDeviceAndForDisconnectingIs(modelDevice, true);
     }
 
     @Override

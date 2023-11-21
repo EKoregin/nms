@@ -23,6 +23,10 @@ public class CheckDto {
 
     private Boolean isCreator;
 
+    private boolean forConnecting;
+
+    private boolean forDisconnecting;
+
     private String snmpOID;
 
     private String telnetCommands;
@@ -55,5 +59,7 @@ public class CheckDto {
         this.jsonFilter = check.getJsonFilter();
         this.regexFilter = check.getRegexFilter();
         this.checkScope = check.getCheckScope();
+        this.forConnecting = check.isForConnecting();
+        this.forDisconnecting = check.isForDisconnecting();
     }
 }

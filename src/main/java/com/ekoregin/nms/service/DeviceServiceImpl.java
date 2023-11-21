@@ -74,6 +74,11 @@ public class DeviceServiceImpl implements DeviceService {
     }
 
     @Override
+    public void update(Device device) {
+        deviceRepo.save(device);
+    }
+
+    @Override
     public void delete(long id) {
         deviceRepo.deleteById(id);
         log.info("Device with ID: {} was deleted", id);

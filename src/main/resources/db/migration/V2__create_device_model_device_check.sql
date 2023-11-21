@@ -68,6 +68,8 @@ CREATE TABLE IF NOT EXISTS checks
     check_name      VARCHAR(255) NOT NULL DEFAULT '',
     check_type      VARCHAR(255) NOT NULL DEFAULT 'SNMP',
     is_creator      BOOLEAN DEFAULT FALSE,
+    for_connecting  BOOLEAN DEFAULT FALSE,
+    for_disconnecting BOOLEAN DEFAULT FALSE,
     snmp_oid        VARCHAR(255),
     telnet_commands TEXT,
     description     TEXT,

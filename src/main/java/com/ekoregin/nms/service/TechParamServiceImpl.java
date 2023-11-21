@@ -48,6 +48,12 @@ public class TechParamServiceImpl implements TechParamService {
     }
 
     @Override
+    public TechParameter create(TechParameter techParameter) {
+        repo.save(techParameter);
+        return techParameter;
+    }
+
+    @Override
     public void update(TechParameter techParameter) {
         long paramId = techParameter != null ? techParameter.getParamId() : 0;
         TechParameter techParameterFound = repo.findById(paramId).orElse(null);

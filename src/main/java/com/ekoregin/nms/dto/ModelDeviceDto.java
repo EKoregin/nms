@@ -37,7 +37,7 @@ public class ModelDeviceDto {
 
     private List<TypeTechParameter> typeTechParameters = new ArrayList<>();
 
-    private List<Check> checks;
+    private List<CheckDto> checks;
 
     private List<String> listDevices;
 
@@ -50,7 +50,7 @@ public class ModelDeviceDto {
         this.manufacturer = modelDevice.getManufacturer();
         this.numberOfPorts = modelDevice.getNumberOfPorts();
         this.typePort = modelDevice.getTypePort();
-        this.checks = modelDevice.getChecks();
+        this.checks = modelDevice.getChecks().stream().map(CheckDto::new).toList();
         this.listDevices = modelDevice.getDevices().stream().map(Device::getName).toList();
         this.controlMethods = modelDevice.getControlMethods();
         this.typeTechParameters = modelDevice.getTypeTechParameters();

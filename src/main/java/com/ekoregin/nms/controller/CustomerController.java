@@ -26,6 +26,8 @@ public class CustomerController {
     private final CustomerService customerService;
     private final DeviceService deviceService;
     private final TypeTechParameterService ttpService;
+    private final CheckService checkService;
+    private final TechParamService techParamService;
 
     @RequestMapping(path = {"", "/search"})
     public String searchCustomers(Model model, String searchKeyword,
@@ -131,12 +133,9 @@ public class CustomerController {
 
         for (Long typeId : parameters.keySet()) {
             TypeTechParameter type = ttpService.findById(typeId);
-            System.out.println("Type: " + type.getName());
             TechParameter techParameter = new TechParameter();
             //find techParameter with type in Customer parameters
             for (TechParameter customerTechParam : customer.getParams()) {
-                System.out.println("CustomerTechParam: " + customerTechParam);
-                System.out.println("Type id:" + type.getId());
                 if (customerTechParam.getType().getName().equals(type.getName())) {
                     techParameter = customerTechParam;
                     break;
@@ -148,10 +147,19 @@ public class CustomerController {
             techParameter.setType(type);
             techParameter.setValue(parameters.get(typeId));
             techParameter.setCustomer(customer);
+            techParamService.create(techParameter);
+
             device.getParameters().add(techParameter);
+            customer.getParams().add(techParameter);
         }
         customer.getDevices().add(device);
         customerService.update(customer);
+
+        //Exec check for connecting to device
+        Check checkCreator = checkService.findByModelDeviceAndForConnecting(device.getModel());
+        log.info("Run Check for connecting with ID: {} for Customer with ID: {}", checkCreator.getCheckId(), customer.getId());
+        checkService.executeForCustomer(checkCreator.getCheckId(), customer.getId());
+
         return "redirect:/customers/editForm/" + customerId;
     }
 
@@ -161,6 +169,11 @@ public class CustomerController {
         log.info("Delete device with ID {}, from customer ID: {}", deviceId, customerId);
         Customer foundCustomer = customerService.findById(customerId);
         Device foundDevice = deviceService.findById(deviceId);
+
+        //Exec check for disconnecting device
+        Check checkCreator = checkService.findByModelDeviceAndForDisconnecting(foundDevice.getModel());
+        log.info("Run Check for disconnecting with ID: {} for Customer with ID: {}", checkCreator.getCheckId(), foundCustomer.getId());
+        checkService.executeForCustomer(checkCreator.getCheckId(), foundCustomer.getId());
 
         List<Long> deviceParameterIds = foundDevice.getParameters().stream().map(TechParameter::getParamId).toList();
         List<Long> customerParameterIds = foundCustomer.getParams().stream().map(TechParameter::getParamId).toList();
@@ -188,6 +201,7 @@ public class CustomerController {
         foundCustomer.getDevices().remove(foundDevice);
 
         customerService.update(foundCustomer);
+
         return "redirect:/customers/editForm/" + customerId;
     }
 }

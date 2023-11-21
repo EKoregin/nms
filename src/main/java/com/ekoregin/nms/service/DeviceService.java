@@ -11,6 +11,8 @@ public interface DeviceService {
 
     void update(DeviceDto deviceDto);
 
+    void update(Device device);
+
     void delete(long id);
 
     Device findById(long id);

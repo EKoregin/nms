@@ -28,6 +28,12 @@ public class Check {
     @Column(name = "is_creator")
     private boolean isCreator = false;
 
+    @Column(name = "for_connecting")
+    private boolean forConnecting = false;
+
+    @Column(name = "for_disconnecting")
+    private boolean forDisconnecting = false;
+
     @Column(name = "snmp_oid")
     private String snmpOID;
 

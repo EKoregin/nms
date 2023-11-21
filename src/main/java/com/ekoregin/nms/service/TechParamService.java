@@ -8,6 +8,8 @@ import java.util.List;
 public interface TechParamService {
     TechParameter create(TechParameterDto techParameterDto);
 
+    TechParameter create(TechParameter techParameter);
+
     void update(TechParameter techParameter);
 
     void delete(long id);

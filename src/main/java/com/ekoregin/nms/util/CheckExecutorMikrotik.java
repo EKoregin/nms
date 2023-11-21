@@ -32,11 +32,11 @@ public class CheckExecutorMikrotik implements CheckExecutor {
         Map<String, String> paramsForCheck = new HashMap<>();
         String checkScope = check.getCheckScope();
         if (checkScope.equals(CheckScope.CUSTOMER.name())) {
-            log.info("Starting check execute with REST API for customer");
+            log.info("Starting check execute with MIKROTIK API for customer");
             checkDevice = getDeviceForCheck(modelDeviceService, check, customer);
             paramsForCheck = getParamsForCheck(check, customer);
         } else if (checkScope.equals(CheckScope.DEVICE.name())) {
-            log.info("Starting check execute with REST API for device");
+            log.info("Starting check execute with MIKROTIK API for device");
             checkDevice = device;
         }
         if (checkDevice == null)
@@ -49,7 +49,6 @@ public class CheckExecutorMikrotik implements CheckExecutor {
         String login = checkDevice.getLogin();
         String password = checkDevice.getPassword();
         int managePort = checkDevice.getPort();
-        String commands = commandsWithValues;
         //https://github.com/GideonLeGrange/mikrotik-java/tree/master
         StringBuilder reportCommand = new StringBuilder().append("Выполненные команды").append("\n");
         try (ApiConnection connection = ApiConnection.connect(SocketFactory.getDefault(), ipAddress, managePort, 10000)) {
@@ -57,7 +56,7 @@ public class CheckExecutorMikrotik implements CheckExecutor {
             log.info("Starting check execute: {} with Mikrotik API", check.getCheckName());
             log.info("Login to device IP: {} and port {}", ipAddress, managePort);
             connection.login(login, password);
-            List<String> commandList = Arrays.stream(commands.split(";")).toList();
+            List<String> commandList = Arrays.stream(commandsWithValues.split(";")).toList();
             for (String command : commandList) {
                 log.info("Execute command \"{}\" on device {}", command, checkDevice.getName());
                 execCommand(connection, command, reportCommand);
