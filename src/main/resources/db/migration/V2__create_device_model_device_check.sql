@@ -54,6 +54,7 @@ CREATE TABLE IF NOT EXISTS customer_device
     customer_id INT NOT NULL,
     device_id   INT NOT NULL,
     port        INT default 0,
+    is_connected BOOLEAN DEFAULT FALSE,
     CONSTRAINT fk_customer
         FOREIGN KEY (customer_id)
             REFERENCES customer (id),

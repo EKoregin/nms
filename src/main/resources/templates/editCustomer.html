@@ -96,6 +96,7 @@
                                         <th scope="col">Название</th>
                                         <th scope="col">IP адрес</th>
                                         <th scope="col">Модель</th>
+                                        <th scope="col">Статус</th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -104,6 +105,11 @@
                                         <td th:text="${device.name}"></td>
                                         <td th:text="${device.ip.address}"></td>
                                         <td th:text="${device.model.name}"></td>
+                                        <span th:each="connection : ${connections}">
+                                            <span th:if="${connection.device.id == device.id}">
+                                            <td th:text="${connection.isConnected() ? 'Подключен' : 'Отключен'}"></td>
+                                            </span>
+                                        </span>
                                         <td>
                                             <div class="container">
                                                 <div class="row">

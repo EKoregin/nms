@@ -2,6 +2,7 @@ package com.ekoregin.nms.controller;
 
 import com.ekoregin.nms.dto.CustomerDto;
 import com.ekoregin.nms.entity.*;
+import com.ekoregin.nms.repository.CustomerDeviceRepo;
 import com.ekoregin.nms.service.*;
 import com.ekoregin.nms.util.CustomerToDeviceForm;
 import com.ekoregin.nms.util.Validation;
@@ -28,6 +29,7 @@ public class CustomerController {
     private final TypeTechParameterService ttpService;
     private final CheckService checkService;
     private final TechParamService techParamService;
+    private final CustomerDeviceRepo customerDeviceRepo;
 
     @RequestMapping(path = {"", "/search"})
     public String searchCustomers(Model model, String searchKeyword,
@@ -88,6 +90,7 @@ public class CustomerController {
                     .toList();
             model.addAttribute("checks", checks);
             model.addAttribute("customerDto", customerDto);
+            model.addAttribute("connections", foundCustomer.getConnections());
         } else {
             log.info("Customer with ID: {} not found", customerId);
             throw new NoSuchElementException("Customer with ID: " + customerId + " not found");
@@ -141,7 +144,6 @@ public class CustomerController {
                     break;
                 }
             }
-
             Validation.verifyParameterForValidity(type, parameters.get(typeId));
 
             techParameter.setType(type);
@@ -157,8 +159,20 @@ public class CustomerController {
 
         //Exec check for connecting to device
         Check checkCreator = checkService.findByModelDeviceAndForConnecting(device.getModel());
-        log.info("Run Check for connecting with ID: {} for Customer with ID: {}", checkCreator.getCheckId(), customer.getId());
-        checkService.executeForCustomer(checkCreator.getCheckId(), customer.getId());
+        if (checkCreator != null) {
+            log.info("Run Check for connecting with ID: {} for Customer with ID: {}", checkCreator.getCheckId(), customer.getId());
+            checkService.executeForCustomer(checkCreator.getCheckId(), customer.getId());
+        } else {
+            log.warn("Connecting creator for device: {} not assign", device.getName());
+        }
+        // Change isConnected to true in CustomerDevice
+        CustomerDevice connection = customer.getConnections().stream()
+                .filter(conn -> conn.getDevice().getId().equals(device.getId()))
+                .findFirst().orElse(null);
+        if (connection != null) {
+            connection.setConnected(true);
+            customerDeviceRepo.save(connection);
+        }
 
         return "redirect:/customers/editForm/" + customerId;
     }
@@ -172,8 +186,12 @@ public class CustomerController {
 
         //Exec check for disconnecting device
         Check checkCreator = checkService.findByModelDeviceAndForDisconnecting(foundDevice.getModel());
-        log.info("Run Check for disconnecting with ID: {} for Customer with ID: {}", checkCreator.getCheckId(), foundCustomer.getId());
-        checkService.executeForCustomer(checkCreator.getCheckId(), foundCustomer.getId());
+        if (checkCreator != null) {
+            log.info("Run Check for disconnecting with ID: {} for Customer with ID: {}", checkCreator.getCheckId(), foundCustomer.getId());
+            checkService.executeForCustomer(checkCreator.getCheckId(), foundCustomer.getId());
+        } else {
+            log.warn("Disconnecting creator for device with ID {} not assign", deviceId);
+        }
 
         List<Long> deviceParameterIds = foundDevice.getParameters().stream().map(TechParameter::getParamId).toList();
         List<Long> customerParameterIds = foundCustomer.getParams().stream().map(TechParameter::getParamId).toList();

@@ -9,6 +9,7 @@ import org.hibernate.annotations.Type;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -77,6 +78,9 @@ public class Device {
             inverseJoinColumns = @JoinColumn(name = "tech_parameter_id")
     )
     private List<TechParameter> parameters = new ArrayList<>();
+
+    @OneToMany(mappedBy = "device")
+    Set<CustomerDevice> connections;
 
     public Device(DeviceDto deviceDto) {
         this.id = deviceDto.getId();

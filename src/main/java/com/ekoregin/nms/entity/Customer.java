@@ -5,11 +5,13 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(of = {"id"})
 @Entity(name = "customer")
 public class Customer {
 
@@ -32,6 +34,9 @@ public class Customer {
             inverseJoinColumns = @JoinColumn(name = "device_id")
     )
     private List<Device> devices;
+
+    @OneToMany(mappedBy = "customer")
+    Set<CustomerDevice> connections;
 
     public Customer(CustomerDto customerDto) {
         id = customerDto.getCustomerId();

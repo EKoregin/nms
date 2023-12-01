@@ -26,7 +26,7 @@ public class CustomerServiceImpl implements CustomerService {
         Customer customer;
         if (customerDto != null) {
             customer = new Customer(customerDto);
-            customerRepo.save(customer);
+            customer = customerRepo.save(customer);
             log.info("Customer with ID: {} was created", customer.getId());
         } else {
             log.warn("CustomerDto is null");
