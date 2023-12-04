@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Collections;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -37,10 +38,24 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public void update(CustomerDto customerDto) {
-        Customer customer = findById(customerDto.getCustomerId());
-        customer.setName(customerDto.getName());
-        customer.setAddress(customerDto.getAddress());
-        customerRepo.save(customer);
+        if (customerDto == null)
+            throw new NoSuchElementException("CustomerDto is null");
+        Optional<Customer> customer = customerRepo.findById(customerDto.getCustomerId());
+        if (customer.isEmpty())
+            throw new NoSuchElementException("Customer with ID " + customerDto.getCustomerId() + " not found");
+        customer.get().setName(customerDto.getName());
+        customer.get().setAddress(customerDto.getAddress());
+        customerRepo.save(customer.get());
+    }
+
+    @Override
+    public Customer findById(long id) {
+        Customer customer = customerRepo.findById(id).orElse(null);
+        if (customer == null) {
+            log.warn("Customer with ID: {} not found!", id);
+            throw new NoSuchElementException("Customer with ID: " + id + " not found!");
+        }
+        return customer;
     }
 
     @Override
@@ -52,16 +67,6 @@ public class CustomerServiceImpl implements CustomerService {
     public void delete(long id) {
         customerRepo.deleteById(id);
         log.info("Customer with ID: {} was deleted", id);
-    }
-
-    @Override
-    public Customer findById(long id) {
-        Customer customer = customerRepo.findById(id).orElse(null);
-        if (customer == null) {
-            log.warn("Customer with ID: {} not found!", id);
-            throw new NoSuchElementException("Customer with ID: " + id + " not found!");
-        }
-        return customer;
     }
 
     @Override
