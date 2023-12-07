@@ -49,23 +49,33 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public Customer findById(long id) {
-        Customer customer = customerRepo.findById(id).orElse(null);
-        if (customer == null) {
-            log.warn("Customer with ID: {} not found!", id);
-            throw new NoSuchElementException("Customer with ID: " + id + " not found!");
-        }
-        return customer;
-    }
-
-    @Override
     public void update(Customer customer) {
+        if (customer == null)
+            throw new NoSuchElementException("Customer is null");
+        var foundCustomer = customerRepo.findById(customer.getId());
+        if (foundCustomer.isEmpty()) {
+            throw new NoSuchElementException("Customer with ID " + customer.getId() + " not found");
+        }
         customerRepo.save(customer);
     }
 
     @Override
+    public Customer findById(long id) {
+        Optional<Customer> customer = customerRepo.findById(id);
+        if (customer.isEmpty()) {
+            log.warn("Customer with ID: {} not found!", id);
+            throw new NoSuchElementException("Customer with ID: " + id + " not found!");
+        }
+        return customer.get();
+    }
+
+    @Override
     public void delete(long id) {
-        customerRepo.deleteById(id);
+        var foundCustomer = customerRepo.findById(id);
+        if (foundCustomer.isEmpty()) {
+            throw new NoSuchElementException("Customer with ID " + id + " not found");
+        }
+        customerRepo.delete(foundCustomer.get());
         log.info("Customer with ID: {} was deleted", id);
     }
 

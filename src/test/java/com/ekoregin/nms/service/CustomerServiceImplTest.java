@@ -44,7 +44,7 @@ class CustomerServiceImplTest {
     }
 
     @Test
-    void shouldUpdateExistedCustomer() {
+    void shouldUpdateExistedCustomerDto() {
         CustomerDto customerDto = getCustomerDto();
         customerDto.setName("Ivanov Ivan Petrovich");
         customerDto.setAddress("Moscow");
@@ -70,6 +70,50 @@ class CustomerServiceImplTest {
         CustomerDto customerDto = null;
         var exception = assertThrows(NoSuchElementException.class, () -> customerService.update(customerDto));
         assertThat(exception.getMessage()).isEqualTo("CustomerDto is null");
+    }
+
+    @Test
+    void shouldUpdateIfCustomerIsExisted() {
+        Customer customer = getCustomer();
+        doReturn(Optional.of(customer)).when(customerRepo).findById(customer.getId());
+
+        customerService.update(customer);
+
+        verify(customerRepo).save(customer);
+    }
+
+    @Test
+    void throwExceptionIfUpdateCustomerNotFound() {
+        Customer customer = getCustomer();
+        customer.setId(100500L);
+        doReturn(Optional.empty()).when(customerRepo).findById(customer.getId());
+
+        var exception = assertThrows(NoSuchElementException.class, () -> customerService.update(customer));
+        assertThat(exception.getMessage()).isEqualTo("Customer with ID " + customer.getId() + " not found");
+    }
+
+    @Test
+    void throwExceptionIfCustomerIsNullWhenUpdate() {
+        Customer customer = null;
+        var exception = assertThrows(NoSuchElementException.class, () -> customerService.update(customer));
+        assertThat(exception.getMessage()).isEqualTo("Customer is null");
+    }
+
+    @Test
+    void shouldDeleteExistedCustomer() {
+        Customer customer = getCustomer();
+        doReturn(Optional.of(customer)).when(customerRepo).findById(customer.getId());
+
+        customerService.delete(customer.getId());
+
+        verify(customerRepo).delete(customer);
+    }
+
+    @Test
+    void throwExceptionWhenCustomerNotFoundWhenDelete() {
+        Customer customer = getCustomer();
+        doReturn(Optional.empty()).when(customerRepo).findById(customer.getId());
+        assertThrows(NoSuchElementException.class, () -> customerService.delete(customer.getId()));
     }
 
     Customer getCustomer () {
