@@ -1,0 +1,67 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns="http://www.w3.org/1999/html" lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <script src="https://code.jquery.com/jquery-3.7.0.js"
+            integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM="
+            crossorigin="anonymous"></script>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+            integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+            crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link th:href="@{/styles/main.css}" rel="stylesheet"/>
+    <link rel="stylesheet" th:href="@{/font-awesome/css/font-awesome.min.css}">
+    <script type="text/javascript" th:src="@{/js/menu.js}"></script>
+    <title>Registration</title>
+</head>
+<body>
+<div class='dashboard'>
+    <div th:replace="~{fragments/menu::menu}"></div>
+    <div class='dashboard-app'>
+        <header class='dashboard-toolbar'>
+            <a href="#!" class="menu-toggle">
+                <i class="fa fa-bars"></i></a>
+            <h1 class="display-4">Network Management System</h1>
+        </header>
+        <div class='dashboard-content'>
+            <div class="container">
+                <form th:action="@{/users}" method="post" th:object="${user}">
+                    <label for="username">Username:
+                        <input id="username" type="text" name="username" th:value="*{username}">
+                    </label><br>
+                    <label for="rawPassword">Password:
+                        <input id="rawPassword" type="password" name="rawPassword">
+                    </label><br>
+                    <label for="birthDate">BirthDate:
+                        <input id="birthDate" type="date" name="birthDate" th:value="*{birthDate}">
+                    </label><br>
+                    <label for="lastname">Lastname:
+                        <input id="lastname" type="text" name="lastname" th:value="*{lastname}">
+                    </label><br>
+                    <label for="firstname">Firstname:
+                        <input id="firstname" type="text" name="firstname" th:value="*{firstname}">
+                    </label><br>
+                    <div th:each="role : ${roles}">
+                        <input th:id="${role}" type="radio" name="role"
+                               th:value="${role}" th:checked="${role == user.role}">
+                        <label th:for="${role}" th:text="${role}"></label>
+                    </div>
+                    <button type="submit">Register</button>
+                </form>
+                <div th:if="${errors}">
+                    <p style="color: red" th:each="error : ${errors}" th:text="${error.defaultMessage}">Error message</p>
+                </div>
+            </div>
+        </div>
+        <div th:replace="~{fragments/footer::footer}">&nbsp;</div>
+    </div>
+</div>
+</body>
+</html>
