@@ -1,6 +1,7 @@
 package com.ekoregin.nms.dto;
 
 import com.ekoregin.nms.entity.Role;
+import com.ekoregin.nms.validation.UniqueUsername;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Value;
@@ -12,6 +13,7 @@ import java.time.LocalDate;
 public class UserCreateEditDto {
 
     @Email
+    @UniqueUsername
     String username;
 
     @NotBlank
@@ -24,5 +26,5 @@ public class UserCreateEditDto {
 
     String lastname;
 
-    Role role;
+    Role role = Role.USER;
 }

@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.Arrays;
+
 @Slf4j
 @Controller
 @RequestMapping("/users")
@@ -26,7 +28,7 @@ public class UserController {
     @GetMapping("/registration")
     public String registration(Model model, @ModelAttribute("user") UserCreateEditDto user) {
         model.addAttribute("user", user);
-        model.addAttribute("roles", Role.values());
+        model.addAttribute("roles", Arrays.stream(Role.values()).filter(role -> !role.toString().equals("ADMIN")));
         return "user/registration";
     }
 
