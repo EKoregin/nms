@@ -13,6 +13,8 @@ import com.ekoregin.nms.util.TypeDevice;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
@@ -32,6 +34,11 @@ public class ModelDeviceController {
     private final CheckService checkService;
     private final TypeTechParameterService ttpService;
     private final CheckTypeRepo checkTypeRepo;
+
+    @ModelAttribute
+    private void currentAuthUser(@AuthenticationPrincipal UserDetails userDetails, Model model) {
+        model.addAttribute("currentUser", userDetails.getUsername());
+    }
 
     @ModelAttribute
     public void addControlMethods(Model model) {

@@ -53,7 +53,8 @@
                                th:value="${role}" th:checked="${role == user.role}">
                         <label th:for="${role}" th:text="${role}"></label>
                     </div>
-                    <button type="submit">Register</button>
+                    <button class="btn btn-primary" type="submit">Register</button>
+                    <a class="btn btn-primary" href="/login" role="button">Назад</a>
                 </form>
                 <div th:if="${errors}">
                     <p style="color: red" th:each="error : ${errors}" th:text="${error.defaultMessage}">Error message</p>

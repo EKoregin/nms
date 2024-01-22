@@ -8,6 +8,8 @@ import com.ekoregin.nms.service.TechParamService;
 import com.ekoregin.nms.service.TypeTechParameterService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +24,11 @@ public class TechParamController {
 
     private final TechParamService techParamService;
     private final TypeTechParameterService typeTechParamService;
+
+    @ModelAttribute
+    private void currentAuthUser(@AuthenticationPrincipal UserDetails userDetails, Model model) {
+        model.addAttribute("currentUser", userDetails.getUsername());
+    }
 
     @ModelAttribute(name = "typeTechParams")
     public List<TypeTechParameter> typeTechParameterList() {

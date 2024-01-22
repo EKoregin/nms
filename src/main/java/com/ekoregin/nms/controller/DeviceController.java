@@ -11,6 +11,8 @@ import com.ekoregin.nms.service.ModelDeviceService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
@@ -24,6 +26,11 @@ import java.util.Optional;
 @Controller
 @RequestMapping("/devices")
 public class DeviceController {
+
+    @ModelAttribute
+    private void currentAuthUser(@AuthenticationPrincipal UserDetails userDetails, Model model) {
+        model.addAttribute("currentUser", userDetails.getUsername());
+    }
 
     public final DeviceService deviceService;
     public final ModelDeviceService modelDeviceService;

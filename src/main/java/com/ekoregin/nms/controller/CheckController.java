@@ -9,6 +9,8 @@ import com.ekoregin.nms.service.TypeTechParameterService;
 import com.ekoregin.nms.util.CheckType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +24,11 @@ import java.util.NoSuchElementException;
 @Controller
 @RequestMapping("/checks")
 public class CheckController {
+
+    @ModelAttribute
+    private void currentAuthUser(@AuthenticationPrincipal UserDetails userDetails, Model model) {
+        model.addAttribute("currentUser", userDetails.getUsername());
+    }
 
     private final CheckService checkService;
     private final TypeTechParameterService typeTechParameterService;

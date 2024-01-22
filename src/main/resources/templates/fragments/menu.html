@@ -53,7 +53,12 @@
                 </div>
                 <a href="https://zabbix.3z.net" class="dashboard-nav-item"><i class="fa fa-eye"></i>Zabbix</a>
                 <div class="nav-item-divider"></div>
-                <a href="/logout" class="dashboard-nav-item"><i class="fas fa-sign-out-alt"></i>Выйти</a>
+                <div th:if="${currentUser}">
+                    <span style="color: white; margin-left:20px" >Вы зашли как:<br/>
+                        <span th:text="${currentUser}" style="margin-left:20px"></span>
+                    </span>
+                        <a href="/logout" class="dashboard-nav-item"><i class="fas fa-sign-out-alt"></i>Выйти</a>
+                </div>
             </div>
         </nav>
     </div>

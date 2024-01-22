@@ -10,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -30,6 +32,11 @@ public class CustomerController {
     private final CheckService checkService;
     private final TechParamService techParamService;
     private final CustomerDeviceRepo customerDeviceRepo;
+
+    @ModelAttribute
+    private void currentAuthUser(@AuthenticationPrincipal UserDetails userDetails, Model model) {
+        model.addAttribute("currentUser", userDetails.getUsername());
+    }
 
     @RequestMapping(path = {"", "/search"})
     public String searchCustomers(Model model, String searchKeyword,
