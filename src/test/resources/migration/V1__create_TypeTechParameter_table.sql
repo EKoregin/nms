@@ -1,6 +1,0 @@
-CREATE TABLE IF NOT EXISTS type_tech_parameter (
-    id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
-    name VARCHAR(255) NOT NULL ,
-    description VARCHAR(255),
-    regex_rule VARCHAR(255)
-);

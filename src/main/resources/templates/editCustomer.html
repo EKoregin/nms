@@ -46,6 +46,23 @@
                                                id="customerAddress">
                                     </div>
                                 </div>
+
+
+                                <div class="container">
+                                    <div class="row">
+                                        <div>
+                                            <div th:id="customerBillingInfo"></div>
+                                            <div>
+                                                <button id="mikrobillUserInfoButton" type="button"
+                                                        th:class="'mikrobillUserInfo btn btn-info'"
+                                                        th:data-info="*{name}">Получить данные из биллинга
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+
                                 <h5 class="card-header">Параметры</h5>
                                 <table class="table">
                                     <thead>
@@ -116,7 +133,8 @@
                                                     <div class="col-2 col-md-5">
                                                         <form th:action="@{'/customers/delDeviceFromCustomer/' + *{customerId} + '/device/' + ${device.id}}"
                                                               th:method="delete">
-                                                            <button type="submit" class="btn btn-danger">Отключить</button>
+                                                            <button type="submit" class="btn btn-danger">Отключить
+                                                            </button>
                                                         </form>
                                                     </div>
                                                 </div>
@@ -232,6 +250,15 @@
         }
     }
 
+    async function fetchMikrobillUserInfo(customerName) {
+        let response = await fetch("/api/v1/mikrobilluser/" + customerName);
+        if (response.ok) {
+            return response.json();
+        } else {
+            alert("Ошибка HTTP: " + response);
+        }
+    }
+
     function waiting(element) {
         element.innerHTML = "Ждите...";
     }
@@ -246,6 +273,20 @@
             let div = document.createElement('div');
             div.innerText = resultMessage;
             let checkResult = document.querySelector("#checkResult" + checkId);
+            parent.innerHTML = "";
+            checkResult.prepend(div);
+        })
+    });
+
+    $('.mikrobillUserInfo').click(function () {
+        let customerName = $(this).data('info');
+        let parent = document.getElementById("customerBillingInfo");
+        waiting(parent);
+        fetchMikrobillUserInfo(customerName).then(json => {
+            let resultMessage = json.result;
+            let div = document.createElement('div');
+            div.innerText = resultMessage;
+            let checkResult = document.querySelector("#customerBillingInfo");
             parent.innerHTML = "";
             checkResult.prepend(div);
         })
