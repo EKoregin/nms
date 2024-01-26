@@ -17,10 +17,13 @@ services:
       context: .
       dockerfile: Dockerfile
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/nms
-      - SPRING_DATASOURCE_USERNAME=postgres
-      - SPRING_DATASOURCE_PASSWORD=postgres
+      - SPRING_DATASOURCE_URL=${SPRING_DATASOURCE_URL}
+      - SPRING_DATASOURCE_USERNAME=${SPRING_DATASOURCE_USERNAME}
+      - SPRING_DATASOURCE_PASSWORD=${SPRING_DATASOURCE_PASSWORD}
       - SPRING_JPA_HIBERNATE_DDL_AUTO=none
+      - DB_MIKROBILL_URL=${DB_MIKROBILL_URL}
+      - DB_MIKROBILL_USERNAME=${DB_MIKROBILL_USERNAME}
+      - DB_MIKROBILL_PASSWORD=${DB_MIKROBILL_PASSWORD}
     container_name: nms
     depends_on:
       - db
