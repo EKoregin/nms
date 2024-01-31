@@ -8,7 +8,6 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.expectit.Expect;
 import net.sf.expectit.ExpectBuilder;
-import net.sf.expectit.Result;
 import org.apache.commons.net.telnet.InvalidTelnetOptionException;
 import org.apache.commons.net.telnet.TelnetClient;
 import org.apache.commons.net.telnet.TerminalTypeOptionHandler;
@@ -70,7 +69,7 @@ public class CheckExecutorTelnet implements CheckExecutor {
         CheckResult checkResult = new CheckResult();
 
         TelnetClient telnet = new TelnetClient();
-        WindowSizeOptionHandler windowSizeOptionHandler = new WindowSizeOptionHandler(100, 100, false, false, true, false);
+        WindowSizeOptionHandler windowSizeOptionHandler = new WindowSizeOptionHandler(100, 200, false, false, true, false);
         TerminalTypeOptionHandler terminalTypeOptionHandler = new TerminalTypeOptionHandler("VT100", false, false, true, false);
         try {
             telnet.addOptionHandler(terminalTypeOptionHandler);
@@ -88,24 +87,32 @@ public class CheckExecutorTelnet implements CheckExecutor {
 
                 String[] keyValueArr = commands.replaceAll("\n", "").trim().split(";");
 
-                int keyValueArrLength = keyValueArr.length - 1;
+                StringBuilder sb = new StringBuilder();
 
-                for (int i = 0; i < keyValueArrLength; i++) {
-                    String[] parts = keyValueArr[i].split("==");
-                    log.info("Wait Response: {}", parts[0].trim());
-                    Result tempResult = expect.expect(contains(parts[0].trim()));
-                    log.info("Message before Response: {}", tempResult.getBefore());
-                    log.info("SendLine: {}", parts[1].trim());
-                    expect.sendLine(parts[1].trim());
+                boolean isCommand = false;
+                for (String s : keyValueArr) {
+                    String[] parts = s.split("==");
+                    String wait = parts[0].trim();
+                    String command = parts[1].trim();
+                    log.info("Wait: {}", wait);
+                    String outString = expect.expect(contains(wait.replace("cmd", ""))).getBefore();
+                    if (isCommand) {
+                        sb.append(outString);
+                    }
+                    if (wait.startsWith("cmd")) {
+                        isCommand = true;
+                        log.info("Set command flag. Wait = " + wait);
+                    } else {
+                        isCommand = false;
+                    }
+                    log.info("Message before wait: {}", outString);
+                    log.info("SendLine: {}", command);
+                    expect.sendLine(command);
                 }
-                String finishKey = keyValueArr[keyValueArrLength].split("==")[0].trim();
-                String finishCommand = keyValueArr[keyValueArrLength].split("==")[1].trim();
-                log.info("Finish key: {}, Finish value={}", finishKey, finishCommand);
-                Result result = expect.expect(contains(finishKey));
                 checkResult.setStatus(CheckResultStatus.OK);
-                checkResult.setResult(result.getBefore());
-                expect.sendLine(finishCommand);
-                log.info(result.getBefore());
+                checkResult.setResult(sb.toString());
+                log.info("Result string:");
+                log.info(sb.toString());
             }
         } catch (IOException e) {
             checkResult.setStatus(CheckResultStatus.ERROR);
@@ -122,6 +129,9 @@ public class CheckExecutorTelnet implements CheckExecutor {
         StringBuilder result = new StringBuilder();
         while (matcher.find()) {
             result.append(matcher.group(0)).append("\n");
+        }
+        if (result.isEmpty()) {
+            result.append("нет данных");
         }
         checkResult.setResult(result.toString());
     }

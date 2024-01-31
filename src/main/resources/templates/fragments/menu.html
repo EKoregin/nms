@@ -55,6 +55,7 @@
                 <div class="nav-item-divider"></div>
                 <div th:if="${currentUser}">
                     <span style="color: white; margin-left:20px" >Вы зашли как:<br/>
+<!--                        <span th:text="${#authentication.principal.username}">Username</span>-->
                         <span th:text="${currentUser}" style="margin-left:20px"></span>
                     </span>
                         <a href="/logout" class="dashboard-nav-item"><i class="fas fa-sign-out-alt"></i>Выйти</a>

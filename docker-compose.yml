@@ -24,6 +24,8 @@ services:
       - DB_MIKROBILL_URL=${DB_MIKROBILL_URL}
       - DB_MIKROBILL_USERNAME=${DB_MIKROBILL_USERNAME}
       - DB_MIKROBILL_PASSWORD=${DB_MIKROBILL_PASSWORD}
+    volumes:
+      - ../logs/nms:/nms/logs
     container_name: nms
     depends_on:
       - db

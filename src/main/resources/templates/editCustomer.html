@@ -27,7 +27,6 @@
         </header>
         <div class='dashboard-content'>
             <div class="container">
-                <div class="row pt3">
                     <div class="card">
                         <h5 class="card-header" th:text="'Изменение абонента - ' + *{customerDto.name}"></h5>
                         <div class="card-body">
@@ -233,7 +232,6 @@
                             </form>
                         </div>
                     </div>
-                </div>
             </div>
         </div>
         <div th:replace="~{fragments/footer::footer}">&nbsp;</div>

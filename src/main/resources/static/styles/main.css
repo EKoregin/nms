@@ -66,6 +66,10 @@ h1, .h1 {
     font-weight: normal;
 }
 
+.container {
+    max-width: none;
+}
+
 .card {
     position: relative;
     display: -webkit-box;

@@ -20,7 +20,7 @@ public class SecurityConfig {
                         .requestMatchers("/login", "/users/registration", "/v3/api-docs/**", "/swagger-ui/**").permitAll()
                         .requestMatchers("/js/**", "/styles/**", "/font-awesome/**").permitAll()
                         .requestMatchers(HttpMethod.POST,"/users").permitAll()
-                        .requestMatchers("/devices", "/typeTechParams", "/modelDevices", "/gathering/**").hasAuthority(Role.ADMIN.getAuthority())
+                        .requestMatchers("/typeTechParams", "/modelDevices", "/gathering/**").hasAuthority(Role.ADMIN.getAuthority())
                         .anyRequest().authenticated()
                 )
                 .logout(logout -> logout

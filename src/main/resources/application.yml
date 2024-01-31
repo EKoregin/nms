@@ -7,7 +7,7 @@ db:
 
 spring:
   profiles:
-    active: production
+    active: development
   mvc:
     hiddenmethod:
       filter:
@@ -25,7 +25,3 @@ spring:
     password: ${spring.datasource.password}
   thymeleaf:
     cache: false
-
-logging:
-  level:
-    org.hibernate.sql: info
