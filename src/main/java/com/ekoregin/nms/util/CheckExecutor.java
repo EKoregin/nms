@@ -2,10 +2,12 @@ package com.ekoregin.nms.util;
 
 import com.ekoregin.nms.entity.*;
 import com.ekoregin.nms.service.ModelDeviceService;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.util.Strings;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.NoSuchElementException;
 
 public interface CheckExecutor {
 
@@ -24,7 +26,7 @@ public interface CheckExecutor {
             String paramValue = customer.getParams().stream()
                     .filter(parameter -> parameter.getType().equals(type))
                     .map(TechParameter::getValue)
-                    .findFirst().orElse(Strings.EMPTY);
+                    .findFirst().orElseThrow(() -> new NoSuchElementException("Нет параметра: " + type.getName()));
             paramsForCheck.put(type.getName(), paramValue);
         }
         return paramsForCheck;
@@ -48,7 +50,7 @@ public interface CheckExecutor {
                 'П','Р','С','Т','У','Ф', 'Х','Ц','Ч','Ш','Щ','a','b','c','d','e','f','g','h','i','j','k','l','m',
                 'n','o','p','q','r','s','t','u','v','w','x','y','z','A','B','C','D','E','F','G','H','I','J','K','L','M','N',
                 'O','P','Q','R','S','T','U','V','W','X','Y','Z','1','2','3','4','5','6','7','8','9','/','-'};
-        String[] abcLat = {" ","a","b","v","g","d","e","zh","z","i","y","k","l","m","n","o","p","r","s","t",
+        String[] abcLat = {"_","a","b","v","g","d","e","zh","z","i","y","k","l","m","n","o","p","r","s","t",
                 "u","f","h","c","ch","sh","sh","e","u","ya","A","B","V","G","D","E","Zh","Z","I","K","L","M","N","O",
                 "P","R","S","T","U","F","H","C","CH","Sh","sh","a","b","c","d","e","f","g","h","i","j","k","l","m","n","o",
                 "p","q","r","s","t","u","v","w","x","y","z","A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q",

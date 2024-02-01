@@ -12,6 +12,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(NoSuchElementException.class)
     public ResponseEntity<?> handleNotFound(NoSuchElementException exception) {
+        System.out.println("Exception No sucj element");
         return ResponseEntity.badRequest().body(
                 exception.getMessage());
     }

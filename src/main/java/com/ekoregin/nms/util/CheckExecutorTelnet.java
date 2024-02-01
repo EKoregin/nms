@@ -55,6 +55,7 @@ public class CheckExecutorTelnet implements CheckExecutor {
         admin#=show fdb port [#PORT]
          */
         String commandsWithValues = replacingVariablesWithValues(check.getTelnetCommands(), paramsForCheck, customer);
+        commandsWithValues = UtilService.convertStringWithExpressions(commandsWithValues);
         log.info("Telnet commands: {}", commandsWithValues);
         CheckResult checkResult = telnetExec(checkDevice, commandsWithValues);
         String regex = check.getRegexFilter();

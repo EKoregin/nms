@@ -244,7 +244,7 @@
         if (response.ok) {
             return response.json();
         } else {
-            alert("Ошибка HTTP: " + response);
+            response.text().then(text => alert("Ошибка: " + text));
         }
     }
 
@@ -253,7 +253,7 @@
         if (response.ok) {
             return response.json();
         } else {
-            alert("Ошибка HTTP: " + response);
+            alert("Ошибка HTTP: " + response.status);
         }
     }
 
