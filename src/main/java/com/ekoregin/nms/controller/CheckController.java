@@ -69,6 +69,7 @@ public class CheckController {
             ModelDeviceDto modelDeviceDto = new ModelDeviceDto(foundCheck.getModelDevice());
             CheckDto checkDto = new CheckDto(foundCheck);
             model.addAttribute("checkDto", checkDto);
+            model.addAttribute("typeTechParams", foundCheck.getTypeTechParams());
             model.addAttribute("modelDevice", modelDeviceDto);
         } else {
             log.info("Check with ID: {} not found", checkId);

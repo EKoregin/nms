@@ -118,47 +118,46 @@
                                       placeholder="Указать регулярное выражение в формате regex. В результат попадут только строки соответствующие выражению"></textarea>
                                     </div>
                                 </div>
-                                <h3>Технические параметры</h3>
-                                <hr>
-                                <table class="table">
-                                    <thead>
-                                    <tr>
-                                        <th scope="col">ID</th>
-                                        <th scope="col">Название</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <tr th:each="typeTechParam : *{typeTechParams}">
-                                        <td th:text="${typeTechParam.id}"></td>
-                                        <td th:text="${typeTechParam.name}"></td>
-                                        <td>
-                                            <div class="container">
-                                                <div class="row">
-                                                    <div class="col-2 col-md-5">
-                                                        <form th:action="@{'/checks/delTypeParamFromCheck/' + ${checkId} + '/typeParam/' + ${typeTechParam.id}}"
-                                                              th:method="delete">
-                                                            <button type="submit" class="btn btn-danger">Delete</button>
-                                                        </form>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    </tbody>
-                                </table>
-                                <hr>
-                                <div class="row">
-                                    <div class="col-5 col-md-5">
-                                        <a th:href="@{'/checks/addTypeParam/{checkId}'(checkId=*{checkId})}"
-                                           role="button" class="btn btn-success">Добавить тип параметра</a>
-                                    </div>
-                                </div>
-                                <p></p>
                                 <input type="hidden" name="modelDeviceId" id="modelDeviceId" th:value="${modelDevice.id}">
                                 <button type="submit" class="btn btn-primary">Сохранить</button>
                                 <a th:href="@{'/modelDevices/editForm/' + ${modelDevice.id}}" role="button"
                                    class="btn btn-primary">Отмена</a>
                             </form>
+                            <p></p>
+                            <h3>Технические параметры</h3>
+                            <hr>
+                            <table class="table">
+                                <thead>
+                                <tr>
+                                    <th scope="col">ID</th>
+                                    <th scope="col">Название</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="typeTechParam : ${typeTechParams}">
+                                    <td th:text="${typeTechParam.id}"></td>
+                                    <td th:text="${typeTechParam.name}"></td>
+                                    <td>
+                                        <div class="container">
+                                            <div class="row">
+                                                <div class="col-2 col-md-5">
+                                                    <form th:action="@{'/checks/delTypeParamFromCheck/' + ${checkId} + '/typeParam/' + ${typeTechParam.id}}" th:method="delete">
+                                                        <button type="submit" class="btn btn-danger">Delete</button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                            <hr>
+                            <div class="row">
+                                <div class="col-5 col-md-5">
+                                    <a th:href="@{'/checks/addTypeParam/{checkId}'(checkId=*{checkId})}"
+                                       role="button" class="btn btn-success">Добавить тип параметра</a>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
