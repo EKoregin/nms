@@ -1,5 +1,8 @@
 server:
   port: 8999
+  servlet:
+    session:
+      timeout: 60m
 
 db:
   mikrobill:

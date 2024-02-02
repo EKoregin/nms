@@ -14,6 +14,9 @@
     <link th:href="@{/styles/main.css}" rel="stylesheet"/>
     <link rel="stylesheet" th:href="@{/font-awesome/css/font-awesome.min.css}">
     <script type="text/javascript" th:src="@{/js/menu.js}"></script>
+    <!--    Accordion enable-->
+    <script type="text/javascript" th:src="@{/js/jquery.accordion.js}"></script>
+    <link th:href="@{/styles/jquery.accordion.css}" rel="stylesheet"/>
     <title>Изменение абонента</title>
 </head>
 <body>
@@ -27,211 +30,228 @@
         </header>
         <div class='dashboard-content'>
             <div class="container">
-                    <div class="card">
-                        <h5 class="card-header" th:text="'Изменение абонента - ' + *{customerDto.name}"></h5>
-                        <div class="card-body">
-                            <form th:action="@{/customers/update}" th:method="PUT" th:object="${customerDto}">
-                                <input type="hidden" th:field="*{customerId}">
-                                <div class="form-group row">
-                                    <label for="customerName" class="col-sm-2 col-form-label">Имя</label>
-                                    <div class="col-sm-8">
-                                        <input type="text" class="form-control" th:field="*{name}" id="customerName">
-                                    </div>
+                <div class="card">
+                    <h5 class="card-header" th:text="'Изменение абонента - ' + *{customerDto.name}"></h5>
+                    <div class="card-body">
+                        <form th:action="@{/customers/update}" th:method="PUT" th:object="${customerDto}">
+                            <input type="hidden" th:field="*{customerId}">
+                            <div class="form-group row">
+                                <label for="customerName" class="col-sm-2 col-form-label">Имя</label>
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control" th:field="*{name}" id="customerName">
                                 </div>
-                                <div class="form-group row">
-                                    <label for="customerAddress" class="col-sm-2 col-form-label">Адрес</label>
-                                    <div class="col-sm-8">
-                                        <input type="text" class="form-control" th:field="*{address}"
-                                               id="customerAddress">
-                                    </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="customerAddress" class="col-sm-2 col-form-label">Адрес</label>
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control" th:field="*{address}"
+                                           id="customerAddress">
                                 </div>
+                            </div>
 
-
-                                <div class="container">
-                                    <div class="row">
+                            <div class="container">
+                                <div class="row">
+                                    <div>
+                                        <div th:id="customerBillingInfo"></div>
                                         <div>
-                                            <div th:id="customerBillingInfo"></div>
-                                            <div>
-                                                <button id="mikrobillUserInfoButton" type="button"
-                                                        th:class="'mikrobillUserInfo btn btn-info'"
-                                                        th:data-info="*{name}">Получить данные из биллинга
-                                                </button>
+                                            <button id="mikrobillUserInfoButton" type="button"
+                                                    th:class="'mikrobillUserInfo btn btn-info'"
+                                                    th:data-info="*{name}">Получить данные из биллинга
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div id="multiple" data-accordion-group>
+                                <div class="accordion" data-accordion>
+                                    <div data-control><h5 class="card-header">Параметры</h5></div>
+                                    <div data-content>
+                                        <table class="table">
+                                            <thead>
+                                            <tr>
+                                                <th scope="col">ID</th>
+                                                <th scope="col">Название</th>
+                                                <th scope="col">Значение</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <form></form>
+                                            <tr th:each="parameter : *{params}">
+                                                <td th:text="${parameter.paramId}"></td>
+                                                <td th:text="${parameter.type.name}"></td>
+                                                <td th:text="${parameter.value}"></td>
+                                                <td>
+                                                    <div class="container">
+                                                        <div class="row">
+                                                            <div class="col-2 col-md-5">
+                                                                <a th:href="@{'/techParams/editForm/{techParamId}'(techParamId=${parameter.paramId})}"
+                                                                   class="btn btn-info" role="button">Редактировать</a>
+                                                            </div>
+                                                            <div class="col-2 col-md-5">
+                                                                <form th:action="@{'/techParams/' + ${parameter.paramId} + '/customer/' + *{customerId}}"
+                                                                      th:method="delete">
+                                                                    <button type="submit" class="btn btn-danger">
+                                                                        Delete
+                                                                    </button>
+                                                                </form>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                        <div class="row">
+                                            <div class="col-5 col-md-5">
+                                                <a th:href="@{'/techParams/addForm/{customerId}'(customerId=*{customerId})}"
+                                                   role="button" class="btn btn-success">Добавить параметр</a>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-
-
-                                <h5 class="card-header">Параметры</h5>
-                                <table class="table">
-                                    <thead>
-                                    <tr>
-                                        <th scope="col">ID</th>
-                                        <th scope="col">Название</th>
-                                        <th scope="col">Значение</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <form></form>
-                                    <tr th:each="parameter : *{params}">
-                                        <td th:text="${parameter.paramId}"></td>
-                                        <td th:text="${parameter.type.name}"></td>
-                                        <td th:text="${parameter.value}"></td>
-                                        <td>
-                                            <div class="container">
-                                                <div class="row">
-                                                    <div class="col-2 col-md-5">
-                                                        <a th:href="@{'/techParams/editForm/{techParamId}'(techParamId=${parameter.paramId})}"
-                                                           class="btn btn-info" role="button">Редактировать</a>
-                                                    </div>
-                                                    <div class="col-2 col-md-5">
-                                                        <form th:action="@{'/techParams/' + ${parameter.paramId} + '/customer/' + *{customerId}}"
-                                                              th:method="delete">
-                                                            <button type="submit" class="btn btn-danger">Delete</button>
-                                                        </form>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    </tbody>
-                                </table>
-                                <hr>
-                                <div class="row">
-                                    <div class="col-5 col-md-5">
-                                        <a th:href="@{'/techParams/addForm/{customerId}'(customerId=*{customerId})}"
-                                           role="button" class="btn btn-success">Добавить параметр</a>
-                                    </div>
-                                </div>
                                 <p></p>
-                                <h5 class="card-header">Подключенное оборудование</h5>
-                                <table class="table">
-                                    <thead>
-                                    <tr>
-                                        <th scope="col">ID</th>
-                                        <th scope="col">Название</th>
-                                        <th scope="col">IP адрес</th>
-                                        <th scope="col">Модель</th>
-                                        <th scope="col">Статус</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <tr th:each="device : *{devices}">
-                                        <td th:text="${device.id}"></td>
-                                        <td th:text="${device.name}"></td>
-                                        <td th:text="${device.ip.address}"></td>
-                                        <td th:text="${device.model.name}"></td>
-                                        <span th:each="connection : ${connections}">
+                                <div class="accordion" data-accordion>
+                                    <div data-control><h5 class="card-header">Подключенное оборудование</h5></div>
+                                    <div data-content>
+                                        <table class="table">
+                                            <thead>
+                                            <tr>
+                                                <th scope="col">ID</th>
+                                                <th scope="col">Название</th>
+                                                <th scope="col">IP адрес</th>
+                                                <th scope="col">Модель</th>
+                                                <th scope="col">Статус</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr th:each="device : *{devices}">
+                                                <td th:text="${device.id}"></td>
+                                                <td th:text="${device.name}"></td>
+                                                <td th:text="${device.ip.address}"></td>
+                                                <td th:text="${device.model.name}"></td>
+                                                <span th:each="connection : ${connections}">
                                             <span th:if="${connection.device.id == device.id}">
                                             <td th:text="${connection.isConnected() ? 'Подключен' : 'Отключен'}"></td>
                                             </span>
                                         </span>
-                                        <td>
-                                            <div class="container">
-                                                <div class="row">
-                                                    <div class="col-2 col-md-5">
-                                                        <form th:action="@{'/customers/delDeviceFromCustomer/' + *{customerId} + '/device/' + ${device.id}}"
-                                                              th:method="delete">
-                                                            <button type="submit" class="btn btn-danger">Отключить
-                                                            </button>
-                                                        </form>
+                                                <td>
+                                                    <div class="container">
+                                                        <div class="row">
+                                                            <div class="col-2 col-md-5">
+                                                                <form th:action="@{'/customers/delDeviceFromCustomer/' + *{customerId} + '/device/' + ${device.id}}"
+                                                                      th:method="delete">
+                                                                    <button type="submit" class="btn btn-danger">
+                                                                        Отключить
+                                                                    </button>
+                                                                </form>
+                                                            </div>
+                                                        </div>
                                                     </div>
-                                                </div>
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                        <div class="row">
+                                            <div class="col-5 col-md-5">
+                                                <a th:href="@{'/customers/addDevice/{customerId}'(customerId=*{customerId})}"
+                                                   role="button" class="btn btn-success">Подключить к оборудованию</a>
                                             </div>
-                                        </td>
-                                    </tr>
-                                    </tbody>
-                                </table>
-                                <hr>
-                                <div class="row">
-                                    <div class="col-5 col-md-5">
-                                        <a th:href="@{'/customers/addDevice/{customerId}'(customerId=*{customerId})}"
-                                           role="button" class="btn btn-success">Подключить к оборудованию</a>
+                                        </div>
                                     </div>
                                 </div>
                                 <p></p>
-                                <h5 class="card-header">Проверки</h5>
-                                <table class="table">
-                                    <thead>
-                                    <tr>
-                                        <th scope="col">ID</th>
-                                        <th scope="col">Название</th>
-                                        <th scope="col">Оборудование</th>
-                                        <th scope="col">Тип</th>
-                                        <th scope="col">Параметры</th>
-                                        <th scope="col">Результат</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <tr th:each="check : ${checks}">
-                                        <span th:if="${!check.isCreator()}">
-                                        <td th:text="${check.checkId}"></td>
-                                        <td th:text="${check.checkName}"></td>
-                                        <td th:text="${check.getModelDevice().name}"></td>
-                                        <td th:text="${check.isCreator()} ? ${check.checkType} + '- создатель' : ${check.checkType}"></td>
-                                        <td th:text="${check.typeTechParams.isEmpty()} ? 'НЕТ' : ${check.typeTechParams}"></td>
-                                        <td th:id="checkResult + ${check.checkId}"></td>
-                                        <td>
-                                            <div class="container">
-                                                <div class="row">
-                                                    <div class="col-2 col-md-5">
-                                                        <button id="checkButton" type="button"
-                                                                th:class="${check.isCreator()} ? 'checks btn btn-warning' : 'checks btn btn-info'"
-                                                                th:data-info="*{customerId}"
-                                                                th:data-target="${check.checkId}">Проверить
-                                                        </button>
+                                <div class="accordion open" data-accordion>
+                                    <div data-control><h5 class="card-header">Проверки</h5></div>
+                                    <div data-content>
+                                        <table class="table">
+                                            <thead>
+                                            <tr>
+                                                <th scope="col">ID</th>
+                                                <th scope="col">Название</th>
+                                                <th scope="col">Оборудование</th>
+                                                <th scope="col">Тип</th>
+                                                <th scope="col">Параметры</th>
+                                                <th scope="col">Результат</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr th:each="check : ${checks}">
+                                            <span th:if="${!check.isCreator()}">
+                                            <td th:text="${check.checkId}"></td>
+                                            <td th:text="${check.checkName}"></td>
+                                            <td th:text="${check.getModelDevice().name}"></td>
+                                            <td th:text="${check.isCreator()} ? ${check.checkType} + '- создатель' : ${check.checkType}"></td>
+                                            <td th:text="${check.typeTechParams.isEmpty()} ? 'НЕТ' : ${check.typeTechParams}"></td>
+                                            <td th:id="checkResult + ${check.checkId}"></td>
+                                            <td>
+                                                <div class="container">
+                                                    <div class="row">
+                                                        <div class="col-2 col-md-5">
+                                                            <button id="checkButton" type="button"
+                                                                    th:class="${check.isCreator()} ? 'checks btn btn-warning' : 'checks btn btn-info'"
+                                                                    th:data-info="*{customerId}"
+                                                                    th:data-target="${check.checkId}">Проверить
+                                                            </button>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                        </td>
-                                        </span>
-                                    </tr>
-                                    </tbody>
-                                </table>
+                                            </td>
+                                            </span>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
                                 <p></p>
-                                <h5 class="card-header">Создатели</h5>
-                                <table class="table">
-                                    <thead>
-                                    <tr>
-                                        <th scope="col">ID</th>
-                                        <th scope="col">Название</th>
-                                        <th scope="col">Оборудование</th>
-                                        <th scope="col">Тип</th>
-                                        <th scope="col">Параметры</th>
-                                        <th scope="col">Результат</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <tr th:each="check : ${checks}">
-                                        <span th:if="${check.isCreator()}">
-                                        <td th:text="${check.checkId}"></td>
-                                        <td th:text="${check.checkName}"></td>
-                                        <td th:text="${check.getModelDevice().name}"></td>
-                                        <td th:text="${check.checkType}"></td>
-                                        <td th:text="${check.typeTechParams.isEmpty()} ? 'НЕТ' : ${check.typeTechParams}"></td>
-                                        <td th:id="checkResult + ${check.checkId}"></td>
-                                        <td>
-                                            <div class="container">
-                                                <div class="row">
-                                                    <div class="col-2 col-md-5">
-                                                        <button id="checkButton2" type="button"
-                                                                th:class="${check.isCreator()} ? 'checks btn btn-warning' : 'checks btn btn-info'"
-                                                                th:data-info="*{customerId}"
-                                                                th:data-target="${check.checkId}">Выполнить
-                                                        </button>
+                                <div class="accordion" data-accordion>
+                                    <div data-control><h5 class="card-header">Создатели</h5></div>
+                                    <div data-content>
+                                        <table class="table">
+                                            <thead>
+                                            <tr>
+                                                <th scope="col">ID</th>
+                                                <th scope="col">Название</th>
+                                                <th scope="col">Оборудование</th>
+                                                <th scope="col">Тип</th>
+                                                <th scope="col">Параметры</th>
+                                                <th scope="col">Результат</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr th:each="check : ${checks}">
+                                            <span th:if="${check.isCreator()}">
+                                            <td th:text="${check.checkId}"></td>
+                                            <td th:text="${check.checkName}"></td>
+                                            <td th:text="${check.getModelDevice().name}"></td>
+                                            <td th:text="${check.checkType}"></td>
+                                            <td th:text="${check.typeTechParams.isEmpty()} ? 'НЕТ' : ${check.typeTechParams}"></td>
+                                            <td th:id="checkResult + ${check.checkId}"></td>
+                                            <td>
+                                                <div class="container">
+                                                    <div class="row">
+                                                        <div class="col-2 col-md-5">
+                                                            <button id="checkButton2" type="button"
+                                                                    th:class="${check.isCreator()} ? 'checks btn btn-warning' : 'checks btn btn-info'"
+                                                                    th:data-info="*{customerId}"
+                                                                    th:data-target="${check.checkId}">Выполнить
+                                                            </button>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                        </td>
-                                        </span>
-                                    </tr>
-                                    </tbody>
-                                </table>
+                                            </td>
+                                            </span>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
                                 <button type="submit" class="btn btn-primary">Сохранить</button>
                                 <a th:href="@{/customers}" role="button" class="btn btn-primary">Отмена</a>
-                            </form>
-                        </div>
+                            </div>
+                        </form>
                     </div>
+                </div>
             </div>
         </div>
         <div th:replace="~{fragments/footer::footer}">&nbsp;</div>
@@ -239,6 +259,12 @@
 </div>
 
 <script>
+    $(document).ready(function() {
+        $('#multiple [data-accordion]').accordion({
+            singleOpen: false
+        });
+    });
+
     async function fetchCheckResult(checkId, customerId) {
         let response = await fetch("/checks/" + checkId + "/customer/" + customerId);
         if (response.ok) {
@@ -281,7 +307,11 @@
         let parent = document.getElementById("customerBillingInfo");
         waiting(parent);
         fetchMikrobillUserInfo(customerName).then(json => {
+            let resultStatus = json.status;
             let resultMessage = json.result;
+            if (resultStatus === "NODATA") {
+                resultMessage = "Нет данных";
+            }
             let div = document.createElement('div');
             div.innerText = resultMessage;
             let checkResult = document.querySelector("#customerBillingInfo");
@@ -289,6 +319,7 @@
             checkResult.prepend(div);
         })
     });
+
 </script>
 </body>
 </html>

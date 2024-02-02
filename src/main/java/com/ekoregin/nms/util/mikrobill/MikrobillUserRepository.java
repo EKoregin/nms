@@ -18,7 +18,7 @@ public class MikrobillUserRepository {
             SELECT
                 st.otherinfo, st.user_name, st.tarif, st.ballance, st.state, st.usrip, st.contract, st.stopdate, st.isarchived, st.todaytraffic
             FROM stat as st
-            WHERE st.user_name LIKE ?;
+            WHERE st.otherinfo LIKE ?;
             """;
 
     public List<MikrobillUser> findUserByName(String userName) {

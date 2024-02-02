@@ -15,10 +15,12 @@ public class MikrobillUserService {
         var users =  mikrobillUserRepository.findUserByName(userName);
         CheckResult result = new CheckResult();
         result.setStatus(CheckResultStatus.OK);
+        if (users.isEmpty()) {
+            result.setStatus(CheckResultStatus.NODATA);
+        }
         result.setResult(users.stream()
                 .map(Object::toString)
                 .reduce("", String::concat));
-
         return result;
     }
 }
