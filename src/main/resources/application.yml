@@ -8,24 +8,37 @@ db:
   mikrobill:
     driver-class-name: com.mysql.cj.jdbc.Driver
 
-
 spring:
+  application:
+    name: nms
   profiles:
-    active: development
+    active: dev
+  devtools:
+    add-properties: false
+  config:
+    import: optional:file:.env[.properties]
+  jpa:
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: true
+  datasource:
+    driver-class-name: org.postgresql.Driver
   mvc:
     hiddenmethod:
       filter:
         enabled: true
-  jpa:
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.PostgreSQLDialect
-        hbm2ddl:
-          auto: validate
-        show_sql: true
+
   flyway:
     url: ${spring.datasource.url}
     user: ${spring.datasource.username}
     password: ${spring.datasource.password}
   thymeleaf:
     cache: false
+
+logging:
+  level:
+    root: info
+    org.springframework: info
