@@ -1,0 +1,197 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns="http://www.w3.org/1999/html" lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.7.0.js"
+            integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM="
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+            integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+            crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+            integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+            crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link th:href="@{/styles/main.css}" rel="stylesheet"/>
+    <link rel="stylesheet" th:href="@{/font-awesome/css/font-awesome.min.css}">
+    <script type="text/javascript" th:src="@{/js/menu.js}"></script>
+    <title>Пользователи</title>
+</head>
+<body>
+<div class='dashboard'>
+    <div th:replace="~{fragments/menu::menu}"></div>
+    <div class='dashboard-app'>
+        <header class='dashboard-toolbar'><a href="#!" class="menu-toggle"><i class="fa fa-bars"></i></a>
+            <h1 class="display-4">Порты</h1></header>
+        <div class='dashboard-content'>
+            <div class="container">
+
+                <div class="row">
+                    <h5 class="card-header">Порты</h5>
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th scope="col">Name</th>
+                            <th scope="col">Speed</th>
+                            <th scope="col">Duplex</th>
+                            <th scope="col">Media</th>
+                            <th scope="col"></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <form></form>
+                        <tr th:each="port : ${ports}">
+                            <td th:text="${port.name}"></td>
+                            <td th:text="${port.speed}"></td>
+                            <td th:text="${port.duplex}"></td>
+                            <td th:text="${port.mediaType}"></td>
+                            <td>
+                                <div class="col-sm-4">
+                                <button id="edit-port" type="button" class="btn btn-info btn-sm" data-toggle="modal"
+                                        data-target="#addPortDialog"
+                                        th:data-portid="${port.id}"
+                                        th:data-portname="${port.name}"
+                                        th:data-portspeed="${port.speed}"
+                                        th:data-portduplex="${port.duplex}"
+                                        th:data-portmedia="${port.mediaType}"
+                                        th:data-porttype="${port.type}"
+                                        th:data-portdeviceid="${deviceId}">Редактировать</button>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="col-sm-4">
+                                <button type="button" class="delete-port btn btn-danger btn-sm"
+                                        th:data-portid="${port.id}"
+                                        id="delete-port-button">Удалить</button>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <p></p>
+                </div>
+
+                <p></p>
+<!--                <div class="row">-->
+                    <button id="add-port" type="button" class="btn btn-primary" data-toggle="modal"
+                            data-target="#addPortDialog" th:data-portdeviceid="${deviceId}">Добавить порт</button>
+                    <a th:href="@{'/devices/{deviceId}'(deviceId=${deviceId})}" role="button" class="btn btn-primary">Выйти</a>
+<!--                </div>-->
+            </div>
+        </div>
+        <div th:replace="~{fragments/footer::footer}">&nbsp;</div>
+    </div>
+</div>
+
+<!-- Modal add group form -->
+<div class="modal fade" id="addPortDialog" tabindex="-1" role="dialog" aria-labelledby="addPortDialogLabel"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addPortDialogLabel">Редактирование порта</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <input type="hidden" name="port-id" id="port-id">
+                    <label for="port-name">Название</label>
+                    <input type="text" class="form-control" id="port-name">
+                    <label for="port-speed">Speed</label>
+                    <input type="text" class="form-control" id="port-speed">
+                    <label for="port-duplex">Duplex</label>
+                    <input type="text" class="form-control" id="port-duplex">
+                    <label for="port-media">Media</label>
+                    <input type="text" class="form-control" id="port-media">
+                    <label for="port-type">Type</label>
+                    <input type="text" class="form-control" id="port-type">
+                    <input type="hidden" name="port-deviceid" id="port-deviceid">
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button id="close-port-button" type="button" class="btn btn-secondary" data-dismiss="modal">Close
+                </button>
+                <button id="save-port-button" type="button" class="btn btn-primary">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    $('#addPortDialog').on('shown.bs.modal', function (event) {
+        $(this).find('form').trigger('reset');
+        let button = $(event.relatedTarget);
+        let modal = $(this);
+        modal.find('#port-id').val(button.data('portid'));
+        modal.find('#port-name').val(button.data('portname'));
+        modal.find('#port-speed').val(button.data('portspeed'));
+        modal.find('#port-duplex').val(button.data('portduplex'));
+        modal.find('#port-media').val(button.data('portmedia'));
+        modal.find('#port-type').val(button.data('porttype'));
+        modal.find('#port-deviceid').val(button.data('portdeviceid'));
+
+    });
+
+    $('#save-port-button').click(function () {
+        let modal = $('#addPortDialog');
+        let portId = modal.find('#port-id').val();
+        let url = '/ports';
+        let httpMethod = 'POST';
+        if (portId !== null && portId.length !== 0) {
+            url = '/ports/' + portId;
+            httpMethod = 'PUT';
+        }
+
+        let port = {
+            name: modal.find('#port-name').val(),
+            speed: modal.find('#port-speed').val(),
+            duplex: modal.find('#port-duplex').val(),
+            mediaType: modal.find('#port-media').val(),
+            type: modal.find('#port-type').val(),
+            deviceId: modal.find('#port-deviceid').val()
+        };
+        $.ajax({
+            url: url,
+            type: httpMethod,
+            data: JSON.stringify(port),
+            contentType: "application/json; charset=utf-8",
+            success: () => {
+                location.reload()
+            },
+            error: (err) => {
+                alert("Error Ajax")
+                console.log(err)
+            }
+        })
+        modal.modal('hide');
+    });
+
+    $(document).ready(function () {
+        $('.delete-port').click(function (event) {
+            let portId = document.getElementById('delete-port-button').getAttribute('data-portid');
+            $.ajax({
+                url: '/ports/' + portId,
+                type: 'DELETE',
+                success: () => {
+                    location.reload()
+                },
+                error: (err) => {
+                    alert("Error Ajax")
+                    console.log(err)
+                }
+            })
+        });
+    });
+</script>
+</body>
+</html>

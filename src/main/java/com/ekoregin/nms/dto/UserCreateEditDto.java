@@ -1,6 +1,6 @@
 package com.ekoregin.nms.dto;
 
-import com.ekoregin.nms.entity.Role;
+import com.ekoregin.nms.database.entity.Role;
 import com.ekoregin.nms.validation.UniqueUsername;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;

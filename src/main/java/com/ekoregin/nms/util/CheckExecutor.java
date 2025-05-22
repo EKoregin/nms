@@ -1,9 +1,7 @@
 package com.ekoregin.nms.util;
 
-import com.ekoregin.nms.entity.*;
+import com.ekoregin.nms.database.entity.*;
 import com.ekoregin.nms.service.ModelDeviceService;
-import lombok.extern.slf4j.Slf4j;
-import org.apache.logging.log4j.util.Strings;
 
 import java.util.HashMap;
 import java.util.Map;

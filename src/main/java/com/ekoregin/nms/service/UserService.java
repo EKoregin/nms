@@ -1,10 +1,11 @@
 package com.ekoregin.nms.service;
 
+import com.ekoregin.nms.database.entity.User;
 import com.ekoregin.nms.dto.UserCreateEditDto;
 import com.ekoregin.nms.dto.UserReadDto;
 import com.ekoregin.nms.mapper.UserCreateEditMapper;
 import com.ekoregin.nms.mapper.UserReadMapper;
-import com.ekoregin.nms.repository.UserRepository;
+import com.ekoregin.nms.database.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -45,7 +46,6 @@ public class UserService implements UserDetailsService {
                 .map(userReadMapper::map);
     }
 
-    @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return userRepository.findByUsername(username)
                 .map(user -> new org.springframework.security.core.userdetails.User(

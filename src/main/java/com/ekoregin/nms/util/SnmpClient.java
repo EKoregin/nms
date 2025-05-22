@@ -1,7 +1,7 @@
 package com.ekoregin.nms.util;
 
-import com.ekoregin.nms.entity.CheckResult;
-import com.ekoregin.nms.entity.CheckResultStatus;
+import com.ekoregin.nms.database.entity.CheckResult;
+import com.ekoregin.nms.database.entity.CheckResultStatus;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;

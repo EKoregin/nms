@@ -1,6 +1,6 @@
 package com.ekoregin.nms.dto;
 
-import com.ekoregin.nms.entity.TechParameter;
+import com.ekoregin.nms.database.entity.TechParameter;
 import lombok.*;
 
 @Getter

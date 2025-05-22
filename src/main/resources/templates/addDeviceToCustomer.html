@@ -59,7 +59,7 @@
                                     <!--                                dynamic part-->
                                 </div>
                                 <button type="submit" class="btn btn-primary">Сохранить</button>
-                                <a th:href="@{'/customers/editForm/{customerId}'(customerId=*{customer.customerId})}"
+                                <a th:href="@{'/customers/{customerId}'(customerId=*{customer.customerId})}"
                                    role="button" class="btn btn-primary">Отмена</a>
                             </form>
                         </div>

@@ -1,30 +1,130 @@
 package com.ekoregin.nms.service;
 
+import com.ekoregin.nms.database.entity.*;
 import com.ekoregin.nms.dto.CheckDto;
-import com.ekoregin.nms.entity.Check;
-import com.ekoregin.nms.entity.CheckResult;
-import com.ekoregin.nms.entity.ModelDevice;
+import com.ekoregin.nms.database.repository.CheckRepository;
+import com.ekoregin.nms.mapper.CustomerCreateEditMapper;
+import com.ekoregin.nms.util.CheckExecutor;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 
-public interface CheckService {
-    Check create(CheckDto checkDto);
+@Slf4j
+@RequiredArgsConstructor
+@Service
+@Transactional(readOnly = true)
+public class CheckService {
 
-    void update(CheckDto checkDto);
+    private final CheckRepository checkRepository;
+    private final DeviceService deviceService;
+    private final ModelDeviceService modelDeviceService;
+    private final CustomerService customerService;
+    private final CheckExecutor checkExecutorSnmp;
+    private final CheckExecutor checkExecutorTelnet;
+    private final CheckExecutor checkExecutorRest;
+    private final CheckExecutor checkExecutorMikrotik;
+    private final CustomerCreateEditMapper customerCreateEditMapper;
 
-    void update(Check check);
+    @Transactional
+    public Check create(CheckDto checkDto) {
+        Check check;
+        if (checkDto != null) {
+            ModelDevice modelDevice = modelDeviceService.findById(checkDto.getModelDeviceId());
+            check = new Check(checkDto);
+            check.setModelDevice(modelDevice);
+            log.info("Check with ID: {} was created", checkRepository.save(check).getCheckId());
+        } else {
+            log.warn("CheckDto is null");
+            throw new NoSuchElementException("CheckDto is null");
+        }
+        return check;
+    }
 
-    void delete(long checkId);
+    @Transactional
+    public void update(CheckDto checkDto) {
+        Check check = findById(checkDto.getCheckId());
+        check.setCheckType(checkDto.getCheckType());
+        check.setCheckName(checkDto.getCheckName());
+        check.setSnmpOID(checkDto.getSnmpOID());
+        check.setDescription(checkDto.getDescription());
+        check.setSubstRules(checkDto.getSubstRules());
+        check.setTelnetCommands(checkDto.getTelnetCommands());
+        check.setJsonFilter(checkDto.getJsonFilter());
+        check.setRegexFilter(checkDto.getRegexFilter());
+        check.setCheckScope(checkDto.getCheckScope());
+        check.setCreator(checkDto.getIsCreator());
+        check.setForConnecting(checkDto.isForConnecting());
+        check.setForDisconnecting(checkDto.isForDisconnecting());
+        checkRepository.save(check);
+    }
 
-    Check findById(long checkId);
+    @Transactional
+    public void update(Check check) {
+        checkRepository.save(check);
+    }
 
-    Check findByModelDeviceAndForConnecting(ModelDevice modelDevice);
+    @Transactional
+    public void delete(long checkId) {
+        checkRepository.deleteById(checkId);
+        log.info("Check with ID: {} was deleted", checkId);
+    }
 
-    Check findByModelDeviceAndForDisconnecting(ModelDevice modelDevice);
+    public Check findById(long checkId) {
+        Check check = checkRepository.findById(checkId).orElse(null);
+        if (check == null) {
+            log.warn("Check with ID: {} not found!", checkId);
+            throw new NoSuchElementException("Check with ID: " + checkId + " not found!");
+        }
+        return check;
+    }
 
-    List<Check> findAll();
+    public Optional<Check> findByModelDeviceAndForConnecting(ModelDevice modelDevice) {
+        return checkRepository.findByModelDeviceAndForConnectingIs(modelDevice, true);
+    }
 
-    CheckResult executeForCustomer(long checkId, long customerId);
+    public Optional<Check> findByModelDeviceAndForDisconnecting(ModelDevice modelDevice) {
+        return checkRepository.findByModelDeviceAndForDisconnectingIs(modelDevice, true);
+    }
 
-    CheckResult executeForDevice(long checkId, long deviceId);
+    public List<Check> findAll() {
+        return checkRepository.findAll();
+    }
+
+    public CheckResult executeForCustomer(long checkId, long customerId) {
+        Check foundCheck = findById(checkId);
+        Customer foundCustomer = customerService.findById(customerId);
+//        Customer foundCustomer = customerService.findById(customerId)
+//                .map(customerCreateEditMapper::map)
+//                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        CheckResult checkResult;
+        log.info("Type of check {} for customer {}", foundCheck.getCheckType(), foundCustomer.getName());
+        switch (foundCheck.getCheckType()) {
+            case "SNMP" -> checkResult = checkExecutorSnmp.checkExecute(foundCheck, foundCustomer, null);
+            case "TELNET" -> checkResult = checkExecutorTelnet.checkExecute(foundCheck, foundCustomer, null);
+            case "REST_API" -> checkResult = checkExecutorRest.checkExecute(foundCheck, foundCustomer, null);
+            case "MIKROTIK_API" -> checkResult = checkExecutorMikrotik.checkExecute(foundCheck, foundCustomer, null);
+            default -> throw new IllegalArgumentException("That method not support!");
+        }
+        return checkResult;
+    }
+
+    public CheckResult executeForDevice(long checkId, long deviceId) {
+        Check foundCheck = findById(checkId);
+        Device foundDevice = deviceService.findById(deviceId);
+        CheckResult checkResult;
+        log.info("Type of check {} for device {}", foundCheck.getCheckType(), foundDevice.getName());
+        switch (foundCheck.getCheckType()) {
+            case "SNMP" -> checkResult = checkExecutorSnmp.checkExecute(foundCheck, null, foundDevice);
+            case "TELNET" -> checkResult = checkExecutorTelnet.checkExecute(foundCheck, null, foundDevice);
+            case "REST_API" -> checkResult = checkExecutorRest.checkExecute(foundCheck, null, foundDevice);
+            case "MIKROTIK_API" -> checkResult = checkExecutorMikrotik.checkExecute(foundCheck, null, foundDevice);
+            default -> throw new IllegalArgumentException("That method not support!");
+        }
+        return checkResult;
+    }
 }

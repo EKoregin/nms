@@ -1,6 +1,6 @@
 package com.ekoregin.nms.dto;
 
-import com.ekoregin.nms.entity.*;
+import com.ekoregin.nms.database.entity.*;
 import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -11,6 +11,7 @@ import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -41,7 +42,7 @@ public class ModelDeviceDto {
 
     private List<String> listDevices;
 
-
+    private List<PortReadDto> ports;
 
     public ModelDeviceDto(ModelDevice modelDevice) {
         this.id = modelDevice.getId();

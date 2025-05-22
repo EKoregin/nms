@@ -1,19 +1,17 @@
 package com.ekoregin.nms.dto;
 
-import com.ekoregin.nms.entity.Customer;
-import com.ekoregin.nms.entity.Device;
+import com.ekoregin.nms.database.entity.Customer;
+import com.ekoregin.nms.database.entity.Device;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Getter
 @Setter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class DeviceDto {
@@ -35,16 +33,14 @@ public class DeviceDto {
     private String mac;
 
     private int managePort = 23;
-
     private String login;
-
     private String password;
-
+    private Double latitude;
+    private Double longitude;
     private Long modelId;
-
     private List<Customer> customers;
-
     private List<Integer> freePorts = new ArrayList<>();
+    private List<PortReadDto> ports;
 
     public DeviceDto(Device device) {
         this.id = device.getId();
@@ -54,6 +50,8 @@ public class DeviceDto {
         this.managePort = device.getPort();
         this.login = device.getLogin();
         this.password = device.getPassword();
+        latitude = device.getLatitude();
+        longitude = device.getLongitude();
         this.modelId = device.getModel().getId();
         this.mac = device.getMac();
         this.customers = device.getCustomers();

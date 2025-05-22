@@ -50,7 +50,7 @@
                                 </div>
                                 <input type="hidden" th:field="*{customerId}">
                                 <button type="submit" class="btn btn-primary">Сохранить</button>
-                                <a th:href="@{'/customers/editForm/' + *{customerId}}" role="button"
+                                <a th:href="@{'/customers/' + *{customerId}}" role="button"
                                    class="btn btn-primary">Отмена</a>
                             </form>
                         </div>

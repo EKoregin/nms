@@ -1,7 +1,7 @@
 package com.ekoregin.nms.dto;
 
-import com.ekoregin.nms.entity.Check;
-import com.ekoregin.nms.entity.TypeTechParameter;
+import com.ekoregin.nms.database.entity.Check;
+import com.ekoregin.nms.database.entity.TypeTechParameter;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

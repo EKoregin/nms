@@ -1,6 +1,6 @@
 package com.ekoregin.nms.util;
 
-import com.ekoregin.nms.entity.*;
+import com.ekoregin.nms.database.entity.*;
 import com.ekoregin.nms.service.ModelDeviceService;
 import com.google.gson.*;
 import lombok.Getter;

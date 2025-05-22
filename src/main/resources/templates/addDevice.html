@@ -30,7 +30,7 @@
                     <div class="card" style="width: 80%">
                         <h5 class="card-header">Новое оборудование</h5>
                         <div class="card-body">
-                            <form th:action="@{/devices/create}" method="POST" th:object="${deviceDto}">
+                            <form th:action="@{/devices}" method="POST" th:object="${deviceDto}">
                                 <div class="form-group row">
                                     <label for="modelId" class="col-sm-2 col-form-label">Модель</label>
                                     <div class="col-sm-8">

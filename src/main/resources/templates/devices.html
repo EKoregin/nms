@@ -34,11 +34,17 @@
         </header>
         <div class='dashboard-content'>
             <div class="container">
+                <form th:action="@{/devices/search}" method="get">
+                    <input type="text" name="searchKeyword" th:value="${searchKeyword}" placeholder="Фильтр"
+                           size="50">
+                    <button type="submit" class="btn btn-info">Фильтр</button>
+                    <button type="submit" class="btn btn-info">Сброс</button>
+                </form>
                 <div class="row">
                     <a th:href="@{/devices/addForm}" class="btn btn-info mr-1" role="button">Добавить</a>
                 </div>
                 <div class="row">
-                    Всего устройств:&nbsp<span class="font-weight-bold" th:text="${devices.size()}"></span>
+                    Всего устройств:&nbsp<span class="font-weight-bold" th:text="${countDevices}"></span>
                     <table class="table">
                         <thead>
                         <tr>
@@ -52,7 +58,7 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <tr th:each="device : ${devices}">
+                        <tr th:each="device : ${devicePage}">
                             <td th:text="${device.id}"></td>
                             <td th:text="${device.name}"></td>
                             <td th:text="${device.ip.address}"></td>
@@ -62,7 +68,7 @@
                             <td>
                                 <div class="container">
                                     <div class="row">
-                                        <a th:href="@{'/devices/editForm/{deviceId}'(deviceId=${device.id})}"
+                                        <a th:href="@{'/devices/{deviceId}'(deviceId=${device.id})}"
                                            class="btn btn-info mr-1" role="button">Редактировать</a>
                                         <form th:action="@{'/devices/{deviceId}'(deviceId=${device.id})}"
                                               th:method="delete">

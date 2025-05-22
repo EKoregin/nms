@@ -33,7 +33,7 @@
                 <div class="card">
                     <h5 class="card-header" th:text="'Изменение абонента - ' + *{customerDto.name}"></h5>
                     <div class="card-body">
-                        <form th:action="@{/customers/update}" th:method="PUT" th:object="${customerDto}">
+                        <form th:action="@{/customers/{id}(id=${customerDto.customerId})}" th:method="PUT" th:object="${customerDto}">
                             <input type="hidden" th:field="*{customerId}">
                             <div class="form-group row">
                                 <label for="customerName" class="col-sm-2 col-form-label">Имя</label>
@@ -48,6 +48,13 @@
                                            id="customerAddress">
                                 </div>
                             </div>
+                            <div class="form-group row">
+                                <label for="customerInfo" class="col-sm-2 col-form-label">Инфо</label>
+                                <div class="col-sm-8">
+                                    <textarea class="form-control" th:field="*{info}" id="customerInfo"
+                                              rows="5"></textarea>
+                                </div>
+                            </div>
 
                             <div class="container">
                                 <div class="row">
@@ -55,7 +62,7 @@
                                         <div th:id="customerBillingInfo"></div>
                                         <div>
                                             <button id="mikrobillUserInfoButton" type="button"
-                                                    th:class="'mikrobillUserInfo btn btn-info'"
+                                                    th:class="'mikrobillUserInfo btn btn-info btn-sm'"
                                                     th:data-info="*{name}">Получить данные из биллинга
                                             </button>
                                         </div>
@@ -65,12 +72,30 @@
 
                             <div id="multiple" data-accordion-group>
                                 <div class="accordion" data-accordion>
+                                    <div data-control><h5 class="card-header">Координаты</h5></div>
+                                    <div class="form-group row" data-content>
+                                        <label for="latitude" class="col-sm-2 col-form-label">Широта</label>
+                                        <div class="col-sm-4">
+                                            <input type="number" step="0.000000000000001" class="form-control"
+                                                   th:field="*{latitude}"
+                                                   id="latitude">
+                                        </div>
+                                        <label for="longitude" class="col-sm-2 col-form-label">Долгота</label>
+                                        <div class="col-sm-4">
+                                            <input type="number" step="0.000000000000001" class="form-control"
+                                                   th:field="*{longitude}"
+                                                   id="longitude">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="accordion" data-accordion>
                                     <div data-control><h5 class="card-header">Параметры</h5></div>
                                     <div data-content>
                                         <table class="table">
                                             <thead>
                                             <tr>
-                                                <th scope="col">ID</th>
+                                                <!--                                                <th scope="col">ID</th>-->
                                                 <th scope="col">Название</th>
                                                 <th scope="col">Значение</th>
                                             </tr>
@@ -78,21 +103,21 @@
                                             <tbody>
                                             <form></form>
                                             <tr th:each="parameter : *{params}">
-                                                <td th:text="${parameter.paramId}"></td>
+                                                <!--                                                <td th:text="${parameter.paramId}"></td>-->
                                                 <td th:text="${parameter.type.name}"></td>
                                                 <td th:text="${parameter.value}"></td>
                                                 <td>
                                                     <div class="container">
                                                         <div class="row">
-                                                            <div class="col-2 col-md-5">
+                                                            <div class="col-sm-2">
                                                                 <a th:href="@{'/techParams/editForm/{techParamId}'(techParamId=${parameter.paramId})}"
-                                                                   class="btn btn-info" role="button">Редактировать</a>
+                                                                   class="btn btn-info btn-sm" role="button">Редактировать</a>
                                                             </div>
-                                                            <div class="col-2 col-md-5">
+                                                            <div class="col-sm-2">
                                                                 <form th:action="@{'/techParams/' + ${parameter.paramId} + '/customer/' + *{customerId}}"
                                                                       th:method="delete">
-                                                                    <button type="submit" class="btn btn-danger">
-                                                                        Delete
+                                                                    <button type="submit" class="btn btn-danger btn-sm">
+                                                                        Удалить
                                                                     </button>
                                                                 </form>
                                                             </div>
@@ -105,7 +130,7 @@
                                         <div class="row">
                                             <div class="col-5 col-md-5">
                                                 <a th:href="@{'/techParams/addForm/{customerId}'(customerId=*{customerId})}"
-                                                   role="button" class="btn btn-success">Добавить параметр</a>
+                                                   role="button" class="btn btn-success btn-sm">Добавить параметр</a>
                                             </div>
                                         </div>
                                     </div>
@@ -117,7 +142,7 @@
                                         <table class="table">
                                             <thead>
                                             <tr>
-                                                <th scope="col">ID</th>
+                                                <!--                                                <th scope="col">ID</th>-->
                                                 <th scope="col">Название</th>
                                                 <th scope="col">IP адрес</th>
                                                 <th scope="col">Модель</th>
@@ -126,7 +151,7 @@
                                             </thead>
                                             <tbody>
                                             <tr th:each="device : *{devices}">
-                                                <td th:text="${device.id}"></td>
+                                                <!--                                                <td th:text="${device.id}"></td>-->
                                                 <td th:text="${device.name}"></td>
                                                 <td th:text="${device.ip.address}"></td>
                                                 <td th:text="${device.model.name}"></td>
@@ -141,7 +166,7 @@
                                                             <div class="col-2 col-md-5">
                                                                 <form th:action="@{'/customers/delDeviceFromCustomer/' + *{customerId} + '/device/' + ${device.id}}"
                                                                       th:method="delete">
-                                                                    <button type="submit" class="btn btn-danger">
+                                                                    <button type="submit" class="btn btn-danger btn-sm">
                                                                         Отключить
                                                                     </button>
                                                                 </form>
@@ -152,12 +177,8 @@
                                             </tr>
                                             </tbody>
                                         </table>
-                                        <div class="row">
-                                            <div class="col-5 col-md-5">
-                                                <a th:href="@{'/customers/addDevice/{customerId}'(customerId=*{customerId})}"
+                                        <a th:href="@{'/customers/addDevice/{customerId}'(customerId=*{customerId})}"
                                                    role="button" class="btn btn-success">Подключить к оборудованию</a>
-                                            </div>
-                                        </div>
                                     </div>
                                 </div>
                                 <p></p>
@@ -167,7 +188,7 @@
                                         <table class="table">
                                             <thead>
                                             <tr>
-                                                <th scope="col">ID</th>
+                                                <!--                                                <th scope="col">ID</th>-->
                                                 <th scope="col">Название</th>
                                                 <th scope="col">Оборудование</th>
                                                 <th scope="col">Тип</th>
@@ -178,25 +199,19 @@
                                             <tbody>
                                             <tr th:each="check : ${checks}">
                                             <span th:if="${!check.isCreator()}">
-                                            <td th:text="${check.checkId}"></td>
-                                            <td th:text="${check.checkName}"></td>
-                                            <td th:text="${check.getModelDevice().name}"></td>
-                                            <td th:text="${check.isCreator()} ? ${check.checkType} + '- создатель' : ${check.checkType}"></td>
-                                            <td th:text="${check.typeTechParams.isEmpty()} ? 'НЕТ' : ${check.typeTechParams}"></td>
-                                            <td th:id="checkResult + ${check.checkId}"></td>
-                                            <td>
-                                                <div class="container">
-                                                    <div class="row">
-                                                        <div class="col-2 col-md-5">
-                                                            <button id="checkButton" type="button"
-                                                                    th:class="${check.isCreator()} ? 'checks btn btn-warning' : 'checks btn btn-info'"
-                                                                    th:data-info="*{customerId}"
-                                                                    th:data-target="${check.checkId}">Проверить
-                                                            </button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </td>
+<!--                                            <td th:text="${check.checkId}"></td>-->
+                                                <td th:text="${check.checkName}"></td>
+                                                <td th:text="${check.getModelDevice().name}"></td>
+                                                <td th:text="${check.isCreator()} ? ${check.checkType} + '- создатель' : ${check.checkType}"></td>
+                                                <td th:text="${check.typeTechParams.isEmpty()} ? 'НЕТ' : ${check.typeTechParams}"></td>
+                                                <td th:id="checkResult + ${check.checkId}"></td>
+                                                <td>
+                                                    <button id="checkButton" type="button"
+                                                            th:class="${check.isCreator()} ? 'checks btn btn-warning btn-sm' : 'checks btn btn-info btn-sm'"
+                                                            th:data-info="*{customerId}"
+                                                            th:data-target="${check.checkId}">Проверить
+                                                    </button>
+                                                </td>
                                             </span>
                                             </tr>
                                             </tbody>
@@ -210,7 +225,7 @@
                                         <table class="table">
                                             <thead>
                                             <tr>
-                                                <th scope="col">ID</th>
+                                                <!--                                                <th scope="col">ID</th>-->
                                                 <th scope="col">Название</th>
                                                 <th scope="col">Оборудование</th>
                                                 <th scope="col">Тип</th>
@@ -221,7 +236,7 @@
                                             <tbody>
                                             <tr th:each="check : ${checks}">
                                             <span th:if="${check.isCreator()}">
-                                            <td th:text="${check.checkId}"></td>
+<!--                                            <td th:text="${check.checkId}"></td>-->
                                             <td th:text="${check.checkName}"></td>
                                             <td th:text="${check.getModelDevice().name}"></td>
                                             <td th:text="${check.checkType}"></td>
@@ -232,7 +247,7 @@
                                                     <div class="row">
                                                         <div class="col-2 col-md-5">
                                                             <button id="checkButton2" type="button"
-                                                                    th:class="${check.isCreator()} ? 'checks btn btn-warning' : 'checks btn btn-info'"
+                                                                    th:class="${check.isCreator()} ? 'checks btn btn-warning btn-sm' : 'checks btn btn-info btn-sm'"
                                                                     th:data-info="*{customerId}"
                                                                     th:data-target="${check.checkId}">Выполнить
                                                             </button>
@@ -247,7 +262,7 @@
                                     </div>
                                 </div>
                                 <button type="submit" class="btn btn-primary">Сохранить</button>
-                                <a th:href="@{/customers}" role="button" class="btn btn-primary">Отмена</a>
+                                <a th:href="@{/customers}" role="button" class="btn btn-primary">Выход</a>
                             </div>
                         </form>
                     </div>
@@ -259,7 +274,7 @@
 </div>
 
 <script>
-    $(document).ready(function() {
+    $(document).ready(function () {
         $('#multiple [data-accordion]').accordion({
             singleOpen: false
         });

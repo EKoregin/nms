@@ -90,14 +90,14 @@
                             <td>
                                 <div class="container">
                                     <div class="row">
-                                        <div class="col-2 col-md-5">
-                                            <a th:href="@{'/customers/editForm/{customerId}'(customerId=${customer.id})}"
-                                               class="btn btn-info" role="button">Редактировать</a>
+                                        <div class="col-sm-4">
+                                            <a th:href="@{'/customers/{customerId}'(customerId=${customer.id})}"
+                                               class="btn btn-info btn-sm" role="button">Редактировать</a>
                                         </div>
-                                        <div class="col-2 col-md-5">
+                                        <div class="col-sm-4">
                                             <form th:action="@{'/customers/{customerId}'(customerId=${customer.id})}"
                                                   th:method="delete">
-                                                <button type="submit" class="btn btn-danger">Delete</button>
+                                                <button type="submit" class="btn btn-danger btn-sm">Delete</button>
                                             </form>
                                         </div>
                                     </div>

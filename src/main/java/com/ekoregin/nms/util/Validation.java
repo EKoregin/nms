@@ -1,6 +1,6 @@
 package com.ekoregin.nms.util;
 
-import com.ekoregin.nms.entity.TypeTechParameter;
+import com.ekoregin.nms.database.entity.TypeTechParameter;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j

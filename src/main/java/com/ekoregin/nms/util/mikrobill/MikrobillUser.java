@@ -22,17 +22,17 @@ public class MikrobillUser {
 
     @Override
     public String toString() {
-        return name +
-               ", IP=" + ip +
-               ", Vlan=" + vlan +
-               ", Device=" + device +
-               ", MAC=" + mac +
-               ", Тариф=" + tariff +
-               ", Баланс=" + balance +
-               ", Статус=" + status +
-               ", Договор=" + contract +
-               ", Stopdate=" + stopdate +
-               ", Архив=" + isArchive +
-               ", Трафик(Mb)=" + todaytraffic + "\r\n";
+        return "Логин: " + name + "\n" +
+               "IP: " + ip + "\n" +
+               "Vlan: " + vlan + "\n" +
+               "Device: " + device + "\n" +
+               "MAC: " + mac + "\n" +
+               "Тариф: " + tariff + "\n" +
+               "Баланс: " + balance + "\n" +
+               "Статус: " + status + "\n" +
+               "Договор: " + contract + "\n" +
+               "Stopdate: " + stopdate + "\n" +
+               "Архив: " + isArchive + "\n" +
+               "Трафик(Mb): " + todaytraffic + "\r\n";
     }
 }

@@ -16,7 +16,7 @@ import java.util.Objects;
 @Configuration
 @EnableTransactionManagement
 @EnableJpaRepositories(
-        basePackages = {"com.ekoregin.nms.repository"},
+        basePackages = {"com.ekoregin.nms.database"},
         entityManagerFactoryRef = "mainEntityManagerFactory",
         transactionManagerRef = "mainTransactionManager"
 )
@@ -27,7 +27,7 @@ public class MainJpaConfiguration {
                                                                            @Qualifier("mainDataSource") DataSource dataSource) {
         return builder
                 .dataSource(dataSource)
-                .packages("com.ekoregin.nms.repository", "com.ekoregin.nms.entity")
+                .packages("com.ekoregin.nms.database")
                 .build();
     }
 

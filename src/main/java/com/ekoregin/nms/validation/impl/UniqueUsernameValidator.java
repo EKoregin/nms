@@ -1,6 +1,6 @@
 package com.ekoregin.nms.validation.impl;
 
-import com.ekoregin.nms.repository.UserRepository;
+import com.ekoregin.nms.database.repository.UserRepository;
 import com.ekoregin.nms.validation.UniqueUsername;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;

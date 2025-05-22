@@ -6,6 +6,15 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
+    <script src="https://code.jquery.com/jquery-3.7.0.js"
+            integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM="
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+            integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+            crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+            integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+            crossorigin="anonymous"></script>
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
           integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
@@ -78,7 +87,8 @@
                                 <div class="form-group row">
                                     <div class="col-sm-8" th:each="typeParam : ${typeParams}" id="typeTechParameters">
                                         <label>
-                                            <input th:field="*{typeTechParameters}" type="checkbox" th:value="${typeParam.id}">
+                                            <input th:field="*{typeTechParameters}" type="checkbox"
+                                                   th:value="${typeParam.id}">
                                         </label>
                                         <span th:text="${typeParam.name}">TYPE PARAMETERS</span>
                                     </div>
@@ -105,51 +115,111 @@
                                 </div>
                                 <p></p>
                                 <div th:if="*{controlMethods != null && controlMethods.size() > 0}">
-                                <h5 class="card-header">Подключенные проверки</h5>
+                                    <h5 class="card-header">Подключенные проверки</h5>
+                                    <table class="table">
+                                        <thead>
+                                        <tr>
+                                            <th scope="col">ID</th>
+                                            <th scope="col">Тип</th>
+                                            <th scope="col">Название</th>
+                                            <th scope="col">Область действия</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <form></form>
+                                        <tr th:each="check : *{checks}">
+                                            <td th:text="${check.checkId}"></td>
+                                            <td th:text="${check.checkType}"></td>
+                                            <td th:text="${check.checkName}"></td>
+                                            <td th:text="${check.checkScope}"></td>
+                                            <td>
+                                                <div class="container">
+                                                    <div class="row">
+                                                        <div class="col-2 col-md-5">
+                                                            <a th:href="@{'/checks/editForm/{checkId}'(checkId=${check.checkId})}"
+                                                               class="btn btn-info mr-3" role="button">Редактировать</a>
+                                                        </div>
+                                                        <div class="col-2 col-md-5">
+                                                            <form th:action="@{'/modelDevices/delCheckFromModel/' + *{id} + '/check/' + ${check.checkId}}"
+                                                                  th:method="delete">
+                                                                <button type="submit" class="btn btn-danger">Delete
+                                                                </button>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                    <hr>
+                                    <div class="row">
+                                        <div class="col-5 col-md-5">
+                                            <a th:href="@{'/checks/addForm/{modelId}'(modelId=*{id})}"
+                                               role="button" class="btn btn-success">Добавить проверку</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <p></p>
+
+
+                                <h5 class="card-header">Порты</h5>
                                 <table class="table">
                                     <thead>
                                     <tr>
-                                        <th scope="col">ID</th>
-                                        <th scope="col">Тип</th>
-                                        <th scope="col">Название</th>
-                                        <th scope="col">Область действия</th>
+                                        <th scope="col">Name</th>
+                                        <th scope="col">Speed</th>
+                                        <th scope="col">Duplex</th>
+                                        <th scope="col">Media</th>
+                                        <th scope="col"></th>
                                     </tr>
                                     </thead>
                                     <tbody>
                                     <form></form>
-                                    <tr th:each="check : *{checks}">
-                                        <td th:text="${check.checkId}"></td>
-                                        <td th:text="${check.checkType}"></td>
-                                        <td th:text="${check.checkName}"></td>
-                                        <td th:text="${check.checkScope}"></td>
+                                    <tr th:each="port : *{ports}">
+                                        <td th:text="${port.name}"></td>
+                                        <td th:text="${port.speed}"></td>
+                                        <td th:text="${port.duplex}"></td>
+                                        <td th:text="${port.mediaType}"></td>
                                         <td>
-                                            <div class="container">
-                                                <div class="row">
-                                                    <div class="col-2 col-md-5">
-                                                        <a th:href="@{'/checks/editForm/{checkId}'(checkId=${check.checkId})}"
-                                                           class="btn btn-info mr-3" role="button">Редактировать</a>
-                                                    </div>
-                                                    <div class="col-2 col-md-5">
-                                                        <form th:action="@{'/modelDevices/delCheckFromModel/' + *{id} + '/check/' + ${check.checkId}}"
-                                                              th:method="delete">
-                                                            <button type="submit" class="btn btn-danger">Delete</button>
-                                                        </form>
-                                                    </div>
+                                            <div class="row">
+                                                <div class="col-2 col-md-5">
+                                                    <button id="edit-port" type="button" class="btn btn-info btn-sm"
+                                                            data-toggle="modal"
+                                                            data-target="#addPortDialog"
+                                                            th:data-portid="${port.id}"
+                                                            th:data-portname="${port.name}"
+                                                            th:data-portspeed="${port.speed}"
+                                                            th:data-portduplex="${port.duplex}"
+                                                            th:data-portmedia="${port.mediaType}"
+                                                            th:data-porttype="${port.type}"
+                                                            th:data-portmodelid="*{id}">Редактировать
+                                                    </button>
+                                                </div>
+                                                <div class="col-2 col-md-5">
+                                                    <button type="button" class="btn btn-danger btn-sm" th:onclick="'deletePort(' + ${port.id} + ')'">Удалить</button>
                                                 </div>
                                             </div>
                                         </td>
                                     </tr>
                                     </tbody>
                                 </table>
+                                <p></p>
+                                <button id="add-port" type="button" class="btn btn-info btn-sm" data-toggle="modal"
+                                        data-target="#addPortDialog" th:data-portmodelid="*{id}">Добавить порт
+                                </button>
+
+
                                 <hr>
                                 <div class="row">
                                     <div class="col-5 col-md-5">
-                                        <a th:href="@{'/checks/addForm/{modelId}'(modelId=*{id})}"
-                                           role="button" class="btn btn-success">Добавить проверку</a>
+                                        <a th:href="@{'/ports/addForm/modelDevice/{modelId}'(modelId=*{id})}"
+                                           role="button" class="btn btn-success">Добавить порты</a>
                                     </div>
                                 </div>
                                 <p></p>
-                                </div>
+
+
                                 <button type="submit" class="btn btn-primary">Сохранить</button>
                                 <a th:href="@{/modelDevices}" role="button" class="btn btn-primary">Отмена</a>
                             </form>
@@ -161,6 +231,133 @@
         <div th:replace="~{fragments/footer::footer}">&nbsp;</div>
     </div>
 </div>
+
+<!-- Modal add group form -->
+<div class="modal fade" id="addPortDialog" tabindex="-1" role="dialog" aria-labelledby="addPortDialogLabel"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addPortDialogLabel">Редактирование порта</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <input type="hidden" name="port-id" id="port-id">
+                    <label for="port-name">Название</label>
+                    <input type="text" class="form-control" id="port-name">
+
+                    <label for="port-speed">Speed</label>
+                    <input type="text" class="form-control" id="port-speed">
+
+                    <label for="port-duplex">Duplex</label>
+                    <select id="port-duplex" class="form-control">
+                        <option selected="selected">FULL</option>
+                        <option>HALF</option>
+                    </select>
+
+                    <label for="port-media">Media</label>
+                    <select id="port-media" class="form-control">
+                        <option selected="selected">COPPER</option>
+                        <option>FIBER</option>
+                    </select>
+
+                    <label for="port-type">Type</label>
+                    <select id="port-type" class="form-control">
+                        <option selected="selected">PHYSICAL</option>
+                        <option>LOGICAL</option>
+                    </select>
+
+                    <input type="hidden" name="port-modelid" id="port-modelid">
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button id="close-port-button" type="button" class="btn btn-secondary" data-dismiss="modal">Close
+                </button>
+                <button id="save-port-button" type="button" class="btn btn-primary">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Ports
+    $('#addPortDialog').on('shown.bs.modal', function (event) {
+        $(this).find('form').trigger('reset');
+        let button = $(event.relatedTarget);
+        let modal = $(this);
+        modal.find('#port-id').val(button.data('portid'));
+        modal.find('#port-name').val(button.data('portname'));
+        modal.find('#port-speed').val(button.data('portspeed'));
+
+        let portDuplex = button.data('portduplex');
+        if (portDuplex !== undefined) {
+            modal.find('#port-duplex').val(portDuplex);
+        }
+        let portMedia = button.data('portmedia');
+        if (portMedia !== undefined) {
+            modal.find('#port-media').val(portMedia);
+        }
+        let portType = button.data('porttype');
+        if (portType !== undefined) {
+            modal.find('#port-type').val(portType);
+        }
+
+        modal.find('#port-modelid').val(button.data('portmodelid'));
+    });
+
+    $('#save-port-button').click(function () {
+        let modal = $('#addPortDialog');
+        let portId = modal.find('#port-id').val();
+        let url = '/ports';
+        let httpMethod = 'POST';
+        if (portId !== null && portId.length !== 0) {
+            url = '/ports/' + portId;
+            httpMethod = 'PUT';
+        }
+
+        let port = {
+            name: modal.find('#port-name').val(),
+            speed: modal.find('#port-speed').val(),
+            duplex: modal.find('#port-duplex').val(),
+            mediaType: modal.find('#port-media').val(),
+            type: modal.find('#port-type').val(),
+            modelId: modal.find('#port-modelid').val()
+        };
+        $.ajax({
+            url: url,
+            type: httpMethod,
+            data: JSON.stringify(port),
+            contentType: "application/json; charset=utf-8",
+            success: () => {
+                location.reload()
+            },
+            error: (err) => {
+                alert("Error Ajax")
+                console.log(err)
+            }
+        })
+        modal.modal('hide');
+    });
+
+    function deletePort(portId) {
+        $.ajax({
+            url: '/ports/' + portId,
+            type: 'DELETE',
+            success: () => {
+                location.reload()
+            },
+            error: (err) => {
+                alert("Error Ajax")
+                console.log(err)
+            }
+        })
+    }
+</script>
+
+
 </body>
 </html>
 

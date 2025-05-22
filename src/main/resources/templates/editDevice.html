@@ -5,8 +5,15 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
     <script src="https://code.jquery.com/jquery-3.7.0.js"
             integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM="
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+            integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+            crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+            integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
             crossorigin="anonymous"></script>
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
@@ -15,6 +22,9 @@
     <link th:href="@{/styles/main.css}" rel="stylesheet"/>
     <link rel="stylesheet" th:href="@{/font-awesome/css/font-awesome.min.css}">
     <script type="text/javascript" th:src="@{/js/menu.js}"></script>
+    <!--    Accordion enable-->
+    <script type="text/javascript" th:src="@{/js/jquery.accordion.js}"></script>
+    <link th:href="@{/styles/jquery.accordion.css}" rel="stylesheet"/>
     <title>Изменение оборудования</title>
 </head>
 <body>
@@ -30,125 +40,294 @@
             <div class="container">
                 <div class="row pt3">
                     <div class="card" style="width: 80%">
-                        <h5 class="card-header">Редактирование оборудования</h5>
+
                         <div class="card-body">
-                            <form th:action="@{/devices/update}" th:method="PUT" th:object="${deviceDto}">
-                                <input type="hidden" th:field="*{id}">
-                                <div class="form-group row">
-                                    <label for="modelId" class="col-sm-2 col-form-label">Модель</label>
-                                    <div class="col-sm-8">
-                                        <select th:field="*{modelId}" id="modelId">
-                                            <option value="" selected>Выбрать модель</option>
-                                            <option th:each="model : ${models}"
-                                                    th:value="${model.id}" th:text="${model.name}">
-                                            </option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="form-group row">
-                                    <label for="deviceName" class="col-sm-2 col-form-label">Название</label>
-                                    <div class="col-sm-8">
-                                        <input type="text" class="form-control" th:field="*{name}" id="deviceName">
-                                        <p class="text-danger" th:if="${#fields.hasErrors('name')}"
-                                           th:errorclass="error" th:errors="*{name}"></p>
-                                    </div>
-                                </div>
-                                <div class="form-group row">
-                                    <label for="deviceDesc" class="col-sm-2 col-form-label">Описание</label>
-                                    <div class="col-sm-8">
-                                        <input type="text" class="form-control" th:field="*{description}"
-                                               id="deviceDesc">
-                                    </div>
-                                </div>
-                                <div class="form-group row">
-                                    <label for="deviceIp" class="col-sm-2 col-form-label">IP адрес</label>
-                                    <div class="col-sm-8">
-                                        <input type="text" class="form-control" th:name="ip" th:value="*{ip}"
-                                               id="deviceIp">
-                                        <p class="text-danger" th:if="${#fields.hasErrors('ip')}" th:errorclass="error"
-                                           th:errors="*{ip}"></p>
-                                    </div>
-                                </div>
-                                <div class="form-group row">
-                                    <label for="deviceMac" class="col-sm-2 col-form-label">MAC адрес</label>
-                                    <div class="col-sm-8">
-                                        <input type="text" class="form-control" th:field="*{mac}" id="deviceMac">
-                                        <p class="text-danger" th:if="${#fields.hasErrors('mac')}" th:errorclass="error"
-                                           th:errors="*{mac}"></p>
-                                    </div>
-                                </div>
-                                <div class="form-group row">
-                                    <label for="managePort" class="col-sm-2 col-form-label">Порт</label>
-                                    <div class="col-sm-8">
-                                        <input type="text" class="form-control" th:field="*{managePort}"
-                                               id="managePort">
-                                    </div>
-                                </div>
-                                <div class="form-group row">
-                                    <label for="deviceLogin" class="col-sm-2 col-form-label">Логин</label>
-                                    <div class="col-sm-8">
-                                        <input type="text" class="form-control" th:field="*{login}" id="deviceLogin">
-                                    </div>
-                                </div>
-                                <div class="form-group row">
-                                    <label for="devicePassw" class="col-sm-2 col-form-label">Пароль</label>
-                                    <div class="col-sm-8">
-                                        <input type="text" class="form-control" th:field="*{password}" id="devicePassw">
-                                    </div>
-                                </div>
-                                <div th:if="*{customers != null && customers.size() > 0}">
-                                    <div style="cursor:pointer;color:blue;text-decoration:underline;">
-                                        <a onclick="return toggleMe('listOfCustomers')">Подключенные абоненты</a>
-                                    </div>
-                                    <div id="listOfCustomers" class="col-sm-8">
-                                <span th:each="customer : *{customers}">
-                                    <span th:text="${customer.name}"></span>
-                                    Порт:<span th:each="techParam : ${customer.getParams()}">
-                                            <span th:if="${techParam.type.name.equals('PORT')}" th:text="${techParam.value}" class="font-weight-bold"></span>
-                                            </span><br>
-                                </span>
-                                    </div>
-                                </div>
-                                <p></p>
-                                <h5 class="card-header">Доступные проверки</h5>
-                                <table class="table">
-                                    <thead>
-                                    <tr>
-                                        <th scope="col">ID</th>
-                                        <th scope="col">Название</th>
-                                        <th scope="col">Модель</th>
-                                        <th scope="col">Тип</th>
-                                        <th scope="col">Параметры</th>
-                                        <th scope="col">Результат</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <tr th:each="check : ${checks}">
-                                        <td th:text="${check.checkId}"></td>
-                                        <td th:text="${check.checkName}"></td>
-                                        <td th:text="${check.getModelDevice().name}"></td>
-                                        <td th:text="${check.checkType}"></td>
-                                        <td th:text="${check.typeTechParams.isEmpty()} ? 'НЕТ' : ${check.typeTechParams}"></td>
-                                        <td th:id="checkResult + ${check.checkId}"></td>
-                                        <td>
-                                            <div class="container">
-                                                <div class="row">
-                                                    <div class="col-2 col-md-5">
-                                                        <button id="checkButton" type="button"
-                                                                class="checks btn btn-info"
-                                                                th:data-info="*{id}"
-                                                                th:data-target="${check.checkId}">Проверить
-                                                        </button>
-                                                    </div>
+                            <form th:action="@{/devices/{id}(id=${deviceDto.id})}" th:method="PUT"
+                                  th:object="${deviceDto}">
+                                <div id="multiple" data-accordion-group>
+                                    <div class="accordion open" data-accordion>
+                                        <div data-control><h5 class="card-header" th:text="*{name}">Редактирование</h5>
+                                        </div>
+                                        <div data-content>
+                                            <input type="hidden" th:field="*{id}">
+                                            <br>
+                                            <div class="form-group row">
+                                                <label for="modelId" class="col-sm-2 col-form-label">Модель</label>
+                                                <div class="col-sm-8">
+                                                    <select th:field="*{modelId}" id="modelId">
+                                                        <option value="" selected>Выбрать модель</option>
+                                                        <option th:each="model : ${models}"
+                                                                th:value="${model.id}" th:text="${model.name}">
+                                                        </option>
+                                                    </select>
                                                 </div>
                                             </div>
-                                        </td>
-                                    </tr>
-                                    </tbody>
-                                </table>
-                                <p></p>
-                                <button type="submit" class="btn btn-primary">Сохранить</button>
-                                <a th:href="@{/devices}" role="button" class="btn btn-primary">Отмена</a>
+                                            <div class="form-group row">
+                                                <label for="deviceName" class="col-sm-2 col-form-label">Название</label>
+                                                <div class="col-sm-8">
+                                                    <input type="text" class="form-control" th:field="*{name}"
+                                                           id="deviceName">
+                                                    <p class="text-danger" th:if="${#fields.hasErrors('name')}"
+                                                       th:errorclass="error" th:errors="*{name}"></p>
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label for="deviceDesc" class="col-sm-2 col-form-label">Описание</label>
+                                                <div class="col-sm-8">
+                                        <textarea class="form-control" th:field="*{description}" id="deviceDesc"
+                                                  rows="3"></textarea>
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label for="deviceIp" class="col-sm-2 col-form-label">IP адрес</label>
+                                                <div class="col-sm-8">
+                                                    <input type="text" class="form-control" th:name="ip"
+                                                           th:value="*{ip}"
+                                                           id="deviceIp">
+                                                    <p class="text-danger" th:if="${#fields.hasErrors('ip')}"
+                                                       th:errorclass="error"
+                                                       th:errors="*{ip}"></p>
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label for="deviceMac" class="col-sm-2 col-form-label">MAC адрес</label>
+                                                <div class="col-sm-8">
+                                                    <input type="text" class="form-control" th:field="*{mac}"
+                                                           id="deviceMac">
+                                                    <p class="text-danger" th:if="${#fields.hasErrors('mac')}"
+                                                       th:errorclass="error"
+                                                       th:errors="*{mac}"></p>
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label for="managePort" class="col-sm-2 col-form-label">Порт</label>
+                                                <div class="col-sm-8">
+                                                    <input type="text" class="form-control" th:field="*{managePort}"
+                                                           id="managePort">
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label for="deviceLogin" class="col-sm-2 col-form-label">Логин</label>
+                                                <div class="col-sm-8">
+                                                    <input type="text" class="form-control" th:field="*{login}"
+                                                           id="deviceLogin">
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label for="devicePassw" class="col-sm-2 col-form-label">Пароль</label>
+                                                <div class="col-sm-8">
+                                                    <input type="text" class="form-control" th:field="*{password}"
+                                                           id="devicePassw">
+                                                </div>
+                                            </div>
+                                            <div th:if="*{customers != null && customers.size() > 0}">
+                                                <div style="cursor:pointer;color:blue;text-decoration:underline;">
+                                                    <a onclick="return toggleMe('listOfCustomers')">Подключенные
+                                                        абоненты</a>
+                                                </div>
+                                                <div id="listOfCustomers" class="col-sm-8">
+                                                <span th:each="customer : *{customers}">
+                                                    <span th:text="${customer.name}"></span>
+                                                    Порт:<span th:each="techParam : ${customer.getParams()}">
+                                                          <span th:if="${techParam.type.name.equals('PORT')}"
+                                                                th:text="${techParam.value}"
+                                                                class="font-weight-bold"></span>
+                                                          </span><br>
+                                                </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <p></p>
+                                    <div class="accordion" data-accordion>
+                                        <div data-control><h5 class="card-header">Координаты</h5></div>
+                                        <div class="form-group row" data-content>
+                                            <label for="latitude" class="col-sm-2 col-form-label">Широта</label>
+                                            <div class="col-sm-4">
+                                                <input type="number" step="0.000000000000001" class="form-control"
+                                                       th:field="*{latitude}"
+                                                       id="latitude">
+                                            </div>
+                                            <label for="longitude" class="col-sm-2 col-form-label">Долгота</label>
+                                            <div class="col-sm-4">
+                                                <input type="number" step="0.000000000000001" class="form-control"
+                                                       th:field="*{longitude}"
+                                                       id="longitude">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="accordion" data-accordion>
+                                        <div data-control><h5 class="card-header">Доступные проверки</h5></div>
+                                        <div data-content>
+                                            <table class="table">
+                                                <thead>
+                                                <tr>
+                                                    <th scope="col">ID</th>
+                                                    <th scope="col">Название</th>
+                                                    <th scope="col">Модель</th>
+                                                    <th scope="col">Тип</th>
+                                                    <th scope="col">Параметры</th>
+                                                    <th scope="col">Результат</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                <tr th:each="check : ${checks}">
+                                                    <td th:text="${check.checkId}"></td>
+                                                    <td th:text="${check.checkName}"></td>
+                                                    <td th:text="${check.getModelDevice().name}"></td>
+                                                    <td th:text="${check.checkType}"></td>
+                                                    <td th:text="${check.typeTechParams.isEmpty()} ? 'НЕТ' : ${check.typeTechParams}"></td>
+                                                    <td th:id="checkResult + ${check.checkId}"></td>
+                                                    <td>
+                                                        <div class="container">
+                                                            <div class="row">
+                                                                <div class="col-2 col-md-5">
+                                                                    <button id="checkButton" type="button"
+                                                                            class="checks btn btn-info"
+                                                                            th:data-info="*{id}"
+                                                                            th:data-target="${check.checkId}">Проверить
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <p></p>
+                                    <div class="accordion" data-accordion>
+                                        <div data-control><h5 class="card-header">Порты</h5></div>
+                                        <div data-content>
+                                            <table class="table">
+                                                <thead>
+                                                <tr>
+                                                    <th scope="col">Name</th>
+                                                    <th scope="col">Speed</th>
+                                                    <th scope="col">Duplex</th>
+                                                    <th scope="col">Media</th>
+                                                    <th scope="col">Link</th>
+                                                    <th scope="col"></th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                <form></form>
+                                                <tr th:each="port : *{ports}">
+                                                    <td th:text="${port.name}"></td>
+                                                    <td th:text="${port.speed}"></td>
+                                                    <td th:text="${port.duplex}"></td>
+                                                    <td th:text="${port.mediaType}"></td>
+                                                    <td th:text="${port.linkName.isEmpty()} ? 'НЕТ' : ${port.linkName}"></td>
+                                                    <td>
+                                                        <div class="col-sm-4">
+                                                            <button id="edit-port" type="button"
+                                                                    class="btn btn-info btn-sm"
+                                                                    data-toggle="modal"
+                                                                    data-target="#addPortDialog"
+                                                                    th:data-portid="${port.id}"
+                                                                    th:data-portname="${port.name}"
+                                                                    th:data-portspeed="${port.speed}"
+                                                                    th:data-portduplex="${port.duplex}"
+                                                                    th:data-portmedia="${port.mediaType}"
+                                                                    th:data-porttype="${port.type}"
+                                                                    th:data-portdeviceid="${deviceId}">Редактировать
+                                                            </button>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="col-sm-4">
+                                                            <button type="button" class="btn btn-danger btn-sm"
+                                                                    th:onclick="'deletePort(' + ${port.id} + ')'">
+                                                                Удалить
+                                                            </button>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                            <p></p>
+                                            <div class="col-sm-4">
+                                                <button id="add-port" type="button" class="btn btn-info btn-sm"
+                                                        data-toggle="modal"
+                                                        data-target="#addPortDialog" th:data-portdeviceid="*{id}">
+                                                    Добавить
+                                                    порт
+                                                </button>
+                                                <button type="button" class="btn btn-info btn-sm"
+                                                        th:onclick="'createPortsFromModel(' + ${deviceId} + ')'">
+                                                    Добавить
+                                                    порты
+                                                    из
+                                                    модели
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <p></p>
+
+
+                                    <div class="accordion" data-accordion>
+                                        <div data-control><h5 class="card-header">Линки</h5></div>
+                                        <div data-content>
+                                            <table class="table">
+                                                <thead>
+                                                <tr>
+                                                    <th scope="col">Тип</th>
+                                                    <th scope="col">Интерфейс</th>
+                                                    <th scope="col">Абонент</th>
+                                                    <th scope="col"></th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                <form></form>
+                                                <tr th:each="link : ${links}">
+                                                    <td th:text="${link.type}"></td>
+                                                    <td th:text="${link.destination}"></td>
+                                                    <td th:text="${link.customer.name}"></td>
+                                                    <td>
+                                                        <div class="col-sm-4">
+                                                            <button id="edit-link" type="button"
+                                                                    class="btn btn-info btn-sm"
+                                                                    data-toggle="modal"
+                                                                    data-target="#addLinkDialog"
+                                                                    th:data-linkid="${link.id}"
+                                                                    th:data-linktype="${link.type}"
+                                                                    th:data-linkdest="${link.destination}"
+                                                                    th:data-linkdeviceid="${deviceId}">Редактировать
+                                                            </button>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="col-sm-4">
+                                                            <button type="button" class="btn btn-danger btn-sm"
+                                                                    th:onclick="'deleteLink(' + ${link.id} + ')'">
+                                                                Удалить
+                                                            </button>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                            <p></p>
+                                            <div class="col-sm-4">
+                                                <button id="add-link" type="button" class="btn btn-info btn-sm"
+                                                        data-toggle="modal"
+                                                        data-target="#addLinkDialog" th:data-linkdeviceid="*{id}">
+                                                    Добавить
+                                                    линк
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                    <p></p>
+                                    <hr>
+                                    <button type="submit" class="btn btn-primary">Сохранить</button>
+                                    <a th:href="@{/devices}" role="button" class="btn btn-primary">Отмена</a>
+                                </div>
                             </form>
                         </div>
                     </div>
@@ -158,7 +337,147 @@
         <div th:replace="~{fragments/footer::footer}">&nbsp;</div>
     </div>
 </div>
+
+<!-- Modal add group form -->
+<div class="modal fade" id="addPortDialog" tabindex="-1" role="dialog" aria-labelledby="addPortDialogLabel"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addPortDialogLabel">Редактирование порта</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <input type="hidden" name="port-id" id="port-id">
+                    <label for="port-name">Название</label>
+                    <input type="text" class="form-control" id="port-name">
+
+                    <label for="port-speed">Speed</label>
+                    <input type="text" class="form-control" id="port-speed">
+
+                    <label for="port-duplex">Duplex</label>
+                    <select id="port-duplex" class="form-control">
+                        <option selected="selected">FULL</option>
+                        <option>HALF</option>
+                    </select>
+
+                    <label for="port-media">Media</label>
+                    <select id="port-media" class="form-control">
+                        <option selected="selected">COPPER</option>
+                        <option>FIBER</option>
+                    </select>
+
+                    <label for="port-type">Type</label>
+                    <select id="port-type" class="form-control">
+                        <option selected="selected">PHYSICAL</option>
+                        <option>LOGICAL</option>
+                    </select>
+
+                    <input type="hidden" name="port-deviceid" id="port-deviceid">
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button id="close-port-button" type="button" class="btn btn-secondary" data-dismiss="modal">Close
+                </button>
+                <button id="save-port-button" type="button" class="btn btn-primary">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 <script>
+    // Ports
+    $('#addPortDialog').on('shown.bs.modal', function (event) {
+        $(this).find('form').trigger('reset');
+        let button = $(event.relatedTarget);
+        let modal = $(this);
+        modal.find('#port-id').val(button.data('portid'));
+        modal.find('#port-name').val(button.data('portname'));
+        modal.find('#port-speed').val(button.data('portspeed'));
+
+        let portDuplex = button.data('portduplex');
+        if (portDuplex !== undefined) {
+            modal.find('#port-duplex').val(portDuplex);
+        }
+        let portMedia = button.data('portmedia');
+        if (portMedia !== undefined) {
+            modal.find('#port-media').val(portMedia);
+        }
+        let portType = button.data('porttype');
+        if (portType !== undefined) {
+            modal.find('#port-type').val(portType);
+        }
+
+        modal.find('#port-deviceid').val(button.data('portdeviceid'));
+    });
+
+    $('#save-port-button').click(function () {
+        let modal = $('#addPortDialog');
+        let portId = modal.find('#port-id').val();
+        let url = '/ports';
+        let httpMethod = 'POST';
+        if (portId !== null && portId.length !== 0) {
+            url = '/ports/' + portId;
+            httpMethod = 'PUT';
+        }
+
+        let port = {
+            name: modal.find('#port-name').val(),
+            speed: modal.find('#port-speed').val(),
+            duplex: modal.find('#port-duplex').val(),
+            mediaType: modal.find('#port-media').val(),
+            type: modal.find('#port-type').val(),
+            deviceId: modal.find('#port-deviceid').val()
+        };
+        $.ajax({
+            url: url,
+            type: httpMethod,
+            data: JSON.stringify(port),
+            contentType: "application/json; charset=utf-8",
+            success: () => {
+                location.reload()
+            },
+            error: (err) => {
+                alert("Error Ajax")
+                console.log(err)
+            }
+        })
+        modal.modal('hide');
+    });
+
+    function deletePort(portId) {
+        $.ajax({
+            url: '/ports/' + portId,
+            type: 'DELETE',
+            success: () => {
+                location.reload()
+            },
+            error: (err) => {
+                alert("Error Ajax")
+                console.log(err)
+            }
+        });
+    }
+
+    function createPortsFromModel(deviceId) {
+        $.ajax({
+            url: '/ports/group/device/' + deviceId,
+            type: 'POST',
+            success: () => {
+                location.reload()
+            },
+            error: (err) => {
+                alert("Error Ajax")
+                console.log(err)
+            }
+        });
+    }
+
+    // Checks
     async function fetchCheckResult(checkId, deviceId) {
         let response = await fetch("/checks/" + checkId + "/device/" + deviceId);
         if (response.ok) {
@@ -186,11 +505,15 @@
             checkResult.prepend(div);
         })
     });
-</script>
-</body>
-</html>
 
-<script type="text/javascript">
+    $(document).ready(function () {
+        $('#multiple [data-accordion]').accordion({
+            singleOpen: false
+        });
+    })
+    ;
+
+    //Customer list
     function toggleMe(a) {
         let e = document.getElementById(a);
         if (!e) return true;
@@ -202,5 +525,10 @@
         }
         return true;
     }
+
     toggleMe('listOfCustomers');
 </script>
+</body>
+</html>
+
+

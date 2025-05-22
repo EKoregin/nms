@@ -1,6 +1,6 @@
 package com.ekoregin.nms.util.mikrobill;
 
-import com.ekoregin.nms.entity.CheckResult;
+import com.ekoregin.nms.database.entity.CheckResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;

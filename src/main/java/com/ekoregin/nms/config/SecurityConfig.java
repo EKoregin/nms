@@ -1,6 +1,6 @@
 package com.ekoregin.nms.config;
 
-import com.ekoregin.nms.entity.Role;
+import com.ekoregin.nms.database.entity.Role;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;

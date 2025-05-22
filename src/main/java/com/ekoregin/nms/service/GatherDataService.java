@@ -1,16 +1,17 @@
 package com.ekoregin.nms.service;
 
-import com.ekoregin.nms.entity.Customer;
-import com.ekoregin.nms.entity.GatherResult;
-import com.ekoregin.nms.entity.TechParameter;
-import com.ekoregin.nms.entity.TypeTechParameter;
-import com.ekoregin.nms.repository.TechParameterRepo;
-import com.ekoregin.nms.repository.TypeTechParameterRepo;
+import com.ekoregin.nms.database.entity.Customer;
+import com.ekoregin.nms.database.entity.GatherResult;
+import com.ekoregin.nms.database.entity.TechParameter;
+import com.ekoregin.nms.database.entity.TypeTechParameter;
+import com.ekoregin.nms.database.repository.TechParameterRepo;
+import com.ekoregin.nms.database.repository.TypeTechParameterRepo;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -20,6 +21,7 @@ import java.util.Map;
 @Slf4j
 @RequiredArgsConstructor
 @Service
+@Transactional
 public class GatherDataService {
 
     private final CustomerService customerService;

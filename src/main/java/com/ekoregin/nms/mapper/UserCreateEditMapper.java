@@ -1,7 +1,7 @@
 package com.ekoregin.nms.mapper;
 
 import com.ekoregin.nms.dto.UserCreateEditDto;
-import com.ekoregin.nms.entity.User;
+import com.ekoregin.nms.database.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;

@@ -1,0 +1,2 @@
+ALTER TABLE customer
+ADD COLUMN info TEXT;

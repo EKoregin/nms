@@ -12,7 +12,7 @@ services:
       - ../db/nms/data:/var/lib/postgresql/data
     restart: always
   nms:
-#    image: evgkoregin/nms:0.0.1
+    image: evgkoregin/nms:0.0.1
     build:
       context: .
       dockerfile: Dockerfile
